@@ -8,12 +8,14 @@
 
 local sethiddenprop = (sethiddenproperty or set_hidden_property or sethiddenprop or set_hidden_prop)
 local setsimulationrad = setsimulationradius or set_simulation_radius or function(Radius) sethiddenprop(PlayerInstance, "SimulationRadius", Radius) end
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+Player = Players.LocalPlayer
 
 settings().Physics.AllowSleep = false 
 settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled 
 RunService.Stepped:Connect(function() --old net
-    sethiddenprop(PlayerInstance, "MaximumSimulationRadius", math.huge)
+    sethiddenprop(Player, "MaximumSimulationRadius", math.huge)
     setsimulationrad(math.huge)
 end)
 
