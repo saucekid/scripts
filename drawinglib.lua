@@ -1439,7 +1439,7 @@ library.newcolorpicker = function(info)
 	--
 	local colors = instance.new("Frame")
 	colors.Size = udim2.snew(0.8,0,0.6,0,buttonframe)
-	colors.Position = udim2.pnew(0.5,-(color.Size.x/2),0.5,-(color.Size.y/2),buttonframe)
+	colors.Position = udim2.pnew(0.5,-(colors.Size.x/2),0.5,-(colors.Size.y/2),buttonframe)
 	colors.Color = default
 	colors.Visible = open
 	--
