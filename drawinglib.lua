@@ -42,6 +42,7 @@ local ddenabled = false
 local ddcontent = nil
 local dragging = false
 local dragX,dragY = 0,0
+local font = 3
 --
 local cursor
 local colorpicker
@@ -186,7 +187,7 @@ instance.new = function(type)
 		instance = frame
 	elseif type == "TextLabel" or "textlabel" then
 		local text = Drawing.new("Text")
-		text.Font = 3
+		text.Font = font
 		text.Visible = true
 		text.Outline = true
 		text.Center = false
@@ -897,6 +898,7 @@ end
 --
 library.new = function(info)
 	mousedisable = info.mousedisable
+	font = info.font
 	-- mainframe border
 	local bordercolor = info.bordercolor or Color3.fromRGB(0, 0, 0)
 	local border3 = instance.new("Frame")
