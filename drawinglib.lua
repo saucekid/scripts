@@ -1437,11 +1437,11 @@ library.newcolorpicker = function(info)
 	buttonframe.Color = highercol
 	buttonframe.Visible = open
 	--
-	local color = instance.new("Frame")
-	color.Size = udim2.snew(0.8,0,0.6,0,buttonframe)
-	color.Position = udim2.pnew(0.5,-(color.Size.x/2),0.5,-(color.Size.y/2),buttonframe)
-	color.Color = default
-	color.Visible = open
+	local colors = instance.new("Frame")
+	colors.Size = udim2.snew(0.8,0,0.6,0,buttonframe)
+	colors.Position = udim2.pnew(0.5,-(color.Size.x/2),0.5,-(color.Size.y/2),buttonframe)
+	colors.Color = default
+	colors.Visible = open
 	--
 	border1.Size = udim2.snew(1,6,1,6,buttonframe)
 	border1.Position = udim2.pnew(0,-3,0,-3,buttonframe)
@@ -1464,7 +1464,7 @@ library.newcolorpicker = function(info)
 		border3 = border3
 	}
 	for i,v in pairs(sections) do if v.section == info.section then v.yaxis = v.yaxis+20+2 end end
-	table.insert(colorpickers,{button = buttonframe,transparency = info.transparency,cpcolor = default,transp = deftransp,color = color,open = false,callback = info.callback,enabled = false,ky = y,label = label,borders = borders,section = info.section,tab = info.tab})
+	table.insert(colorpickers,{button = buttonframe,transparency = info.transparency,cpcolor = default,transp = deftransp,color = colors,open = false,callback = info.callback,enabled = false,ky = y,label = label,borders = borders,section = info.section,tab = info.tab})
 	library.updatecursor()
 end
 --
