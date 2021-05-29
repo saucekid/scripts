@@ -971,6 +971,7 @@ library.new = function(info)
 	label.Text = info.name
 	label.Size = 12
 	label.Position = udim2.pnew(0,5,0.5,-(label.TextBounds.Y/2),topbar)
+	label.Color = info.titlecolor
 	local borders = {
 		mainui = {
 			border1 = border1,
