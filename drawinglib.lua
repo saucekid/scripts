@@ -186,7 +186,7 @@ instance.new = function(type)
 		instance = frame
 	elseif type == "TextLabel" or "textlabel" then
 		local text = Drawing.new("Text")
-		text.Font = 0
+		text.Font = 1
 		text.Visible = true
 		text.Outline = true
 		text.Center = false
