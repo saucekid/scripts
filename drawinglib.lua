@@ -1167,7 +1167,7 @@ library.newtoggle = function(info)
 		border3 = border3
 	}
 	for i,v in pairs(sections) do if v.section == info.section then v.yaxis = v.yaxis+20+2 end end
-	table.insert(toggles,{button = buttonframe,open = false,callback = info.callback,enabled = false,ty = y,label = label,borders = borders,section = info.section,tab = info.tab})
+	table.insert(toggles,{button = buttonframe,open = false,callback = info.callback,enabled = info.def or false,ty = y,label = label,borders = borders,section = info.section,tab = info.tab})
 	library.updatecursor()
 end
 --
