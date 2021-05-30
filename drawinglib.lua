@@ -971,7 +971,7 @@ library.new = function(info)
 	label.Text = info.name
 	label.Size = 12
 	label.Position = udim2.pnew(0,5,0.5,-(label.TextBounds.Y/2),topbar)
-	label.Color = info.titlecolor
+	label.Color = info.titlecolor or Color3.fromRGB(255,255,255)
 	local borders = {
 		mainui = {
 			border1 = border1,
@@ -1158,6 +1158,7 @@ library.newtoggle = function(info)
 	--
 	local label = instance.new("TextLabel")
 	label.Text = info.name
+	label.Color = info.textcolor or Color3.fromRGB(255,255,255)
 	label.Size = 12
 	label.Visible = false
 	label.Position = udim2.pnew(1,7,0.5,-(label.TextBounds.Y/2)-1,buttonframe)
