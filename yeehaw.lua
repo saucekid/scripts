@@ -896,6 +896,14 @@ GunItemModule.CanShoot = function(...)
     return OldDelay(...)
 end
 
+local OldReload = GunItemModule.CanLoad;
+GunItemModule.CanLoad = function(...) 
+    if (settings.instantreload) then
+        return true 
+    end
+    return OldDelay(...)
+end
+
 local OldSwitchToItem = PlayerCharacterModule.CanSwitchToItem
 PlayerCharacterModule.CanSwitchToItem = function(...)
 return true end
