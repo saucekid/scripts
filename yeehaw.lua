@@ -16,7 +16,7 @@ casual_degenerate(discord) - quick respawn
 =======================================================================
 	Join the discord: https://discord.gg/qT4KvqY7
 ]]
-local Players = game:GetService("Players");     
+local Players = game:GetService("Players");     ----------------------sorry for messy code
 local Lighting = game:GetService("Lighting");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
 local ScriptContext = game:GetService("ScriptContext");
@@ -58,7 +58,7 @@ local oldLighting = {
     ColorShift_Top = Lighting.ColorShift_Top
 }
 
-local places = {            
+local places = {                --thanks casualdegenerate
 	{"Bronze City","Bronze"},
 	{"Puerto Dorado","Dorado"},
 	{"Tribal Village","Tribal"},
@@ -143,7 +143,7 @@ cheatsettings.keys.Suicide = "K"
 cheatsettings.keys.Harmonica = "N"
 cheatsettings.keys.Ragdoll = "L"
 
---====================================={FUNCTIONS}=====================================-- messy code
+--====================================={FUNCTIONS}=====================================--
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
         Title = title,
@@ -775,6 +775,13 @@ end)
 spawn(function()
     while wait() do
         for i, v in next, weapons.realweapons do
+            if cheatsettings.nospread then
+                v.FanAccuracy =  1
+                v.ProjectileAccuracy =  1
+            else
+                v.FanAccuracy =  weapons.ogvalues[i].FanAccuracy
+                v.ProjectileAccuracy =  weapons.ogvalues[i].ProjectileAccuracy
+            end
             if cheatsettings.instantreload then
                 v.ReloadSpeed =  1000
                 v.LoadSpeed =  1000
@@ -877,14 +884,6 @@ end
 return OldGetMouseHit(...);
 end
 
-
-local OldGetProjectileSpread = SharedUtilsModule.GetProjectileSpread;
-SharedUtilsModule.GetProjectileSpread = function(a, b, c, d)
-if (cheatsettings.aim.silentaim or cheatsettings.nospread) then
-c.accuracy = 1;
-end
-return OldGetProjectileSpread(a, b, c, d);
-end
 
 local OldDelay = GunItemModule.CanShoot;
 GunItemModule.CanShoot = function(...) 
