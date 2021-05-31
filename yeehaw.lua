@@ -1674,7 +1674,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
     })
 
 discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
-    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
+    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/svq3vUrzYN')end})
 
 library.opentab(CheatsTab)
 library.init()
