@@ -107,6 +107,7 @@ settings.norecoil = false
 settings.nodelay = false
 settings.alwaysguns = false
 settings.instantreload = false
+settings.infinitepenetration = false
 settings.mineaura = false
 settings.semiautosell = false
 settings.mineauradistance = 11
@@ -936,6 +937,19 @@ if settings.norecoil then return 0 end;
 return OldCalculateRecoil(...);
 end
 
+local OldOnHit = ClientProjectiles.Projectiles.GunProjectile.OnHit;
+ClientProjectiles.Projectiles.GunProjectile.OnHit = function(self, ...)
+if (settings.infinitepenetration) then
+local OldCheckPenetration = self.CheckPenetration;
+self.CheckPenetration = function(self)
+self.PenetrationLeft = 999999;
+return OldCheckPenetration(self);
+end
+end
+return OldOnHit(self, ...);
+end
+
+
 
 local JumpConnection = LocalPlayer.Character and getconnections(LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Jump"))[1];
 local OldOnCharacterAdded = PlayerCharacterModule.OnCharacterAdded;
@@ -1086,7 +1100,7 @@ end
 end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
-library.new({size = Vector2.new(315,450), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+library.new({size = Vector2.new(315,470), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
 -- tabs
@@ -1475,7 +1489,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
     })
 
 
-guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size = 155,})
+guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size = 175,})
     library.newtoggle({
 	    name = "No Recoil",
 	    section = guns,
@@ -1509,6 +1523,15 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    tab = CheatsTab,
 	    callback = function(bool)
 	        settings.instantreload = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Wallbang",
+	    section = guns,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        settings.infinitepenetration = bool
 	    end
     })
 
@@ -1674,7 +1697,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
     })
 
 discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
-    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/svq3vUrzYN')end})
+    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
 
 library.opentab(CheatsTab)
 library.init()
