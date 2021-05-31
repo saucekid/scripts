@@ -108,6 +108,7 @@ settings.mineaura = false
 settings.mineauradistance = 11
 settings.infiniteboost = false
 settings.nohorseragdoll = false
+settings.ragdollwalk = false
 
 settings.aim = {}
 settings.aim.aimbot = false
@@ -503,6 +504,7 @@ for i,anim in pairs(Entities.Animals:GetChildren()) do
 end
 
 Entities.Animals.ChildAdded:Connect(function(anim)
+    wait(1)
     if not string.match(anim.Name, "Horse") and anim.Name ~= "Cow" and anim:FindFirstChild("Health") then
         plrs("animal", anim)
     end
@@ -611,7 +613,7 @@ for _,anim in next, plrs do
         anim.Name.Size = settings.esp.TextSize
         
         if anim.Model:FindFirstChild("Legendary") then
-            anim.Name.Text = "Legendary".. animal.Name
+            anim.Name.Text = "Legendary ".. animal.Name
             anim.Name.Color = Color3.fromRGB(255,255,0)
             anim.Line.Color = Color3.fromRGB(255,255,0)
         else
@@ -772,6 +774,14 @@ RunService.RenderStepped:Connect(function()
             local partpos = WorldToViewport(target.Position)
             mousemoverel((partpos.x - Mouse.x) * 0.2, ((partpos.y * 0.93) - Mouse.y) * 0.2)
         end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if settings.ragdollwalk then
+		if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.Ragdolls:IsRagdolledLocal(LocalPlayer.Character) then
+		    LocalPlayer.Character:TranslateBy(LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection)
+		end
     end
 end)
 
@@ -1444,7 +1454,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 
 
 
-misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185,})
+misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205,})
     library.newkeybind({name = "Suicide", def = "K", section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
     
     library.newkeybind({name = "Ragdoll", def = "L", section = misc, tab = MiscTab, callback = function(key) settings.keys.Ragdoll = key end})
@@ -1495,6 +1505,15 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185
 	    tab = MiscTab,
 	    callback = function(bool)
 	        settings.antiracist = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Ragdoll Walk",
+	    section = misc,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.ragdollwalk = bool
 	    end
     })
 
