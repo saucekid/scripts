@@ -12,10 +12,11 @@
  ░ ░        
 Credits:
 ThisStuff - Instant Reload
-casual_degenerate(discord) - quick respawn
+casual_degenerate(discord) - quick respawn 
 =======================================================================
 	Join the discord: https://discord.gg/qT4KvqY7
-]]
+]]--
+
 local Players = game:GetService("Players");     ----------------------sorry for messy code
 local Lighting = game:GetService("Lighting");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
@@ -961,6 +962,19 @@ self.Boosts = self.MaxBoosts;
 end
 end
 
+
+local BreakableGlass = {}; do
+for k, v in next, debug.getupvalue(BreakableGlassModule.GetBreakableGlass, 1) do
+if (type(k) == "userdata") then
+table.insert(BreakableGlass, v.Id);
+end
+end
+end
+local BreakAllGlass = function()
+for _, id in ipairs(BreakableGlass) do
+NetworkModule:FireServer("BreakGlass", id, Vector3.new());
+end
+end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
 library.new({size = Vector2.new(315,445), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
@@ -1146,7 +1160,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
     library.newtoggle({
 	    name = "ON/OFF",
 	    section = esp,
-	    textcolor = Color3.fromRGB(0,255,0),
+	    --textcolor = Color3.fromRGB(0,255,0),
 	    tab = CheatsTab,
 	    callback = function(bool)
 	        settings.esp.toggle = bool
@@ -1498,7 +1512,7 @@ mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 
 	    end
     })
 
-general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 60,})
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 55,})
     library.newtoggle({
 	    name = "Fullbright",
 	    section = general,
@@ -1507,8 +1521,10 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 	        Fullbright(bool)
 	    end
     })
-
-horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 70,})
+    
+    library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
+    
+horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 55,})
     library.newtoggle({
 	    name = "Infinite Boosts",
 	    section = horse,
