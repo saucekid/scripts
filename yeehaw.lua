@@ -36,7 +36,7 @@ end
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
 local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
-local AnimalModule, BreakableGlassModule, CameraModule, ClientProjectiles, GunItemModule, NetworkModule, PlayerCharacterModule, SharedUtilsModule, UtilsModule; do
+local AnimalModule, BreakableGlassModule, CameraModule, ClientProjectiles, GunItemModule, NetworkModule, PlayerCharacterModule, SharedUtilsModule, UtilsModule, PlayerDataModule, UIHandlerModule, SharedUtilsModule; do
 AnimalModule = LoadModule("Animal");
 BreakableGlassModule = LoadModule("BreakableGlass");
 CameraModule = LoadModule("Camera");
@@ -44,9 +44,13 @@ ClientProjectiles = LoadModule("ClientProjectiles");
 GunItemModule = LoadModule("GunItem");
 NetworkModule = LoadSharedModule("Network");
 PlayerCharacterModule = LoadModule("PlayerCharacter");
+PlayerDataModule = LoadModule("PlayerData");
 SharedUtilsModule = LoadSharedModule("SharedUtils");
 CharRepUtilsModule = LoadSharedModule("CharRepUtils");
 UtilsModule = LoadModule("Utils");
+SharedUtilsModule= LoadSharedModule("SharedUtils");
+UIHandlerModule = LoadModule("UIHandler")
+ContainerUIModule = LoadModule("ContainerUI");
 end
 
 local library
@@ -101,10 +105,10 @@ settings.ragdolldirection = "lookVector"
 settings.nospread = false
 settings.norecoil = false
 settings.nodelay = false
-settings.regeneration = false
 settings.alwaysguns = false
 settings.instantreload = false
 settings.mineaura = false
+settings.semiautosell = false
 settings.mineauradistance = 11
 settings.infiniteboost = false
 settings.nohorseragdoll = false
@@ -501,27 +505,27 @@ for i, v in next, getgc(true) do
 end
 
 spawn(function()
-    while RunService.Heartbeat:Wait() do
+    while RunService.RenderStepped:Wait() do
         if settings.sizepulse then
             for i = 0.1,1,.1 do
                 Global.Network:FireServer("SetThicknessPercent", i);
                 Global.Network:FireServer("SetHeightPercent", i);
-                RunService.Heartbeat:Wait()
+                RunService.RenderStepped:Wait()
             end
             for i = 1,.1,-.1 do
                 Global.Network:FireServer("SetThicknessPercent", i);
                 Global.Network:FireServer("SetHeightPercent", i);
-                RunService.Heartbeat:Wait()
+                RunService.RenderStepped:Wait()
             end
         end
         if settings.antiracist then
             for i = 1,10,1 do
                 ReplicatedStorage.Communication.Events.SelectSkinColor:FireServer(i)
-                RunService.Heartbeat:Wait()
+                RunService.RenderStepped:Wait()
             end
             for i = 10,1,-1 do
                 ReplicatedStorage.Communication.Events.SelectSkinColor:FireServer(i)
-                RunService.Heartbeat:Wait()
+                RunService.RenderStepped:Wait()
             end
         end
     end
@@ -896,6 +900,16 @@ spawn(function()
                 end
             end
         end
+        if settings.semiautosell then
+            for _,item in pairs(PlayerDataModule:GetContainer("Inventory").Items) do
+                if string.match(item.Type, "Ore") or string.match(item.Type, "Ruby") or string.match(item.Type, "Sapphire") or string.match(item.Type, "Emerald") string.match(item.Type, "Diamond") or string.match(item.Type, "Meat") or string.match(item.Type, "Pelt") or string.match(item.Type, "Tooth") or string.match(item.Type, "Claw") or string.match(item.Type, "Skin") then
+                    local vendor = SharedUtilsModule.GetNearestShopVendor(LocalPlayer.Character.HumanoidRootPart.Position)
+                    if vendor and (LocalPlayer.Character.HumanoidRootPart.Position -vendor.HumanoidRootPart.Position).Magnitude < 13 then
+                        game:GetService("ReplicatedStorage").Communication.Events.ContainerSellItem:FireServer("Inventory", item.Id)
+                    end
+                end
+            end
+        end
     end
 end)
 
@@ -995,13 +1009,10 @@ end
 
 local OldSwitchToItem = PlayerCharacterModule.CanSwitchToItem
 PlayerCharacterModule.CanSwitchToItem = function(...)
-return true end
-
-local OldSleep = PlayerCharacterModule.IsSleeping
-PlayerCharacterModule.IsSleeping = function(...)
-if settings.regeneration then return true end
-return OldSleep(...);
+if settings.alwaysguns then return true end
+return OldSwitchToItem(...);
 end
+
 
 local OldFireServer = NetworkModule.FireServer;
 NetworkModule.FireServer = function(self, remote, ...)
@@ -1075,7 +1086,7 @@ end
 end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
-library.new({size = Vector2.new(315,445), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+library.new({size = Vector2.new(315,450), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
 -- tabs
@@ -1506,7 +1517,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.regeneration = bool
+	        settings.alwaysguns = bool
 	    end
     })
 
@@ -1622,7 +1633,7 @@ mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 
 	    end
     })
 
-general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 55,})
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 80,})
     library.newtoggle({
 	    name = "Fullbright",
 	    section = general,
@@ -1632,6 +1643,15 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 	    end
     })
     
+    library.newtoggle({
+	    name = "Semi Auto Sell",
+	    section = general,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.semiautosell = bool
+	    end
+    })
+
     library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
     
 horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 55,})
