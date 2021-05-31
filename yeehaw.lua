@@ -1,4 +1,11 @@
-local Players = game:GetService("Players");     ----------------------sorry for messy code
+--[[
+Credits:
+ThisStuff - Instant Reload
+casual_degenerate(discord) - quick respawn
+=======================================================================
+	Join the discord: https://discord.gg/qT4KvqY7
+]]
+local Players = game:GetService("Players");     
 local Lighting = game:GetService("Lighting");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
 local ScriptContext = game:GetService("ScriptContext");
@@ -40,7 +47,7 @@ local oldLighting = {
     ColorShift_Top = Lighting.ColorShift_Top
 }
 
-local places = {                --thanks casualdegenerate
+local places = {            
 	{"Bronze City","Bronze"},
 	{"Puerto Dorado","Dorado"},
 	{"Tribal Village","Tribal"},
@@ -125,7 +132,7 @@ cheatsettings.keys.Suicide = "K"
 cheatsettings.keys.Harmonica = "N"
 cheatsettings.keys.Ragdoll = "L"
 
---====================================={FUNCTIONS}=====================================--
+--====================================={FUNCTIONS}=====================================-- messy code
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
         Title = title,
