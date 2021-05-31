@@ -146,7 +146,7 @@ settings.keys = {}
 settings.keys.Suicide = "K"
 settings.keys.Harmonica = "N"
 settings.keys.Ragdoll = "L"
-
+settings.keys.ragdollfly = "Z"
 --====================================={FUNCTIONS}=====================================--
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
@@ -413,6 +413,85 @@ local function deepCopy(original)
 	end
 	return copy
 end
+
+
+
+local flying = false
+local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+local maxspeed = 55
+local speed = 55
+function Fly() 
+local torso = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+if not torso then return end
+local bg = Instance.new("BodyGyro", torso) 
+bg.P = 9e4 
+bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+bg.cframe = torso.CFrame 
+local bv = Instance.new("BodyVelocity", torso) 
+bv.velocity = Vector3.new(0,0.1,0) 
+bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+repeat wait() 
+LocalPlayer.Character.Humanoid.PlatformStand = true 
+if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+speed = speed+.5+(speed/maxspeed) 
+if speed > maxspeed then 
+speed = maxspeed 
+end 
+elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+speed = speed-1 
+if speed < 0 then 
+speed = 0 
+end 
+end 
+if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+bv.velocity = ((CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - CurrentCamera.CoordinateFrame.p))*speed 
+lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+bv.velocity = ((CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - CurrentCamera.CoordinateFrame.p))*speed 
+else 
+bv.velocity = Vector3.new(0,0.1,0) 
+end 
+bg.cframe = CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+until not flying 
+ctrl = {f = 0, b = 0, l = 0, r = 0} 
+lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+speed = 0 
+bg:Destroy() 
+bv:Destroy() 
+LocalPlayer.Character.Humanoid.PlatformStand = false 
+end 
+Mouse.KeyDown:connect(function(key) 
+if key:upper() == settings.keys.ragdollfly then 
+if flying then flying = false 
+    Global.PlayerCharacter:GetUp(game.Players.LocalPlayer.Character.HumanoidRootPart)
+else 
+flying = true 
+ PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100, 'waddup')
+Fly() 
+end 
+elseif key:lower() == "w" then 
+ctrl.f = 1 
+elseif key:lower() == "s" then 
+ctrl.b = -1 
+elseif key:lower() == "a" then 
+ctrl.l = -1 
+elseif key:lower() == "d" then 
+ctrl.r = 1 
+end 
+end) 
+Mouse.KeyUp:connect(function(key) 
+if key:lower() == "w" then 
+ctrl.f = 0 
+elseif key:lower() == "s" then 
+ctrl.b = 0 
+elseif key:lower() == "a" then 
+ctrl.l = 0 
+elseif key:lower() == "d" then 
+ctrl.r = 0 
+end 
+end)
+
 --==============================={Actual Script}=======================================--
 for i, v in next, getgc(true) do
     if type(v) == "table" and rawget(v, "BaseRecoil") then
@@ -468,7 +547,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         Global.PlayerCharacter:EquipItem('Harmonica')
     end
     if input.KeyCode == Enum.KeyCode[settings.keys.Ragdoll] then
-        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100)
+        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100, 'waddup')
     end
 end)
 
@@ -779,7 +858,7 @@ end)
 
 RunService.Heartbeat:Connect(function()
     if settings.ragdollwalk then
-		if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.Ragdolls:IsRagdolledLocal(LocalPlayer.Character) then
+		if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.PlayerCharacter:IsRagdolled(game.Players.LocalPlayer.Character.HumanoidRootPart) then
 		    LocalPlayer.Character:TranslateBy(LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection)
 		end
     end
@@ -945,7 +1024,8 @@ end)
 
 local OldCharacterRagdoll = PlayerCharacterModule.Ragdoll;
 PlayerCharacterModule.Ragdoll = function(...)
-    if (settings.antiragdoll) then return end;
+    local args = {...}
+    if (settings.antiragdoll and args[6] ~= "waddup") then return end;
     return OldCharacterRagdoll(...);
 end
 
@@ -1302,6 +1382,9 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 
 
 charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 205,})
+
+    library.newkeybind({name = "Ragdoll Fly", def = "Z", section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
+
     library.newtoggle({
 	    name = "Infinite Stamina",
 	    section = charsec,
