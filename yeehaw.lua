@@ -902,7 +902,7 @@ spawn(function()
         end
         if settings.semiautosell then
             for _,item in pairs(PlayerDataModule:GetContainer("Inventory").Items) do
-                if string.match(item.Type, "Ore") or string.match(item.Type, "Ruby") or string.match(item.Type, "Sapphire") or string.match(item.Type, "Emerald") string.match(item.Type, "Diamond") or string.match(item.Type, "Meat") or string.match(item.Type, "Pelt") or string.match(item.Type, "Tooth") or string.match(item.Type, "Claw") or string.match(item.Type, "Skin") then
+                if string.match(item.Type, "Ore") or string.match(item.Type, "Ruby") or string.match(item.Type, "Sapphire") or string.match(item.Type, "Emerald") or string.match(item.Type, "Diamond") or string.match(item.Type, "Meat") or string.match(item.Type, "Pelt") or string.match(item.Type, "Tooth") or string.match(item.Type, "Claw") or string.match(item.Type, "Skin") then
                     local vendor = SharedUtilsModule.GetNearestShopVendor(LocalPlayer.Character.HumanoidRootPart.Position)
                     if vendor and (LocalPlayer.Character.HumanoidRootPart.Position -vendor.HumanoidRootPart.Position).Magnitude < 13 then
                         game:GetService("ReplicatedStorage").Communication.Events.ContainerSellItem:FireServer("Inventory", item.Id)
