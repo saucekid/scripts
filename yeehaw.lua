@@ -84,64 +84,66 @@ afsettings.slots = {}
 afsettings.slots.ofarm = "3"
 afsettings.slots.bfarm = "1"
 
-local cheatsettings = {}
-cheatsettings.sizepulse = false
-cheatsettings.ragdollspeed = 1
-cheatsettings.antiracist = false
-cheatsettings.antiragdoll = false
-cheatsettings.nofalldamage = false
-cheatsettings.nojumpcooldown = false
-cheatsettings.instantbreakfree = false
-cheatsettings.instantgetup = false
-cheatsettings.infinitestamina = false
-cheatsettings.alwaysroll = false
-cheatsettings.rollspeed = false
-cheatsettings.ragdolldirection = "lookVector"
-cheatsettings.nospread = false
-cheatsettings.norecoil = false
-cheatsettings.nodelay = false
-cheatsettings.regeneration = false
-cheatsettings.alwaysguns = false
-cheatsettings.instantreload = false
-cheatsettings.mineaura = false
-cheatsettings.mineauradistance = 11
+local settings = {}
+settings.sizepulse = false
+settings.ragdollspeed = 1
+settings.antiracist = false
+settings.antiragdoll = false
+settings.nofalldamage = false
+settings.nojumpcooldown = false
+settings.instantbreakfree = false
+settings.instantgetup = false
+settings.infinitestamina = false
+settings.alwaysroll = false
+settings.rollspeed = false
+settings.ragdolldirection = "lookVector"
+settings.nospread = false
+settings.norecoil = false
+settings.nodelay = false
+settings.regeneration = false
+settings.alwaysguns = false
+settings.instantreload = false
+settings.mineaura = false
+settings.mineauradistance = 11
+settings.infiniteboost = false
+settings.nohorseragdoll = false
 
-cheatsettings.aim = {}
-cheatsettings.aim.aimbot = false
-cheatsettings.aim.silentaim = false
-cheatsettings.aim.target = "Head"
-cheatsettings.aim.visiblecheck = false
-cheatsettings.aim.teamcheck = false
-cheatsettings.aim.fovcircle = false
-cheatsettings.aim.fovcirclecolor = Color3.fromRGB(255,255,255)
-cheatsettings.aim.fovcircleradius = 100
-cheatsettings.aim.fovcirclethickness = 2
-cheatsettings.aim.fovcircletransp = 1
+settings.aim = {}
+settings.aim.aimbot = false
+settings.aim.silentaim = false
+settings.aim.target = "Head"
+settings.aim.visiblecheck = false
+settings.aim.teamcheck = false
+settings.aim.fovcircle = false
+settings.aim.fovcirclecolor = Color3.fromRGB(255,255,255)
+settings.aim.fovcircleradius = 100
+settings.aim.fovcirclethickness = 2
+settings.aim.fovcircletransp = 1
 
-cheatsettings.esp = {}
-cheatsettings.esp.toggle = false
-cheatsettings.esp.showplayers = false
-cheatsettings.esp.showanimals = false
-cheatsettings.esp.showores = false
-cheatsettings.esp.PlayerColor = Color3.fromRGB(255, 255, 255);
-cheatsettings.esp.AnimColor = Color3.fromRGB(0, 255, 255);
-cheatsettings.esp.Friendly_Color = Color3.fromRGB(0, 255, 0);
-cheatsettings.esp.Enemy_Color = Color3.fromRGB(255, 0, 0);
-cheatsettings.esp.ShowLine = false;
-cheatsettings.esp.ShowBox = false;
-cheatsettings.esp.ShowName = true;
-cheatsettings.esp.ShowInfo = true;
-cheatsettings.esp.ObstructedInfo = false;
-cheatsettings.esp.ShowTeam = false;
-cheatsettings.esp.TextShadow = true;
-cheatsettings.esp.TextSize = 20;
-cheatsettings.esp.Thickness = 2;
-cheatsettings.esp.LineTransparency = 0.7;
-cheatsettings.esp.TextTransparency = 1;
-cheatsettings.keys = {}
-cheatsettings.keys.Suicide = "K"
-cheatsettings.keys.Harmonica = "N"
-cheatsettings.keys.Ragdoll = "L"
+settings.esp = {}
+settings.esp.toggle = false
+settings.esp.showplayers = false
+settings.esp.showanimals = false
+settings.esp.showores = false
+settings.esp.PlayerColor = Color3.fromRGB(255, 255, 255);
+settings.esp.AnimColor = Color3.fromRGB(0, 255, 255);
+settings.esp.Friendly_Color = Color3.fromRGB(0, 255, 0);
+settings.esp.Enemy_Color = Color3.fromRGB(255, 0, 0);
+settings.esp.ShowLine = false;
+settings.esp.ShowBox = false;
+settings.esp.ShowName = true;
+settings.esp.ShowInfo = true;
+settings.esp.ObstructedInfo = false;
+settings.esp.ShowTeam = false;
+settings.esp.TextShadow = true;
+settings.esp.TextSize = 20;
+settings.esp.Thickness = 2;
+settings.esp.LineTransparency = 0.7;
+settings.esp.TextTransparency = 1;
+settings.keys = {}
+settings.keys.Suicide = "K"
+settings.keys.Harmonica = "N"
+settings.keys.Ragdoll = "L"
 
 --====================================={FUNCTIONS}=====================================--
 local function notify(title,text,dur)
@@ -158,7 +160,7 @@ function FlyTo(cf)
     destination.Transparency = 1
     destinationPart.CFrame = cf
     if not CharRepUtils.IsRagdolled then
-        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[cheatsettings.ragdolldirection], cheatsettings.ragdollspeed)
+        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed)
     end
 end
 
@@ -213,29 +215,29 @@ end
 
 function getPlayerClosestToMouse()
     local target = nil
-    local maxDist = cheatsettings.aim.fovcircleradius
+    local maxDist = settings.aim.fovcircleradius
     for _,v in pairs(Players:GetPlayers()) do
         if v.Character then
             if v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart")  then
-                if cheatsettings.aim.teamcheck and v.Team == LocalPlayer.Team then return nil end
+                if settings.aim.teamcheck and v.Team == LocalPlayer.Team then return nil end
                 local pos, vis = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
                 local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
                 if dist < maxDist and vis then
-                    if cheatsettings.aim.target == "Automatic" then
+                    if settings.aim.target == "Automatic" then
                         local torsoPos = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
                         local torsoDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(torsoPos.X, torsoPos.Y)).magnitude
                         local headPos = CurrentCamera:WorldToViewportPoint(v.Character.Head.Position)
                         local headDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(headPos.X, headPos.Y)).magnitude
                         if torsoDist > headDist then
-                            if cheatsettings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.Head) then return nil end
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.Head) then return nil end
                             target = v.Character.Head
                         else
-                            if cheatsettings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.HumanoidRootPart) then return nil end
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.HumanoidRootPart) then return nil end
                             target = v.Character.HumanoidRootPart
                         end
                     else
-                        if cheatsettings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character[cheatsettings.aim.target]) then return nil end
-                        target = v.Character[cheatsettings.aim.target]
+                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character[settings.aim.target]) then return nil end
+                        target = v.Character[settings.aim.target]
                     end
                     maxDist = dist
                 end
@@ -363,12 +365,12 @@ function updateBox(box, CF, Size)
     bottom.To = Vector2.new(blPos.X, blPos.Y)
     end
     
-    if cansee and esp_on == true and cheatsettings.esp.ShowBox == false then
+    if cansee and esp_on == true and settings.esp.ShowBox == false then
         top.Visible = true
         bottom.Visible = true
         left.Visible = true
         right.Visible = true
-        elseif not cansee or esp_on == false or cheatsettings.esp.ShowBox == true then 
+        elseif not cansee or esp_on == false or settings.esp.ShowBox == true then 
         top.Visible = false
         bottom.Visible = false
         left.Visible = false
@@ -419,7 +421,7 @@ end
 
 spawn(function()
     while RunService.Heartbeat:Wait() do
-        if cheatsettings.sizepulse then
+        if settings.sizepulse then
             for i = 0.1,1,.1 do
                 Global.Network:FireServer("SetThicknessPercent", i);
                 Global.Network:FireServer("SetHeightPercent", i);
@@ -431,7 +433,7 @@ spawn(function()
                 RunService.Heartbeat:Wait()
             end
         end
-        if cheatsettings.antiracist then
+        if settings.antiracist then
             for i = 1,10,1 do
                 ReplicatedStorage.Communication.Events.SelectSkinColor:FireServer(i)
                 RunService.Heartbeat:Wait()
@@ -457,14 +459,14 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
             closed = not closed
         end
     end
-    if input.KeyCode == Enum.KeyCode[cheatsettings.keys.Suicide] then
+    if input.KeyCode == Enum.KeyCode[settings.keys.Suicide] then
         Global.Network:FireServer("DamageSelf", 100, 'waddup')
     end
-    if input.KeyCode == Enum.KeyCode[cheatsettings.keys.Harmonica] then
+    if input.KeyCode == Enum.KeyCode[settings.keys.Harmonica] then
         Global.PlayerCharacter:EquipItem('Harmonica')
     end
-    if input.KeyCode == Enum.KeyCode[cheatsettings.keys.Ragdoll] then
-        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[cheatsettings.ragdolldirection], cheatsettings.ragdollspeed*100)
+    if input.KeyCode == Enum.KeyCode[settings.keys.Ragdoll] then
+        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100)
     end
 end)
 
@@ -519,7 +521,7 @@ for _,player in pairs(Players:GetPlayers()) do
     end
 end
 for _,ore in next, plrs do
-    if cheatsettings.esp.toggle and cheatsettings.esp.showores and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
+    if settings.esp.toggle and settings.esp.showores and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
         local Base = ore.Model:FindFirstChild(ore.Model.Parent.Name.."Base")
         local actualOre = ore.Model:FindFirstChild(ore.Model.Parent.Name.."Ore")
         local humPos, inView = WorldToViewport(Base.Position)
@@ -529,17 +531,17 @@ for _,ore in next, plrs do
         
         ore.Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
         ore.Line.To =  Vector2.new(humPos.x, humPos.y)
-        ore.Line.Thickness = cheatsettings.esp.Thickness
+        ore.Line.Thickness = settings.esp.Thickness
         ore.Line.Color = actualOre.Color
         
         ore.Name.Position = Vector2.new(humPos.x, humPos.y-10)
         ore.Name.Center = true
-        ore.Name.Outline = cheatsettings.esp.TextShadow
-        ore.Name.Size = cheatsettings.esp.TextSize
+        ore.Name.Outline = settings.esp.TextShadow
+        ore.Name.Size = settings.esp.TextSize
         ore.Name.Text = ore.Model.Parent.Name
         ore.Name.Color = actualOre.Color
         
-        if cheatsettings.esp.ObstructedInfo then
+        if settings.esp.ObstructedInfo then
             obstructed = checkObstructed(CurrentCamera.CFrame.p, Base)
             if obstructed == false then
                 oString = "[CLEAR]"
@@ -554,22 +556,22 @@ for _,ore in next, plrs do
         
         ore.Info.Position = Vector2.new(humPos.x, humPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
         ore.Info.Center = true
-        ore.Info.Outline = cheatsettings.esp.TextShadow
-        ore.Info.Size = cheatsettings.esp.TextSize - 4
+        ore.Info.Outline = settings.esp.TextShadow
+        ore.Info.Size = settings.esp.TextSize - 4
         ore.Info.Color = Color3.new(255,255,255)
         
         for i,v in pairs(ore) do
             if i == "Line" then
-                v.Transparency = cheatsettings.esp.LineTransparency
+                v.Transparency = settings.esp.LineTransparency
             elseif i ~= "Model" then
-                v.Transparency = cheatsettings.esp.TextTransparency
+                v.Transparency = settings.esp.TextTransparency
             end
         end
         
         if inView then  
             for i,v in pairs(ore) do
                 if i ~= "Model" then
-                    v.Visible = cheatsettings.esp["Show"..i]
+                    v.Visible = settings.esp["Show"..i]
                 end
             end
         else
@@ -579,7 +581,7 @@ for _,ore in next, plrs do
                 end
             end
         end
-    elseif (cheatsettings.esp.toggle == false or cheatsettings.esp.showores == false) and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
+    elseif (settings.esp.toggle == false or settings.esp.showores == false) and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
         for i,v in pairs(ore) do
             if i ~= "Model"  then
                 v.Visible = false
@@ -589,7 +591,7 @@ for _,ore in next, plrs do
 end
 
 for _,anim in next, plrs do
-    if cheatsettings.esp.toggle and cheatsettings.esp.showanimals and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") and anim.Model:FindFirstChild("Health") then
+    if settings.esp.toggle and settings.esp.showanimals and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") and anim.Model:FindFirstChild("Health") then
         local animal = anim.Model
         
         local headPos = WorldToViewport(animal.Head.CFrame * (CFrame.new(0, animal.Head.Size.Y, 0) + Vector3.new(0, animal.Head.Size.Y*1.5)).p)
@@ -600,12 +602,12 @@ for _,anim in next, plrs do
         
         anim.Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
         anim.Line.To =  Vector2.new(humPos.x, humPos.y)
-        anim.Line.Thickness = cheatsettings.esp.Thickness
+        anim.Line.Thickness = settings.esp.Thickness
         
         anim.Name.Position = Vector2.new(headPos.x, headPos.y)
         anim.Name.Center = true
-        anim.Name.Outline = cheatsettings.esp.TextShadow
-        anim.Name.Size = cheatsettings.esp.TextSize
+        anim.Name.Outline = settings.esp.TextShadow
+        anim.Name.Size = settings.esp.TextSize
         
         if anim.Model:FindFirstChild("Legendary") then
             anim.Name.Text = "Legendary".. animal.Name
@@ -613,11 +615,11 @@ for _,anim in next, plrs do
             anim.Line.Color = Color3.fromRGB(255,255,0)
         else
             anim.Name.Text = animal.Name
-            anim.Name.Color = cheatsettings.esp.AnimColor
-            anim.Line.Color = cheatsettings.esp.AnimColor
+            anim.Name.Color = settings.esp.AnimColor
+            anim.Line.Color = settings.esp.AnimColor
         end
             
-        if cheatsettings.esp.ObstructedInfo then
+        if settings.esp.ObstructedInfo then
             obstructed = checkObstructed(CurrentCamera.CFrame.p, animal.HumanoidRootPart)
             if obstructed == false then
                 oString = "[CLEAR]"
@@ -632,22 +634,22 @@ for _,anim in next, plrs do
             
         anim.Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
         anim.Info.Center = true
-        anim.Info.Outline = cheatsettings.esp.TextShadow
-        anim.Info.Size = cheatsettings.esp.TextSize - 4
+        anim.Info.Outline = settings.esp.TextShadow
+        anim.Info.Size = settings.esp.TextSize - 4
         anim.Info.Color = Color3.new(255,255,255)
         
         for i,v in pairs(anim) do
             if i == "Line" then
-                v.Transparency = cheatsettings.esp.LineTransparency
+                v.Transparency = settings.esp.LineTransparency
             elseif i ~= "Model" then
-                v.Transparency = cheatsettings.esp.TextTransparency
+                v.Transparency = settings.esp.TextTransparency
             end
         end
         
         if inView then  
             for i,v in pairs(anim) do
                 if i ~= "Model" then
-                    v.Visible = cheatsettings.esp["Show"..i]
+                    v.Visible = settings.esp["Show"..i]
                 end
             end
         else
@@ -657,7 +659,7 @@ for _,anim in next, plrs do
                 end
             end
         end
-    elseif (cheatsettings.esp.toggle == false or cheatsettings.esp.showanimals == false) and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") then
+    elseif (settings.esp.toggle == false or settings.esp.showanimals == false) and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") then
         for i,v in pairs(anim) do
             if i ~= "Model" and i ~= "Animal" then
                 v.Visible = false
@@ -669,7 +671,7 @@ end
 for _,player in pairs(Players:GetPlayers()) do
     local plr = player.Name
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Head") and player.Character:FindFirstChild("Humanoid") then
-            if cheatsettings.esp.toggle == true and cheatsettings.esp.showplayers and plrs[player.Name] ~= nil then
+            if settings.esp.toggle == true and settings.esp.showplayers and plrs[player.Name] ~= nil then
                 local humPos, inView = WorldToViewport(player.Character.HumanoidRootPart.Position)
                 local headPos = WorldToViewport(player.Character.Head.CFrame * (CFrame.new(0, player.Character.Head.Size.Y, 0) + Vector3.new(0, player.Character.Head.Size.Y*1.5)).p)   --WorldToViewport(player.Character.Head.Position)
                 local Distance = distanceFrom(CurrentCamera.CFrame.p, player.Character.HumanoidRootPart.Position)
@@ -678,16 +680,16 @@ for _,player in pairs(Players:GetPlayers()) do
                 
                 plrs[player.Name].Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
                 plrs[player.Name].Line.To =  Vector2.new(humPos.x, humPos.y)
-                plrs[player.Name].Line.Thickness = cheatsettings.esp.Thickness
+                plrs[player.Name].Line.Thickness = settings.esp.Thickness
                 
                 plrs[player.Name].Name.Text = plr
                 plrs[player.Name].Name.Position = Vector2.new(headPos.x, headPos.y)
                 plrs[player.Name].Name.Center = true
-                plrs[player.Name].Name.Outline = cheatsettings.esp.TextShadow
-                plrs[player.Name].Name.Size = cheatsettings.esp.TextSize
+                plrs[player.Name].Name.Outline = settings.esp.TextShadow
+                plrs[player.Name].Name.Size = settings.esp.TextSize
                 
                 
-            if cheatsettings.esp.ObstructedInfo then
+            if settings.esp.ObstructedInfo then
                 obstructed = checkObstructed(CurrentCamera.CFrame.p, player.Character.HumanoidRootPart)
                 if obstructed == false then
                     oString = "[CLEAR]"
@@ -701,38 +703,38 @@ for _,player in pairs(Players:GetPlayers()) do
             
                 plrs[player.Name].Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
                 plrs[player.Name].Info.Center = true
-                plrs[player.Name].Info.Outline = cheatsettings.esp.TextShadow
-                plrs[player.Name].Info.Size = cheatsettings.esp.TextSize - 4
+                plrs[player.Name].Info.Outline = settings.esp.TextShadow
+                plrs[player.Name].Info.Size = settings.esp.TextSize - 4
                 plrs[player.Name].Info.Color = Color3.new(255,255,255)
                 
                 updateBox(plrs[player.Name].Box, player.Character.HumanoidRootPart.CFrame, Vector3.new(2, 3, 0)  * (player.Character.Head.Size.Y or LocalPlayer.Character.Head.Size.Y))
                 
                 for i,v in pairs(plrs[player.Name]) do
                     if i == "Line" then
-                    v.Transparency = cheatsettings.esp.LineTransparency
+                    v.Transparency = settings.esp.LineTransparency
                         else
-                    v.Transparency = cheatsettings.esp.TextTransparency
+                    v.Transparency = settings.esp.TextTransparency
                     end
                 end
                 
-                setBox(plrs[player.Name].Box, "Transparency", cheatsettings.esp.LineTransparency)
-                setBox(plrs[player.Name].Box, "Thickness", cheatsettings.esp.Thickness)
+                setBox(plrs[player.Name].Box, "Transparency", settings.esp.LineTransparency)
+                setBox(plrs[player.Name].Box, "Thickness", settings.esp.Thickness)
                 
-                if cheatsettings.esp.ShowTeam == true then
+                if settings.esp.ShowTeam == true then
                     plrs[player.Name].Line.Color = player.TeamColor.Color
                     plrs[player.Name].Name.Color = player.TeamColor.Color
                     setBox(plrs[player.Name].Box, "Color", player.TeamColor.Color)
                 else
-                    plrs[player.Name].Name.Color = cheatsettings.esp.PlayerColor
-                    plrs[player.Name].Line.Color = cheatsettings.esp.PlayerColor
-                    setBox(plrs[player.Name].Box, "Color", cheatsettings.esp.PlayerColor)
+                    plrs[player.Name].Name.Color = settings.esp.PlayerColor
+                    plrs[player.Name].Line.Color = settings.esp.PlayerColor
+                    setBox(plrs[player.Name].Box, "Color", settings.esp.PlayerColor)
                 end
                 
                 
                 if inView then  --checks if player is in view
-                    setBox(plrs[player.Name].Box, "Visible", cheatsettings.esp.ShowBox)
+                    setBox(plrs[player.Name].Box, "Visible", settings.esp.ShowBox)
                     for i,v in pairs(plrs[player.Name]) do
-                        v.Visible = cheatsettings.esp["Show"..i]
+                        v.Visible = settings.esp["Show"..i]
                     end
                 else
                     setBox(plrs[player.Name].Box, "Visible", false)
@@ -741,7 +743,7 @@ for _,player in pairs(Players:GetPlayers()) do
                     end
                 end
             
-            elseif (cheatsettings.esp.toggle == false or cheatsettings.esp.showplayers == false) and plrs[player.Name] ~= nil and plrs[player.Name].Line ~= nil then
+            elseif (settings.esp.toggle == false or settings.esp.showplayers == false) and plrs[player.Name] ~= nil and plrs[player.Name].Line ~= nil then
                 
                 for i,v in pairs(plrs[player.Name]) do
                     v.Visible = false
@@ -757,13 +759,13 @@ end)
 RunService.RenderStepped:Connect(function()
     radiuscircle.Position = Vector2.new(Mouse.x, Mouse.y+35)
     radiuscircle.Filled = false
-    radiuscircle.Thickness = cheatsettings.aim.fovcirclethickness
-    radiuscircle.Visible = cheatsettings.aim.fovcircle
-    radiuscircle.Transparency = cheatsettings.aim.fovcircletransp
-    radiuscircle.Radius = cheatsettings.aim.fovcircleradius
-    radiuscircle.Color = cheatsettings.aim.fovcirclecolor
+    radiuscircle.Thickness = settings.aim.fovcirclethickness
+    radiuscircle.Visible = settings.aim.fovcircle
+    radiuscircle.Transparency = settings.aim.fovcircletransp
+    radiuscircle.Radius = settings.aim.fovcircleradius
+    radiuscircle.Color = settings.aim.fovcirclecolor
     radiuscircle.NumSides = 30
-    if cheatsettings.aim.aimbot == true then
+    if settings.aim.aimbot == true then
         local target = getPlayerClosestToMouse()
         if keyheld == true and target then
             local partpos = WorldToViewport(target.Position)
@@ -775,14 +777,14 @@ end)
 spawn(function()
     while wait() do
         for i, v in next, weapons.realweapons do
-            if cheatsettings.nospread then
+            if settings.nospread then
                 v.FanAccuracy =  1
                 v.ProjectileAccuracy =  1
             else
                 v.FanAccuracy =  weapons.ogvalues[i].FanAccuracy
                 v.ProjectileAccuracy =  weapons.ogvalues[i].ProjectileAccuracy
             end
-            if cheatsettings.instantreload then
+            if settings.instantreload then
                 v.ReloadSpeed =  1000
                 v.LoadSpeed =  1000
                 v.LoadEndSpeed = 1000
@@ -792,12 +794,12 @@ spawn(function()
                 v.LoadEndSpeed = weapons.ogvalues[i].LoadEndSpeed
             end
         end
-        if cheatsettings.mineaura then 
+        if settings.mineaura then 
             local item = PlayerCharacterModule:GetEquippedItem()
             if string.match(item.Name, "Pickaxe") then
                 for _,ore in next, game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants() do 
 			        if string.match(ore.Name, "Base") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") then
-			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  cheatsettings.mineauradistance then
+			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  settings.mineauradistance then
 			                item:NetworkActivate("MineDeposit", ore.Parent, ore.Position, LocalPlayer.Character.Head.Position)--Vector3.new(-0.165507436, 0.740951896, -0.65084374))
 			            end
 			        end
@@ -826,7 +828,7 @@ end
 
 local OldCalculateRecoil = GunItemModule.CalculateRecoil;
 GunItemModule.CalculateRecoil = function(...)
-if cheatsettings.norecoil then return 0 end;
+if settings.norecoil then return 0 end;
 return OldCalculateRecoil(...);
 end
 
@@ -836,14 +838,14 @@ local OldOnCharacterAdded = PlayerCharacterModule.OnCharacterAdded;
 PlayerCharacterModule.OnCharacterAdded = function(self)
 OldOnCharacterAdded(self);
 JumpConnection = getconnections(self.Human:GetPropertyChangedSignal("Jump"))[1];
-if (cheatsettings.nojumpcooldown) then
+if (settings.nojumpcooldown) then
 JumpConnection:Disable();
 end
 end
 
 local OldBreakFree = PlayerCharacterModule.BreakFree;
 PlayerCharacterModule.BreakFree = function(self)
-if (cheatsettings.instantbreakfree) then
+if (settings.instantbreakfree) then
 self.BreakFreePerc = 1;
 end
 return OldBreakFree(self);
@@ -851,7 +853,7 @@ end
 
 local OldGetUp = PlayerCharacterModule.GetUp;
 PlayerCharacterModule.GetUp = function(self)
-if (cheatsettings.instantgetup) then
+if (settings.instantgetup) then
 local a, b = NetworkModule:InvokeServer("AttemptGetUp");
 self:OnGetUp(a, b);
 return;
@@ -862,7 +864,7 @@ end
 
 local OldIsFirstPerson = CameraModule.IsFirstPerson;
 CameraModule.IsFirstPerson = function(self)
-if (cheatsettings.aim.silentaim) then
+if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 return true;
 end
@@ -873,7 +875,7 @@ end
 local OldGetMouseHit = UtilsModule.GetMouseHit;
 UtilsModule.GetMouseHit = function(...)
 local args = {...};
-if (cheatsettings.aim.silentaim) then
+if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 local target = getPlayerClosestToMouse()
 if (target) then
@@ -887,7 +889,7 @@ end
 
 local OldDelay = GunItemModule.CanShoot;
 GunItemModule.CanShoot = function(...) 
-    if (cheatsettings.nodelay) then
+    if (settings.nodelay) then
         return true 
     end
     return OldDelay(...)
@@ -899,15 +901,15 @@ return true end
 
 local OldSleep = PlayerCharacterModule.IsSleeping
 PlayerCharacterModule.IsSleeping = function(...)
-if cheatsettings.regeneration then return true end
+if settings.regeneration then return true end
 return OldSleep(...);
 end
 
 local OldFireServer = NetworkModule.FireServer;
 NetworkModule.FireServer = function(self, remote, ...)
     local args = {...}
-    if (cheatsettings.infinitestamina and remote == "LowerStamina") then return end;
-    if (cheatsettings.nofalldamage and remote == "DamageSelf" and args[2] ~= "waddup") then return end;
+    if (settings.infinitestamina and remote == "LowerStamina") then return end;
+    if (settings.nofalldamage and remote == "DamageSelf" and args[2] ~= "waddup") then return end;
     return OldFireServer(self, remote, ...)
 end
 
@@ -916,7 +918,7 @@ local old = mt.__namecall
 setreadonly(mt, false) 
 mt.__namecall = newcclosure(function(self,...) 
     local args = {...} 
-    if getnamecallmethod() == 'FireServer' and self.Name == "ACRoll" and cheatsettings.infinitestamina then --and type(args[1]) == string then
+    if getnamecallmethod() == 'FireServer' and self.Name == "ACRoll" and settings.infinitestamina then --and type(args[1]) == string then
          return 
     end
     return old(self,unpack(args)) 
@@ -924,28 +926,40 @@ end)
 
 local OldCharacterRagdoll = PlayerCharacterModule.Ragdoll;
 PlayerCharacterModule.Ragdoll = function(...)
-    if (cheatsettings.antiragdoll) then return end;
+    if (settings.antiragdoll) then return end;
     return OldCharacterRagdoll(...);
 end
 
 local OldCanRoll = PlayerCharacterModule.CanRoll
 PlayerCharacterModule.CanRoll = function(...)
-    if cheatsettings.alwaysroll then
+    if settings.alwaysroll then
         return true end;
     return OldCanRoll(...);
 end
 
 local OldRoll = PlayerCharacterModule.Roll
 PlayerCharacterModule.Roll = function(t)
-    if cheatsettings.rollspeed then
+    if settings.rollspeed then
         spawn(function()
-            repeat t.RollSpeed = cheatsettings.rollspeed wait() until cheatsettings.rollspeed == false
+            repeat t.RollSpeed = settings.rollspeed wait() until settings.rollspeed == false
         end)
     end
     return OldRoll(t);
 end
 
+local OldAnimalRagdoll = AnimalModule.Ragdoll;
+AnimalModule.Ragdoll = function(self, ...)
+if (settings.nohorseragdoll) then return end;
+return OldAnimalRagdoll(self, ...);
+end
 
+local OldAnimalBoost = AnimalModule.Boost;
+AnimalModule.Boost = function(self)
+OldAnimalBoost(self);
+if (settings.infiniteboost) then
+self.Boosts = self.MaxBoosts;
+end
+end
 
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
@@ -1026,7 +1040,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
     	section = aim,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.aim.aimbot = bool
+	        settings.aim.aimbot = bool
     	end
     })
 
@@ -1036,7 +1050,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	       cheatsettings.aim.silentaim = bool
+	       settings.aim.silentaim = bool
 	    end
     })
 
@@ -1046,7 +1060,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
         tab = CheatsTab,
         section = aim,
         callback = function(part) 
-            cheatsettings.aim.target = part
+            settings.aim.target = part
         end
     })
 
@@ -1055,7 +1069,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.aim.visiblecheck = bool
+	        settings.aim.visiblecheck = bool
 	    end
     })
 
@@ -1064,7 +1078,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.aim.teamcheck = bool
+	        settings.aim.teamcheck = bool
 	    end
     })
 
@@ -1073,7 +1087,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.aim.fovcircle = bool
+	        settings.aim.fovcircle = bool
 	    end
     })
 
@@ -1082,11 +1096,11 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    ended = false,
 	    min = 1,
 	    max = 100,
-	    def = cheatsettings.aim.fovcircleradius/10,
+	    def = settings.aim.fovcircleradius/10,
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(num)
-	    cheatsettings.aim.fovcircleradius = num*10
+	    settings.aim.fovcircleradius = num*10
 	end
     })
 
@@ -1099,7 +1113,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(num)
-	        cheatsettings.aim.fovcirclethickness = num
+	        settings.aim.fovcirclethickness = num
 	    end
     })
 
@@ -1108,23 +1122,23 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    ended = false,
 	    min = 1,
 	    max = 10,
-	    def = cheatsettings.aim.fovcircletransp,
+	    def = settings.aim.fovcircletransp,
 	    section = aim,
 	    tab = CheatsTab,
 	    callback = function(num)
-	        cheatsettings.aim.fovcircletransp = (10-num)/10
+	        settings.aim.fovcircletransp = (10-num)/10
 	    end
     })
 
     library.newcolorpicker({
 	    name = "Circle Color",
-	    def = cheatsettings.aim.fovcirclecolor,
+	    def = settings.aim.fovcirclecolor,
 	    section = aim,
 	    tab = CheatsTab,
 	    transp = 0,
 	    transparency = false,
 	    callback = function(color)
-	        cheatsettings.aim.fovcirclecolor = Color3.fromHSV(color[1],color[2],color[3])
+	        settings.aim.fovcirclecolor = Color3.fromHSV(color[1],color[2],color[3])
 	    end
     })
 
@@ -1135,7 +1149,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    textcolor = Color3.fromRGB(0,255,0),
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.toggle = bool
+	        settings.esp.toggle = bool
 	    end
     })
 
@@ -1144,7 +1158,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
     	section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.showplayers = bool
+	        settings.esp.showplayers = bool
     	end
     })
 
@@ -1153,7 +1167,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.showanimals = bool
+	        settings.esp.showanimals = bool
 	    end
     })
 
@@ -1162,7 +1176,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.showores = bool
+	        settings.esp.showores = bool
 	    end
     })
 
@@ -1171,7 +1185,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.ShowTeam = bool
+	        settings.esp.ShowTeam = bool
 	    end
     })
 
@@ -1180,7 +1194,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.ShowLine = bool
+	        settings.esp.ShowLine = bool
     	end
     })
 
@@ -1189,7 +1203,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.esp.ShowBox = bool
+	        settings.esp.ShowBox = bool
 	    end
     })
 
@@ -1200,7 +1214,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
     	def = true,
     	tab = CheatsTab,
     	callback = function(bool)
-    	    cheatsettings.esp.ObstructedInfo = bool
+    	    settings.esp.ObstructedInfo = bool
     	end
     })
 
@@ -1213,7 +1227,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(num)
-	        cheatsettings.esp.LineTransparency = (10-num)/10
+	        settings.esp.LineTransparency = (10-num)/10
 	    end
     })
 
@@ -1226,31 +1240,31 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(num)
-	        cheatsettings.esp.TextTransparency = (10-num)/10
+	        settings.esp.TextTransparency = (10-num)/10
 	    end
     })
 
     library.newcolorpicker({
 	    name = "Player Color",
-	    def = cheatsettings.esp.PlayerColor,
+	    def = settings.esp.PlayerColor,
 	    section = esp,
 	    tab = CheatsTab,
 	    transp = 0,
 	    transparency = false,
 	    callback = function(color)
-	        cheatsettings.esp.PlayerColor = Color3.fromHSV(color[1],color[2],color[3])
+	        settings.esp.PlayerColor = Color3.fromHSV(color[1],color[2],color[3])
 	    end
     })
 
     library.newcolorpicker({
 	    name = "Animal Color",
-	    def = cheatsettings.esp.AnimColor,
+	    def = settings.esp.AnimColor,
 	    section = esp,
 	    tab = CheatsTab,
 	    transp = 0,
 	    transparency = true,
 	    callback = function(color)
-	        cheatsettings.esp.AnimColor = Color3.fromHSV(color[1],color[2],color[3])
+	        settings.esp.AnimColor = Color3.fromHSV(color[1],color[2],color[3])
 	    end
     })
 
@@ -1261,7 +1275,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.infinitestamina = bool
+	        settings.infinitestamina = bool
 	    end
     })
 
@@ -1270,7 +1284,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.nofalldamage = bool
+	        settings.nofalldamage = bool
 	    end
     })
 
@@ -1279,7 +1293,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.nojumpcooldown = bool
+	        settings.nojumpcooldown = bool
 	    end
     })
 
@@ -1288,7 +1302,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.antiragdoll = bool
+	        settings.antiragdoll = bool
 	    end
     })
 
@@ -1297,7 +1311,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.instantgetup = bool
+	        settings.instantgetup = bool
 	    end
     })
 
@@ -1306,7 +1320,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.instantbreakfree = bool
+	        settings.instantbreakfree = bool
 	    end
     })
     library.newtoggle({
@@ -1314,7 +1328,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    section = charsec,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.alwaysroll = bool
+	        settings.alwaysroll = bool
 	    end
     })
     library.newslider({
@@ -1327,10 +1341,10 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    tab = CheatsTab,
 	    callback = function(num)
 	        if num == 0 then
-	            cheatsettings.rollspeed = false
+	            settings.rollspeed = false
 	            return
 	        end
-	        cheatsettings.rollspeed = num
+	        settings.rollspeed = num
 	    end
     })
 
@@ -1341,7 +1355,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.norecoil = bool
+	        settings.norecoil = bool
 	    end
     })
     
@@ -1350,7 +1364,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.nospread = bool
+	        settings.nospread = bool
 	    end
     })
 
@@ -1359,7 +1373,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.nodelay = bool
+	        settings.nodelay = bool
 	    end
     })
 
@@ -1368,7 +1382,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.instantreload = bool
+	        settings.instantreload = bool
 	    end
     })
 
@@ -1377,7 +1391,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.regeneration = bool
+	        settings.regeneration = bool
 	    end
     })
 
@@ -1386,7 +1400,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        cheatsettings.mineaura = bool
+	        settings.mineaura = bool
 	        if bool == true then
 	           notify("Mine Aura Activated", "Equip your pickaxe and go up to an ore") 
 	        end
@@ -1402,18 +1416,18 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    section = guns,
 	    tab = CheatsTab,
 	    callback = function(num)
-	        cheatsettings.mineauradistance = num
+	        settings.mineauradistance = num
 	    end
     })
 
 
 
 misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185,})
-    library.newkeybind({name = "Suicide", def = "K", section = misc, tab = MiscTab, callback = function(key) cheatsettings.keys.Suicide = key end})
+    library.newkeybind({name = "Suicide", def = "K", section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
     
-    library.newkeybind({name = "Ragdoll", def = "L", section = misc, tab = MiscTab, callback = function(key) cheatsettings.keys.Ragdoll = key end})
+    library.newkeybind({name = "Ragdoll", def = "L", section = misc, tab = MiscTab, callback = function(key) settings.keys.Ragdoll = key end})
     
-    library.newkeybind({name = "Equip Harmonica", def = "N", section = misc, tab = MiscTab, callback = function(key) cheatsettings.keys.Harmonica = key end})
+    library.newkeybind({name = "Equip Harmonica", def = "N", section = misc, tab = MiscTab, callback = function(key) settings.keys.Harmonica = key end})
     
     library.newslider({
 	    name = "Ragdoll Speed",
@@ -1424,7 +1438,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185
 	    section = misc,
 	    tab = MiscTab,
 	    callback = function(num)
-	        cheatsettings.ragdollspeed = num
+	        settings.ragdollspeed = num
 	    end
     })
 
@@ -1435,11 +1449,11 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185
         section = misc,
         callback = function(direct) 
             if direct == "Up" then
-                cheatsettings.ragdolldirection = 'UpVector'
+                settings.ragdolldirection = 'UpVector'
             elseif direct == 'Right' then
-                cheatsettings.ragdolldirection = 'RightVector'
+                settings.ragdolldirection = 'RightVector'
             elseif direct == 'Forward' then
-                cheatsettings.ragdolldirection = 'LookVector'
+                settings.ragdolldirection = 'LookVector'
             end
         end
     })
@@ -1449,7 +1463,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185
 	    section = misc,
 	    tab = MiscTab,
 	    callback = function(bool)
-	        cheatsettings.sizepulse = bool
+	        settings.sizepulse = bool
 	    end
     })
 
@@ -1458,7 +1472,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 185
 	    section = misc,
 	    tab = MiscTab,
 	    callback = function(bool)
-	        cheatsettings.antiracist = bool
+	        settings.antiracist = bool
 	    end
     })
 
@@ -1469,19 +1483,22 @@ respawns = library.newsection({name = "Quick Respawn", tab = MiscTab,side = "rig
         library.newbutton({name = v[1], tab = MiscTab, section = respawns, callback = function() game:GetService("ReplicatedStorage").Communication.Functions.Respawn:InvokeServer(v[2]) end})
     end
 
-mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 75,})
+mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 30,})
     library.newtextbox({
         name = "Pardon Player",
 	    section = mayor,
 	    lower = true,
 	    tab = MiscTab,
 	    callback = function(plr)
-	        print(plr)
-	        game:GetService("ReplicatedStorage").Communication.Events.AttemptPardonPlayer:FireServer(Players:FindFirstChild(plr))
+	        for i,v in pairs(Players:GetPlayers()) do
+	            if string.lower(v.Name) == plr then
+	                game:GetService("ReplicatedStorage").Communication.Events.AttemptPardonPlayer:FireServer(v)
+	            end
+	        end
 	    end
     })
 
-general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 70,})
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 60,})
     library.newtoggle({
 	    name = "Fullbright",
 	    section = general,
@@ -1491,8 +1508,27 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 	    end
     })
 
+horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 70,})
+    library.newtoggle({
+	    name = "Infinite Boosts",
+	    section = horse,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.infiniteboost = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "No Ragdoll",
+	    section = horse,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.nohorseragdoll = bool
+	    end
+    })
+
 discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
-    library.newbutton({name = "Copy to Clickboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
+    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
 
 library.opentab(CheatsTab)
 library.init()
