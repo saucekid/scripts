@@ -20,7 +20,7 @@ RunService.Stepped:Connect(function() --old net
 end)
 
 for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do --netless
-  if v:IsA("BasePart") then
+  if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
     game:GetService("RunService").Heartbeat:connect(function()
       v.Velocity = Vector3.new(45,0,0)
     end)
