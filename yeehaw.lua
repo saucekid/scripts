@@ -118,6 +118,7 @@ settings.ragdollwalk = false
 settings.aim = {}
 settings.aim.aimbot = false
 settings.aim.silentaim = false
+settings.aim.smoothness = 0.5
 settings.aim.target = "Head"
 settings.aim.visiblecheck = false
 settings.aim.teamcheck = false
@@ -224,7 +225,7 @@ function getPlayerClosestToMouse()
     local target = nil
     local maxDist = settings.aim.fovcircleradius
     for _,v in pairs(Players:GetPlayers()) do
-        if v.Character then
+        if v.Character and v ~= LocalPlayer then
             if v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart")  then
                 if settings.aim.teamcheck and v.Team == LocalPlayer.Team then return nil end
                 local pos, vis = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
@@ -855,8 +856,8 @@ RunService.RenderStepped:Connect(function()
     if settings.aim.aimbot == true then
         local target = getPlayerClosestToMouse()
         if keyheld == true and target then
-            local partpos = WorldToViewport(target.Position)
-            mousemoverel((partpos.x - Mouse.x) * 0.2, ((partpos.y * 0.93) - Mouse.y) * 0.2)
+            local partpos = WorldToViewport(target.Position + (target.Velocity*3))
+            mousemoverel((partpos.x - Mouse.x) * settings.aim.smoothness, ((partpos.y * 0.93) - Mouse.y) * settings.aim.smoothness)
         end
     end
 end)
@@ -872,7 +873,7 @@ end)
 spawn(function()
     while wait() do
         for i, v in next, weapons.realweapons do
-            if settings.nospread then
+            if settings.nospread or settings.aim.silentaim then
                 v.FanAccuracy =  1
                 v.ProjectileAccuracy =  1
             else
@@ -997,7 +998,7 @@ if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 local target = getPlayerClosestToMouse()
 if (target) then
-return target.Position + target.Parent.HumanoidRootPart.Velocity
+return target.Position + (target.Velocity*3)
 end
 end
 end
@@ -1100,7 +1101,7 @@ end
 end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
-library.new({size = Vector2.new(315,470), name = "yeehaw", mousedisable = true, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+library.new({size = Vector2.new(315,475), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
 -- tabs
@@ -1171,7 +1172,7 @@ library.newcolorpicker({
 ]]
 --
 
-aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 230,})
+aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 255,})
     library.newtoggle({
 	    name = "Aimbot",
     	section = aim,
@@ -1199,6 +1200,19 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
         callback = function(part) 
             settings.aim.target = part
         end
+    })
+
+    library.newslider({
+	    name = "Aim Smoothness",
+	    ended = false,
+	    min = 1,
+	    max = 10,
+	    def = settings.aim.smoothness*10,
+	    section = aim,
+	    tab = CheatsTab,
+	    callback = function(num)
+	    settings.aim.smoothness = num/10
+	end
     })
 
     library.newtoggle({
@@ -1489,7 +1503,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
     })
 
 
-guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size = 175,})
+guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size = 180,})
     library.newtoggle({
 	    name = "No Recoil",
 	    section = guns,
