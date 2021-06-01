@@ -14,7 +14,7 @@ Credits:
 ThisStuff - Instant Reload
 casual_degenerate(discord) - quick respawn 
 =======================================================================
-	Join the discord: https://discord.gg/qT4KvqY7
+	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
 
 local Players = game:GetService("Players");     ----------------------sorry for messy code
