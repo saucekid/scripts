@@ -571,9 +571,11 @@ library.updatecursor()
 --//
 library.disablemovement = function()
 	controls:Disable()
+	if plr.Character:FindFirstChild("Head") then
 	zoom = (workspace.CurrentCamera.CoordinateFrame.p - plr.Character.Head.Position).magnitude
 	plr.CameraMaxZoomDistance = zoom
 	plr.CameraMinZoomDistance = zoom
+	end
 end
 --
 library.enablemovement = function()
