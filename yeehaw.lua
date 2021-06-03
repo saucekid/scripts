@@ -79,8 +79,6 @@ weapons.realweapons = {}
 
 local horses = {}
 
-if _G.Executed then repeat wait() until false end
-_G.Executed = true
 
 --====================================={SETTINGS}=====================================--
 local afsettings = {}
@@ -120,6 +118,7 @@ settings.aim.aimbot = false
 settings.aim.silentaim = false
 settings.aim.smoothness = 0.5
 settings.aim.target = "Head"
+settings.aim.mode = "Player"
 settings.aim.visiblecheck = false
 settings.aim.teamcheck = false
 settings.aim.fovcircle = false
@@ -324,6 +323,7 @@ local plrs = setmetatable({}, {
             if args[2].Health.Value > 200 then
                 local ltag = Instance.new("StringValue", args[2])
                 ltag.Name = "Legendary"
+                notify("Legendary Animal!", "Legendary ".. args[2].Name.. " has spawned")
             end
                 
             tag.Name = name
@@ -509,6 +509,40 @@ elseif key:lower() == "d" then
 ctrl.r = 0 
 end 
 end)
+
+
+function getAnimalClosestToMouse()
+    local target = nil
+    local maxDist = settings.aim.fovcircleradius
+    for _,v in pairs(plrs) do
+        if v.Model and v.Model:FindFirstChild("HumanoidRootPart") then
+            if v.Model.Health.Value ~= 0 then
+                local pos, vis = CurrentCamera:WorldToViewportPoint(v.Model.HumanoidRootPart.Position)
+                local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
+                if dist < maxDist and vis then
+                    if settings.aim.target == "Automatic" then
+                        local torsoPos = CurrentCamera:WorldToViewportPoint(v.Model.HumanoidRootPart.Position)
+                        local torsoDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(torsoPos.X, torsoPos.Y)).magnitude
+                        local headPos = CurrentCamera:WorldToViewportPoint(v.Model.Head.Position)
+                        local headDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(headPos.X, headPos.Y)).magnitude
+                        if torsoDist > headDist then
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model.Head) then return nil end
+                            target = v.Model.Head
+                        else
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model.HumanoidRootPart) then return nil end
+                            target = v.Character.HumanoidRootPart
+                        end
+                    else
+                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model[settings.aim.target]) then return nil end
+                        target = v.Model[settings.aim.target]
+                    end
+                    maxDist = dist
+                end
+            end
+        end
+    end
+    return target
+end
 
 --==============================={Actual Script}=======================================--
 for i, v in next, getgc(true) do
@@ -877,9 +911,9 @@ RunService.RenderStepped:Connect(function()
     radiuscircle.Color = settings.aim.fovcirclecolor
     radiuscircle.NumSides = 30
     if settings.aim.aimbot == true then
-        local target = getPlayerClosestToMouse()
+        local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
         if keyheld == true and target then
-            local partpos = WorldToViewport(target.Position + (target.Velocity*3))
+            local partpos = settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(target.Position + (target.Velocity))
             mousemoverel((partpos.x - Mouse.x) * settings.aim.smoothness, ((partpos.y * 0.93) - Mouse.y) * settings.aim.smoothness)
         end
     end
@@ -925,7 +959,7 @@ spawn(function()
             local item = PlayerCharacterModule:GetEquippedItem()
             if string.match(item.Name, "Pickaxe") then
                 for _,ore in next, game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants() do 
-			        if string.match(ore.Name, "Base") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") then
+			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") then
 			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  settings.mineauradistance then
 			                item:NetworkActivate("MineDeposit", ore.Parent, ore.Position, LocalPlayer.Character.Head.Position)--Vector3.new(-0.165507436, 0.740951896, -0.65084374))
 			            end
@@ -1027,9 +1061,9 @@ UtilsModule.GetMouseHit = function(...)
 local args = {...};
 if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
-local target = getPlayerClosestToMouse()
+local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
 if (target) then
-return target.Position + (target.Velocity*3)
+return settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(target.Position + (target.Velocity))
 end
 end
 end
@@ -1132,8 +1166,11 @@ end
 end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
-library.new({size = Vector2.new(315,495), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+library.new({size = Vector2.new(315,515), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
+
+if _G.Executed then repeat wait() until false end
+_G.Executed = true
 
 -- tabs
 local CheatsTab = library.newtab({name = "Cheats"})
@@ -1203,7 +1240,7 @@ library.newcolorpicker({
 ]]
 --
 
-aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 255,})
+aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 275,})
     library.newtoggle({
 	    name = "Aimbot",
     	section = aim,
@@ -1223,6 +1260,15 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    end
     })
 
+    library.newdropdown({
+        name = "Mode",
+        options = {"Player", "Animal"},
+        tab = CheatsTab,
+        section = aim,
+        callback = function(mode) 
+            settings.aim.mode = mode
+        end
+    })
     library.newdropdown({
         name = "Target Part",
         options = {"Head", "HumanoidRootPart", "Automatic"},
@@ -1352,6 +1398,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	        settings.esp.showanimals = bool
 	    end
     })
+
 
     library.newtoggle({
 	    name = "Ores",
@@ -1715,7 +1762,7 @@ mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 
 	    end
     })
 
-general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 80,})
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 120,})
     library.newtoggle({
 	    name = "Fullbright",
 	    section = general,
@@ -1735,6 +1782,30 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
     })
 
     library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
+    
+    library.newbutton({name = "Server Hop",section = general,tab = MiscTab,callback = function(...) 
+    local x = {}
+	for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+			x[#x + 1] = v.id
+		end
+	end
+	if #x > 0 then
+		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+	else
+		return notify("Serverhop","Couldn't find a server.")
+	end
+    end})
+    
+    library.newbutton({name = "Rejoin",section = general,tab = MiscTab,callback = function(...) 
+        if #Players:GetPlayers() <= 1 then
+		    Players.LocalPlayer:Kick("\nRejoining...")
+		    wait()
+		    game:GetService('TeleportService'):Teleport(game.PlaceId, Players.LocalPlayer)
+	    else
+		    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+	    end
+    end})
     
 horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 150,})
     library.newtoggle({
