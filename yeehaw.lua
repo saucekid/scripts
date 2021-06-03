@@ -1063,7 +1063,7 @@ if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
 if (target) then
-return settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(target.Position + (target.Velocity))
+return WorldToViewport(target.Position + (target.Velocity))
 end
 end
 end
