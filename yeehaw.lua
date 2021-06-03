@@ -11,7 +11,7 @@
  ░ ░        ░  ░   ░  ░ ░  ░  ░      ░  ░    ░    
  ░ ░        
 Credits:
-ThisStuff - Instant Reload
+ThisStuff - Instant Reload and TP bypass
 casual_degenerate(discord) - quick respawn 
 =======================================================================
 	Join the discord: https://discord.gg/DnyxZRwQh3
@@ -1132,7 +1132,7 @@ end
 end
 --===================================={GUI MAKING}====================================--
 library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
-library.new({size = Vector2.new(315,475), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+library.new({size = Vector2.new(315,495), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
 -- tabs
@@ -1451,9 +1451,23 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
     })
 
 
-charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 205,})
+charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 225,})
 
     library.newkeybind({name = "Ragdoll Fly", def = settings.keys.ragdollfly, section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
+
+    library.newtoggle({
+	    name = "TP Bypass/Invisible",
+	    section = charsec,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        if bool == true then
+	            getconnections(ReplicatedStorage.Communication.Events.ACTrigger.OnClientEvent)[1]:Disable()
+	        else
+	            getconnections(ReplicatedStorage.Communication.Events.ACTrigger.OnClientEvent)[1]:Enable()
+	        end
+	    end
+    })
+
 
     library.newtoggle({
 	    name = "Infinite Stamina",
@@ -1777,6 +1791,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
             end
         end
     })
+
 
 library.newkeybind({name = "Call Horse", def = settings.keys.callhorse, section = horse, tab = MiscTab, callback = function(key) settings.keys.callhorse = key end})
 
