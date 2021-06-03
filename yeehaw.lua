@@ -77,6 +77,8 @@ local weapons = {}
 weapons.ogvalues = {}
 weapons.realweapons = {}
 
+local horses = {}
+
 if _G.Executed then repeat wait() until false end
 _G.Executed = true
 
@@ -111,8 +113,6 @@ settings.infinitepenetration = false
 settings.mineaura = false
 settings.semiautosell = false
 settings.mineauradistance = 11
-settings.infiniteboost = false
-settings.nohorseragdoll = false
 settings.ragdollwalk = false
 
 settings.aim = {}
@@ -153,6 +153,18 @@ settings.keys.Suicide = "K"
 settings.keys.Harmonica = "N"
 settings.keys.Ragdoll = "L"
 settings.keys.ragdollfly = "Z"
+settings.keys.silentaim = "P"
+settings.keys.callhorse = "J"
+
+settings.horse = {}
+settings.horse.infiniteboost = false
+settings.horse.nohorseragdoll = false
+settings.horse.horsenames = {}
+settings.horse.speed = 50
+settings.horse.editspeed = false
+if Global.PlayerData:GetSortedHorses()[1] then
+    settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
+end
 --====================================={FUNCTIONS}=====================================--
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
@@ -506,6 +518,11 @@ for i, v in next, getgc(true) do
     end
 end
 
+
+for i, v in next, Global.PlayerData:GetSortedHorses() do
+    table.insert(settings.horse.horsenames, v.Breed)
+end
+
 spawn(function()
     while RunService.RenderStepped:Wait() do
         if settings.sizepulse then
@@ -544,6 +561,12 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         else
             library.openui()
             closed = not closed
+        end
+    end
+    if input.KeyCode == Enum.KeyCode[settings.keys.callhorse] then
+        if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            PlayerCharacterModule:Whistle()
+            game:GetService("ReplicatedStorage").Communication.Events.CallAnimal:FireServer(settings.horse.horseid, LocalPlayer.Character.HumanoidRootPart.Position)
         end
     end
     if input.KeyCode == Enum.KeyCode[settings.keys.Suicide] then
@@ -863,6 +886,14 @@ RunService.RenderStepped:Connect(function()
 end)
 
 RunService.Heartbeat:Connect(function()
+    local horse = Global.WildLife:GetRidingAnimal()
+    if horse then
+        if settings.horse.editspeed then
+            horse.WalkSpeed = settings.horse.speed
+            horse.CanterSpeed = settings.horse.speed 
+            horse.MaxSpeed = settings.horse.speed
+        end
+    end
     if settings.ragdollwalk then
 		if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.PlayerCharacter:IsRagdolled(game.Players.LocalPlayer.Character.HumanoidRootPart) then
 		    LocalPlayer.Character:TranslateBy(LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection)
@@ -1051,7 +1082,7 @@ end)
 local OldCharacterRagdoll = PlayerCharacterModule.Ragdoll;
 PlayerCharacterModule.Ragdoll = function(...)
     local args = {...}
-    if (settings.antiragdoll and args[6] ~= "waddup") then return end;
+    if (settings.antiragdoll and args[#args] ~= "waddup") then return end;
     return OldCharacterRagdoll(...);
 end
 
@@ -1074,14 +1105,14 @@ end
 
 local OldAnimalRagdoll = AnimalModule.Ragdoll;
 AnimalModule.Ragdoll = function(self, ...)
-if (settings.nohorseragdoll) then return end;
+if (settings.horse.nohorseragdoll) then return end;
 return OldAnimalRagdoll(self, ...);
 end
 
 local OldAnimalBoost = AnimalModule.Boost;
 AnimalModule.Boost = function(self)
 OldAnimalBoost(self);
-if (settings.infiniteboost) then
+if (settings.horse.infiniteboost) then
 self.Boosts = self.MaxBoosts;
 end
 end
@@ -1422,7 +1453,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 
 charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 205,})
 
-    library.newkeybind({name = "Ragdoll Fly", def = "Z", section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
+    library.newkeybind({name = "Ragdoll Fly", def = settings.keys.ragdollfly, section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
 
     library.newtoggle({
 	    name = "Infinite Stamina",
@@ -1586,11 +1617,11 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 
 
 misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205,})
-    library.newkeybind({name = "Suicide", def = "K", section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
+    library.newkeybind({name = "Suicide", def = settings.keys.Suicide, section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
     
-    library.newkeybind({name = "Ragdoll", def = "L", section = misc, tab = MiscTab, callback = function(key) settings.keys.Ragdoll = key end})
+    library.newkeybind({name = "Ragdoll", def = settings.keys.Ragdoll , section = misc, tab = MiscTab, callback = function(key) settings.keys.Ragdoll = key end})
     
-    library.newkeybind({name = "Equip Harmonica", def = "N", section = misc, tab = MiscTab, callback = function(key) settings.keys.Harmonica = key end})
+    library.newkeybind({name = "Equip Harmonica", def = settings.keys.Harmonica, section = misc, tab = MiscTab, callback = function(key) settings.keys.Harmonica = key end})
     
     library.newslider({
 	    name = "Ragdoll Speed",
@@ -1691,13 +1722,13 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 
     library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
     
-horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 55,})
+horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 150,})
     library.newtoggle({
 	    name = "Infinite Boosts",
 	    section = horse,
 	    tab = MiscTab,
 	    callback = function(bool)
-	        settings.infiniteboost = bool
+	        settings.horse.infiniteboost = bool
 	    end
     })
 
@@ -1706,9 +1737,48 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
 	    section = horse,
 	    tab = MiscTab,
 	    callback = function(bool)
-	        settings.nohorseragdoll = bool
+	        settings.horse.nohorseragdoll = bool
 	    end
     })
+
+    library.newtoggle({
+	    name = "Edit Speed",
+    	section = horse,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.horse.editspeed = bool
+    	end
+    })
+
+    library.newslider({
+	    name = "Speed",
+	    ended = false,
+	    min = 1,
+	    max = 100,
+	    def = settings.horse.speed,
+	    section = horse,
+	    tab = MiscTab,
+	    callback = function(num)
+	    settings.horse.speed = num
+	end
+    })
+
+
+    library.newdropdown({
+        name = "Horse",
+        options = settings.horse.horsenames,
+        tab = MiscTab,
+        section = horse,
+        callback = function(horsename) 
+            for i, v in next, Global.PlayerData:GetSortedHorses() do
+               if v.Breed == horsename then
+                   settings.horse.horseid = v.Id
+               end
+            end
+        end
+    })
+
+library.newkeybind({name = "Call Horse", def = settings.keys.callhorse, section = horse, tab = MiscTab, callback = function(key) settings.keys.callhorse = key end})
 
 discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
     library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
