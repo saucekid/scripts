@@ -530,7 +530,7 @@ function getAnimalClosestToMouse()
                             target = v.Model.Head
                         else
                             if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model.HumanoidRootPart) then return nil end
-                            target = v.Character.HumanoidRootPart
+                            target = v.Model.HumanoidRootPart
                         end
                     else
                         if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model[settings.aim.target]) then return nil end
