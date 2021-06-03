@@ -53,7 +53,7 @@ local uis = game:GetService('UserInputService')
 local rs = game:GetService("RunService")
 local plr = game.Players.LocalPlayer
 local controls = require(plr.PlayerScripts.PlayerModule):GetControls()
-local zoom = (workspace.CurrentCamera.CoordinateFrame.p - plr.Character.Head.Position).magnitude
+local zoom = plr.Character:FindFirstChild("Head") and (workspace.CurrentCamera.CoordinateFrame.p - plr.Character.Head.Position).magnitude or nil
 local maxzoom = plr.CameraMaxZoomDistance
 local minzoom = plr.CameraMinZoomDistance
 --
