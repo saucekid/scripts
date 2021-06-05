@@ -39,7 +39,7 @@ end
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
 local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
-local AnimalModule, BreakableGlassModule, CameraModule, ClientProjectiles, GunItemModule, NetworkModule, PlayerCharacterModule, SharedUtilsModule, UtilsModule, PlayerDataModule, UIHandlerModule, SharedUtilsModule; do
+local AnimalModule, BreakableGlassModule, CameraModule, ClientProjectiles, GunItemModule, NetworkModule, PlayerCharacterModule, SharedUtilsModule, UtilsModule, PlayerDataModule, UIHandlerModule, SharedUtilsModule, ProjectileHandlerModule; do
 AnimalModule = LoadModule("Animal");
 BreakableGlassModule = LoadModule("BreakableGlass");
 CameraModule = LoadModule("Camera");
@@ -51,9 +51,10 @@ PlayerDataModule = LoadModule("PlayerData");
 SharedUtilsModule = LoadSharedModule("SharedUtils");
 CharRepUtilsModule = LoadSharedModule("CharRepUtils");
 UtilsModule = LoadModule("Utils");
-SharedUtilsModule= LoadSharedModule("SharedUtils");
-UIHandlerModule = LoadModule("UIHandler")
+SharedUtilsModule = LoadSharedModule("SharedUtils");
+UIHandlerModule = LoadModule("UIHandler");
 ContainerUIModule = LoadModule("ContainerUI");
+ProjectileHandlerModule = LoadModule("ProjectileHandler");
 end
 
 local library
@@ -135,6 +136,7 @@ settings.esp.toggle = false
 settings.esp.showplayers = false
 settings.esp.showanimals = false
 settings.esp.showores = false
+settings.esp.legendary = false
 settings.esp.PlayerColor = Color3.fromRGB(255, 255, 255);
 settings.esp.AnimColor = Color3.fromRGB(0, 255, 255);
 settings.esp.Friendly_Color = Color3.fromRGB(0, 255, 0);
@@ -176,6 +178,13 @@ local function notify(title,text,dur)
     })
 end
 
+local function gamenotify(text,color)
+        UIHandlerModule:GiveNotification({
+        text = text,
+        textcolor = color,
+        center = true
+    });
+end
 function FlyTo(cf)
     local destinationPart = Instance.new("Part", workspace)
     destinationPart.Anchored = true
@@ -326,7 +335,7 @@ local plrs = setmetatable({}, {
             if args[2].Health.Value > 200 then
                 local ltag = Instance.new("StringValue", args[2])
                 ltag.Name = "Legendary"
-                notify("Legendary Animal!", "Legendary ".. args[2].Name.. " has spawned")
+                gamenotify("Legendary ".. args[2].Name.. " has spawned!", "Gold")
             end
                 
             tag.Name = name
@@ -632,13 +641,17 @@ UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
 end)
     
 
-Players.PlayerRemoving:Connect(function(player)
-    plrs("remove", player.Name)
-end)
 
 for i,ore in pairs(game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants()) do
     if ore:IsA("Model") and ore:FindFirstChild("DepositInfo") and not ore:FindFirstChild("LimestoneOre") then
         plrs("ore", ore)
+    end
+end
+
+for _,player in pairs(Players:GetPlayers()) do
+    local plr = player.Name
+    if plr ~= LocalPlayer.Name then
+        plrs("add", plr)
     end
 end
 
@@ -661,13 +674,17 @@ Entities.Animals.ChildRemoved:Connect(function(anim)
     end
 end)
 
-RunService.RenderStepped:Connect(function()
-for _,player in pairs(Players:GetPlayers()) do
-    local plr = player.Name
-    if plr ~= LocalPlayer.Name then
-        plrs("add", plr)
-    end
-end
+Players.PlayerRemoving:Connect(function(player)
+    plrs("remove", player.Name)
+end)
+
+Players.PlayerAdded:Connect(function(player)
+    plrs("add", player.Name)
+end)
+
+
+spawn(function()
+    while RunService.Stepped:Wait() do
 for _,ore in next, plrs do
     if settings.esp.toggle and settings.esp.showores and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
         local Base = ore.Model:FindFirstChild(ore.Model.Parent.Name.."Base")
@@ -739,7 +756,7 @@ for _,ore in next, plrs do
 end
 
 for _,anim in next, plrs do
-    if settings.esp.toggle and settings.esp.showanimals and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") and anim.Model:FindFirstChild("Health") then
+    if settings.esp.toggle and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") and anim.Model:FindFirstChild("Health") then
         local animal = anim.Model
         
         local headPos = WorldToViewport(animal.Head.CFrame * (CFrame.new(0, animal.Head.Size.Y, 0) + Vector3.new(0, animal.Head.Size.Y*1.5)).p)
@@ -758,15 +775,21 @@ for _,anim in next, plrs do
         anim.Name.Size = settings.esp.TextSize
         
         if anim.Model:FindFirstChild("Legendary") then
-            anim.Name.Text = "Legendary ".. animal.Name
-            anim.Name.Color = Color3.fromRGB(255,255,0)
-            anim.Line.Color = Color3.fromRGB(255,255,0)
+            if settings.esp.legendary then
+                anim.Name.Text = "Legendary ".. animal.Name
+                anim.Name.Color = Color3.fromRGB(255,255,0)
+                anim.Line.Color = Color3.fromRGB(255,255,0)
+            else 
+                anim.Name.Text = animal.Name
+                anim.Name.Color = settings.esp.AnimColor
+                anim.Line.Color = settings.esp.AnimColor
+            end
         else
             anim.Name.Text = animal.Name
             anim.Name.Color = settings.esp.AnimColor
-            anim.Line.Color = settings.esp.AnimColor
+            anim.Line.Color = settings.esp.AnimColor 
         end
-            
+        
         if settings.esp.ObstructedInfo then
             obstructed = checkObstructed(CurrentCamera.CFrame.p, animal.HumanoidRootPart)
             if obstructed == false then
@@ -793,11 +816,18 @@ for _,anim in next, plrs do
                 v.Transparency = settings.esp.TextTransparency
             end
         end
-        
         if inView then  
             for i,v in pairs(anim) do
                 if i ~= "Model" then
-                    v.Visible = settings.esp["Show"..i]
+                    if settings.esp.showanimals then
+                        v.Visible = settings.esp["Show"..i]
+                    else
+                        if settings.esp.legendary and anim.Model:FindFirstChild("Legendary") then
+                            v.Visible = settings.esp["Show"..i]
+                            else
+                            v.Visible = false
+                        end
+                    end
                 end
             end
         else
@@ -805,12 +835,6 @@ for _,anim in next, plrs do
                 if i ~= "Model" then
                     v.Visible = false
                 end
-            end
-        end
-    elseif (settings.esp.toggle == false or settings.esp.showanimals == false) and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") then
-        for i,v in pairs(anim) do
-            if i ~= "Model" and i ~= "Animal" then
-                v.Visible = false
             end
         end
     end
@@ -848,11 +872,9 @@ for _,player in pairs(Players:GetPlayers()) do
             else
                 plrs[player.Name].Info.Text = "["..tostring(math.round(Distance)).."m]"
             end 
-            
-                plrs[player.Name].Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
-                plrs[player.Name].Info.Center = true
+                
                 plrs[player.Name].Info.Outline = settings.esp.TextShadow
-                plrs[player.Name].Info.Size = settings.esp.TextSize - 4
+                plrs[player.Name].Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)z
                 plrs[player.Name].Info.Color = Color3.new(255,255,255)
                 
                 updateBox(plrs[player.Name].Box, player.Character.HumanoidRootPart.CFrame, Vector3.new(2, 3, 0)  * (player.Character.Head.Size.Y or LocalPlayer.Character.Head.Size.Y))
@@ -901,6 +923,7 @@ for _,player in pairs(Players:GetPlayers()) do
             end
         end
     end
+end
 end)
 
 
@@ -962,7 +985,7 @@ spawn(function()
             local item = PlayerCharacterModule:GetEquippedItem()
             if string.match(item.Name, "Pickaxe") then
                 for _,ore in next, game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants() do 
-			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") and not v:IsA("RayValue") then
+			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") and not ore:IsA("RayValue") then
 			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  settings.mineauradistance then
 			                item:NetworkActivate("MineDeposit", ore.Parent, ore.Position, LocalPlayer.Character.Head.Position)--Vector3.new(-0.165507436, 0.740951896, -0.65084374))
 			            end
@@ -982,6 +1005,17 @@ spawn(function()
         end
     end
 end)
+
+
+local JumpConnection = LocalPlayer.Character and getconnections(LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Jump"))[1];
+local OldOnCharacterAdded = PlayerCharacterModule.OnCharacterAdded;
+PlayerCharacterModule.OnCharacterAdded = function(self)
+OldOnCharacterAdded(self);
+JumpConnection = getconnections(self.Human:GetPropertyChangedSignal("Jump"))[1];
+if (settings.nojumpcooldown) then
+JumpConnection:Disable();
+end
+end
 
 local LightingChangedConnection;
 local Fullbright = function(state)
@@ -1019,17 +1053,6 @@ return OldOnHit(self, ...);
 end
 
 
-
-local JumpConnection = LocalPlayer.Character and getconnections(LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Jump"))[1];
-local OldOnCharacterAdded = PlayerCharacterModule.OnCharacterAdded;
-PlayerCharacterModule.OnCharacterAdded = function(self)
-OldOnCharacterAdded(self);
-JumpConnection = getconnections(self.Human:GetPropertyChangedSignal("Jump"))[1];
-if (settings.nojumpcooldown) then
-JumpConnection:Disable();
-end
-end
-
 local OldBreakFree = PlayerCharacterModule.BreakFree;
 PlayerCharacterModule.BreakFree = function(self)
 if (settings.instantbreakfree) then
@@ -1048,6 +1071,21 @@ end
 return OldGetUp(self);
 end
 
+local OldInitProjectiles
+OldInitProjectiles = hookfunction(ProjectileHandlerModule.InitProjectiles, function(c, Value, Data, Other, Callback)
+    if settings.nospread then
+        Other.accuracy = Random.new():NextNumber(0.9, 1)
+    end
+    return OldInitProjectiles(c, Value, Data, Other, Callback)
+end)
+
+local OldHorseBackAccMod = ProjectileHandlerModule.GetHorseBackAccMod
+ProjectileHandlerModule.GetHorseBackAccMod = function(...)
+    if settings.nospread then
+        return 1.3
+    end
+    return OldHorseBackAccMod(...)
+end
 
 local OldIsFirstPerson = CameraModule.IsFirstPerson;
 CameraModule.IsFirstPerson = function(self)
@@ -1371,7 +1409,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    end
     })
 
-esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 280,})
+esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 300,})
     library.newtoggle({
 	    name = "ON/OFF",
 	    section = esp,
@@ -1392,7 +1430,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
     })
 
     library.newtoggle({
-	    name = "Animals (& Legendary)",
+	    name = "Animals",
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
@@ -1400,6 +1438,14 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 2
 	    end
     })
 
+    library.newtoggle({
+	    name = "Legendary Animals",
+	    section = esp,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        settings.esp.legendary = bool
+	    end
+    })
 
     library.newtoggle({
 	    name = "Ores",
@@ -1541,6 +1587,13 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    tab = CheatsTab,
 	    callback = function(bool)
 	        settings.nojumpcooldown = bool
+	        if JumpConnection then
+                if bool then
+                    JumpConnection:Disable();
+                else
+                    JumpConnection:Enable();
+                end
+            end
 	    end
     })
 
@@ -1763,7 +1816,7 @@ mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 
 	    end
     })
 
-general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 120,})
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 140,})
     library.newtoggle({
 	    name = "Fullbright",
 	    section = general,
@@ -1783,6 +1836,14 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
     })
 
     library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
+    
+    library.newbutton({name = "Join Smallest Server",section = general,tab = MiscTab,callback = function(...) 
+        if syn then
+            spawn(loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/JoinLowestPlayer.lua"))())
+        else
+            notify("Exploit Not Compatible!", "Sorry, this function is Synapse only")
+        end
+    end})
     
     library.newbutton({name = "Server Hop",section = general,tab = MiscTab,callback = function(...) 
     local x = {}
