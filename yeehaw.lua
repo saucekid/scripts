@@ -17,6 +17,9 @@ casual_degenerate(discord) - quick respawn
 	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
 
+if _G.Executed1 then repeat wait() until false end
+_G.Executed1 = true
+
 local Players = game:GetService("Players");     ----------------------sorry for messy code
 local Lighting = game:GetService("Lighting");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
@@ -959,7 +962,7 @@ spawn(function()
             local item = PlayerCharacterModule:GetEquippedItem()
             if string.match(item.Name, "Pickaxe") then
                 for _,ore in next, game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants() do 
-			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") then
+			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") and not v:IsA("RayValue") then
 			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  settings.mineauradistance then
 			                item:NetworkActivate("MineDeposit", ore.Parent, ore.Position, LocalPlayer.Character.Head.Position)--Vector3.new(-0.165507436, 0.740951896, -0.65084374))
 			            end
@@ -1169,8 +1172,6 @@ library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/sc
 library.new({size = Vector2.new(315,515), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
-if _G.Executed then repeat wait() until false end
-_G.Executed = true
 
 -- tabs
 local CheatsTab = library.newtab({name = "Cheats"})
