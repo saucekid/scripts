@@ -228,7 +228,7 @@ end)
 local message = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/MessageMaker.lua"))()
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ArrowsUIlib.lua"))() 
 _G["Theme"] = {
-    ["UI_Position"] = Vector2.new(50, 300),
+    ["UI_Position"] = Vector2.new(50, 400),
     ["Text_Size"] = 16,
 
     ["Category_Text"] = Color3.fromRGB(255, 255, 255),
