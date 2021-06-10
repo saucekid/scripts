@@ -1,3 +1,4 @@
+
 --[[
 
 ▓██   ██▓▓█████ ▓█████  ██░ ██  ▄▄▄       █     █░
@@ -57,6 +58,7 @@ ContainerUIModule = LoadModule("ContainerUI");
 ProjectileHandlerModule = LoadModule("ProjectileHandler");
 end
 
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
 local library
 local radiuscircle = Drawing.new('Circle')
 local keyheld = false
@@ -94,64 +96,57 @@ afsettings.slots.ofarm = "3"
 afsettings.slots.bfarm = "1"
 
 local settings = {}
-settings.sizepulse = false
-settings.ragdollspeed = 1
-settings.antiracist = false
-settings.antiragdoll = false
-settings.nofalldamage = false
-settings.nojumpcooldown = false
-settings.instantbreakfree = false
-settings.instantgetup = false
-settings.infinitestamina = false
-settings.alwaysroll = false
-settings.rollspeed = false
-settings.ragdolldirection = "lookVector"
-settings.nospread = false
-settings.norecoil = false
-settings.nodelay = false
-settings.alwaysguns = false
-settings.instantreload = false
-settings.infinitepenetration = false
-settings.mineaura = false
-settings.semiautosell = false
-settings.mineauradistance = 11
-settings.ragdollwalk = false
+settings.sizepulse = false;
+settings.ragdollspeed = 1;
+settings.antiracist = false;
+settings.antiragdoll = false;
+settings.nofalldamage = false;
+settings.nojumpcooldown = false;
+settings.instantbreakfree = false;
+settings.instantgetup = false;
+settings.infinitestamina = false;
+settings.alwaysroll = false;
+settings.rollspeed = false;
+settings.ragdolldirection = "lookVector";
+settings.nospread = false;
+settings.norecoil = false;
+settings.nodelay = false;
+settings.alwaysguns = false;
+settings.instantreload = false;
+settings.infinitepenetration = false;
+settings.mineaura = false;
+settings.semiautosell = false;
+settings.mineauradistance = 11;
+settings.ragdollwalk = false;
 
 settings.aim = {}
-settings.aim.aimbot = false
-settings.aim.silentaim = false
-settings.aim.smoothness = 0.5
-settings.aim.target = "Head"
-settings.aim.mode = "Player"
-settings.aim.visiblecheck = false
-settings.aim.teamcheck = false
-settings.aim.fovcircle = false
-settings.aim.fovcirclecolor = Color3.fromRGB(255,255,255)
-settings.aim.fovcircleradius = 100
-settings.aim.fovcirclethickness = 2
-settings.aim.fovcircletransp = 1
+settings.aim.aimbot = false;
+settings.aim.silentaim = false;
+settings.aim.smoothness = 0.5;
+settings.aim.target = "Head";
+settings.aim.mode = "Player";
+settings.aim.visiblecheck = false;
+settings.aim.teamcheck = false;
+settings.aim.fovcircle = false;
+settings.aim.fovcirclecolor = Color3.fromRGB(255,255,255);
+settings.aim.fovcircleradius = 100;
+settings.aim.fovcirclethickness = 2;
+settings.aim.fovcircletransp = 1;
 
 settings.esp = {}
-settings.esp.toggle = false
-settings.esp.showplayers = false
-settings.esp.showanimals = false
-settings.esp.showores = false
-settings.esp.legendary = false
+settings.esp.toggle = false;
+settings.esp.players = false;
+settings.esp.animals = false;
+settings.esp.ores = false;
+settings.esp.items = false
+settings.esp.moneybags = false;
+settings.esp.legendary = false;
 settings.esp.PlayerColor = Color3.fromRGB(255, 255, 255);
 settings.esp.AnimColor = Color3.fromRGB(0, 255, 255);
-settings.esp.Friendly_Color = Color3.fromRGB(0, 255, 0);
-settings.esp.Enemy_Color = Color3.fromRGB(255, 0, 0);
-settings.esp.ShowLine = false;
-settings.esp.ShowBox = false;
-settings.esp.ShowName = true;
-settings.esp.ShowInfo = true;
-settings.esp.ObstructedInfo = false;
-settings.esp.ShowTeam = false;
-settings.esp.TextShadow = true;
-settings.esp.TextSize = 20;
-settings.esp.Thickness = 2;
-settings.esp.LineTransparency = 0.7;
-settings.esp.TextTransparency = 1;
+settings.esp.tracers = false;
+settings.esp.boxes = false;
+settings.esp.names = true;
+settings.esp.teamcolor = false;
 settings.keys = {}
 settings.keys.Suicide = "K"
 settings.keys.Harmonica = "N"
@@ -169,6 +164,107 @@ settings.horse.editspeed = false
 if Global.PlayerData:GetSortedHorses()[1] then
     settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
 end
+
+ESP:AddObjectListener(Entities.Animals, {
+    Type = "Model",
+    PrimaryPart = "HumanoidRootPart",
+    CustomName = function(obj)
+        return obj.Name
+    end,
+    Color = function(obj)
+        return settings.esp.AnimColor
+    end,
+    Validator = function(obj)
+        if obj:FindFirstChild("Health") and obj.Health.Value <= 200 and obj.Name ~= "Cow" and not string.find(obj.Name, "Horse") then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Animals"
+})
+
+ESP:AddObjectListener(Entities.Animals, {
+    Type = "Model",
+    PrimaryPart = "HumanoidRootPart",
+    CustomName = function(obj)
+        return "Legendary ".. obj.Name
+    end,
+    Color = function(obj)
+        return Color3.fromRGB(255,255,0)
+    end,
+    Validator = function(obj)
+        if obj:FindFirstChild("Health") and obj.Health.Value > 200 then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Legendary"
+})
+
+ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits, {
+    Recursive = true,
+    Type = "Model",
+    PrimaryPart = function(obj)
+       return obj.PrimaryPart
+    end,
+    CustomName = function(obj)
+        return obj.Parent.Name
+    end,
+    Color = function(obj)
+        local ore
+        for i,v in pairs(obj:GetChildren()) do
+            if string.find(v.Name, "Ore") then
+                ore = v
+            end
+        end
+        return ore.Color
+    end,
+    IsEnabled = "Ores"
+})
+
+ESP:AddObjectListener(workspace.Ignore, {
+    Type = "Model",
+    PrimaryPart = "Bag",
+    CustomName = "Money Bag",
+    Color = Color3.fromRGB(0,255,0),
+    IsEnabled = "Moneybags"
+})
+
+ESP:AddObjectListener(workspace.Ignore, {
+    Type = "Model",
+    PrimaryPart = function(obj)
+        return obj.PrimaryPart
+    end,
+    CustomName = function(obj)
+    	local SplitLocation = string.find(obj.Name,"%l%u") 
+	    local FirstString = string.sub(obj.Name,0,SplitLocation) 
+	    local SecondString = string.sub(obj.Name,SplitLocation + 1) 
+	    local FinalString = FirstString .. " " .. SecondString
+	    return FinalString
+    end,
+    Color = Color3.fromRGB(0,255,0),
+    Validator = function(obj)
+        if obj.PrimaryPart and string.find(obj.PrimaryPart.Name, "Meshes/") then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Items"
+})
+
+
+ESP:Toggle(settings.esp.toggle)
+ESP.Animals = settings.esp.animals
+ESP.Players = settings.esp.players
+ESP.Ores = settings.esp.ores
+ESP.Legendary = settings.esp.legendary
+ESP.Moneybags = settings.esp.moneybags
+ESP.Items = settings.esp.items
+ESP.TeamColor = settings.esp.teamcolor
+ESP.Tracers = settings.esp.tracers
+ESP.Boxes = settings.esp.boxes
+ESP.Color = settings.esp.PlayerColor
+ESP.Health = false
 --====================================={FUNCTIONS}=====================================--
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
@@ -185,14 +281,21 @@ local function gamenotify(text,color)
         center = true
     });
 end
-function FlyTo(cf)
-    local destinationPart = Instance.new("Part", workspace)
-    destinationPart.Anchored = true
-    destination.Transparency = 1
-    destinationPart.CFrame = cf
-    if not CharRepUtils.IsRagdolled then
-        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed)
-    end
+
+local function playsound(soundid, volume, dur)
+    local sound = Instance.new("Sound", game.SoundService)
+    sound.SoundId = soundid
+    sound.Volume = volume
+    local duration = dur or sound.TimeLength
+    sound:Play()
+    spawn(function()
+        wait(duration)
+        for i = 1,100 do
+            sound.Volume = sound.Volume - (volume/100)
+            wait()
+        end
+        sound:Destroy()
+    end)
 end
 
 function PathFind(pos)
@@ -276,160 +379,6 @@ function getPlayerClosestToMouse()
         end
     end
     return target
-end
-
-
-
-local animalnum = 0
-local orenum = 0
-local plrs = setmetatable({}, {     
-    __call = function(self, ...)
-        local args = {...}
-        local case = args[1]
-        if case == "add" then
-            local plr = args[2]
-            if not self[plr] then
-                self[plr] = {}
-                self[plr].Line = Drawing.new("Line")
-                self[plr].Name = Drawing.new("Text")
-                self[plr].Info = Drawing.new("Text")
-                
-                self[plr].Box = {}
-                self[plr].Box.Top = Drawing.new("Line")
-                self[plr].Box.Bottom = Drawing.new("Line")
-                self[plr].Box.Left = Drawing.new("Line")
-                self[plr].Box.Right = Drawing.new("Line")
-                
-            end
-        elseif case == "remove" then
-            local plr = args[2]
-            if self[plr] then
-                self[plr].Line.Visible = false
-                self[plr].Name.Visible = false
-                self[plr].Info.Visible = false
-                
-                if not self[plr].Model then
-                self[plr].Box.Top.Visible = false
-                self[plr].Box.Bottom.Visible = false
-                self[plr].Box.Left.Visible = false
-                self[plr].Box.Right.Visible = false
-                self[plr].Box.Top = nil
-                self[plr].Box.Bottom = nil
-                self[plr].Box.Left = nil
-                self[plr].Box.Right= nil
-                self[plr].Box = nil
-                end
-                
-                self[plr].Line = nil
-                self[plr].Name = nil
-                self[plr].Info = nil
-                self[plr] = nil
-            end
-        
-        elseif case == "animal" then
-            animalnum = animalnum + 1
-            name = 'Animal'.. tostring(animalnum)
-
-            local tag = Instance.new("RayValue", args[2])
-                
-            if args[2].Health.Value > 200 then
-                local ltag = Instance.new("StringValue", args[2])
-                ltag.Name = "Legendary"
-                gamenotify("Legendary ".. args[2].Name.. " has spawned!", "Gold")
-            end
-                
-            tag.Name = name
-            self[name] = {}
-            self[name].Model = args[2]
-            self[name].Line = Drawing.new("Line")
-            self[name].Name = Drawing.new("Text")
-            self[name].Info = Drawing.new("Text")
-            
-        elseif case == "ore" then
-            orenum = orenum + 1
-            name = 'Ore'.. tostring(orenum)
-
-            local tag = Instance.new("RayValue", args[2])
-                
-            tag.Name = name
-            self[name] = {}
-            self[name].Model = args[2]
-            self[name].Line = Drawing.new("Line")
-            self[name].Name = Drawing.new("Text")
-            self[name].Info = Drawing.new("Text")
-        end
-    end
-})
-
-
-function setBox(table,typev,value)
-    if not table or not value then return end
-    for _,val in pairs(table) do
-            if _ == "Top" or _ == "Bottom" or _ == "Left" or _ == "Right" then
-             val[typev] = value
-        end
-    end
-end
-
-
-function updateBox(box, CF, Size)
-    local top, cansee = box.Top
-    local bottom = box.Bottom
-    local left = box.Left
-    local right = box.Right
-    
-    if CF and Size then
-    local tlPos = WorldToViewport((CF * CFrame.new(Size.X, Size.Y, 0)).p)
-    local trPos = WorldToViewport((CF * CFrame.new(-Size.X, Size.Y, 0)).p)
-    local blPos = WorldToViewport((CF * CFrame.new(Size.X, -Size.Y, 0)).p)
-    local brPos = WorldToViewport((CF * CFrame.new(-Size.X, -Size.Y, 0)).p)
-    
-    top.From = Vector2.new(tlPos.X, tlPos.Y)
-    top.To = Vector2.new(trPos.X, trPos.Y)
-    
-    right.From = Vector2.new(trPos.X, trPos.Y)
-    right.To = Vector2.new(brPos.X, brPos.Y)
-    
-    left.From = Vector2.new(blPos.X, blPos.Y)
-    left.To = Vector2.new(tlPos.X, tlPos.Y)
-    
-    bottom.From = Vector2.new(brPos.X, brPos.Y)
-    bottom.To = Vector2.new(blPos.X, blPos.Y)
-    end
-    
-    if cansee and esp_on == true and settings.esp.ShowBox == false then
-        top.Visible = true
-        bottom.Visible = true
-        left.Visible = true
-        right.Visible = true
-        elseif not cansee or esp_on == false or settings.esp.ShowBox == true then 
-        top.Visible = false
-        bottom.Visible = false
-        left.Visible = false
-        right.Visible = false
-    end
-end
-
-
-function checkFFA()
-    local same = {}
-    table.insert(same, LocalPlayer)
-    for _,v in pairs(plrs) do
-        if not v.Model then
-            local actualplr = Players:FindFirstChild(_)
-            if not actualplr then return end
-        
-            if actualplr.Team == LocalPlayer.Team then
-                table.insert(same, actualplr)
-            end
-        end
-    end
-    
-    if #same == #Players:GetPlayers() then
-        return true
-    else
-        return false
-    end
 end
 
 
@@ -639,293 +588,7 @@ UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
         keyheld = false
     end
 end)
-    
-
-
-for i,ore in pairs(game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants()) do
-    if ore:IsA("Model") and ore:FindFirstChild("DepositInfo") and not ore:FindFirstChild("LimestoneOre") then
-        plrs("ore", ore)
-    end
-end
-
-for _,player in pairs(Players:GetPlayers()) do
-    local plr = player.Name
-    if plr ~= LocalPlayer.Name then
-        plrs("add", plr)
-    end
-end
-
-for i,anim in pairs(Entities.Animals:GetChildren()) do
-    if not string.match(anim.Name, "Horse") and anim.Name ~= "Cow" and anim:FindFirstChild("Health") then
-        plrs("animal", anim)
-    end
-end
-
-Entities.Animals.ChildAdded:Connect(function(anim)
-    wait(1)
-    if not string.match(anim.Name, "Horse") and anim.Name ~= "Cow" and anim:FindFirstChild("Health") then
-        plrs("animal", anim)
-    end
-end)
-
-Entities.Animals.ChildRemoved:Connect(function(anim)
-    if not string.match(anim.Name, "Horse") and anim.Name ~= "Cow" and anim:FindFirstChild("Health") then
-        plrs("remove", anim:FindFirstChildOfClass("RayValue").Name)
-    end
-end)
-
-Players.PlayerRemoving:Connect(function(player)
-    plrs("remove", player.Name)
-end)
-
-Players.PlayerAdded:Connect(function(player)
-    plrs("add", player.Name)
-end)
-
-
-spawn(function()
-    while RunService.Stepped:Wait() do
-for _,ore in next, plrs do
-    if settings.esp.toggle and settings.esp.showores and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
-        local Base = ore.Model:FindFirstChild(ore.Model.Parent.Name.."Base")
-        local actualOre = ore.Model:FindFirstChild(ore.Model.Parent.Name.."Ore")
-        local humPos, inView = WorldToViewport(Base.Position)
-        local Distance = distanceFrom(CurrentCamera.CFrame.p, Base.Position)
-        local obstructed
-        local oString
-        
-        ore.Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
-        ore.Line.To =  Vector2.new(humPos.x, humPos.y)
-        ore.Line.Thickness = settings.esp.Thickness
-        ore.Line.Color = actualOre.Color
-        
-        ore.Name.Position = Vector2.new(humPos.x, humPos.y-10)
-        ore.Name.Center = true
-        ore.Name.Outline = settings.esp.TextShadow
-        ore.Name.Size = settings.esp.TextSize
-        ore.Name.Text = ore.Model.Parent.Name
-        ore.Name.Color = actualOre.Color
-        
-        if settings.esp.ObstructedInfo then
-            obstructed = checkObstructed(CurrentCamera.CFrame.p, Base)
-            if obstructed == false then
-                oString = "[CLEAR]"
-            else
-                oString = "[OBSTRUCTED]"
-            end
-            
-            ore.Info.Text = "["..tostring(math.round(Distance)).."m]".. "["..ore.Model.DepositInfo.OreRemaining.Value.." left]".. oString
-        else
-            ore.Info.Text = "["..tostring(math.round(Distance)).."m]".. "["..ore.Model.DepositInfo.OreRemaining.Value.." left]"
-        end 
-        
-        ore.Info.Position = Vector2.new(humPos.x, humPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
-        ore.Info.Center = true
-        ore.Info.Outline = settings.esp.TextShadow
-        ore.Info.Size = settings.esp.TextSize - 4
-        ore.Info.Color = Color3.new(255,255,255)
-        
-        for i,v in pairs(ore) do
-            if i == "Line" then
-                v.Transparency = settings.esp.LineTransparency
-            elseif i ~= "Model" then
-                v.Transparency = settings.esp.TextTransparency
-            end
-        end
-        
-        if inView then  
-            for i,v in pairs(ore) do
-                if i ~= "Model" then
-                    v.Visible = settings.esp["Show"..i]
-                end
-            end
-        else
-            for i,v in pairs(ore) do
-                if i ~= "Model" then
-                    v.Visible = false
-                end
-            end
-        end
-    elseif (settings.esp.toggle == false or settings.esp.showores == false) and ore.Model and ore.Model:FindFirstChild("DepositInfo") then
-        for i,v in pairs(ore) do
-            if i ~= "Model"  then
-                v.Visible = false
-            end
-        end
-    end
-end
-
-for _,anim in next, plrs do
-    if settings.esp.toggle and anim.Model and anim.Model:FindFirstChild("HumanoidRootPart") and anim.Model:FindFirstChild("Health") then
-        local animal = anim.Model
-        
-        local headPos = WorldToViewport(animal.Head.CFrame * (CFrame.new(0, animal.Head.Size.Y, 0) + Vector3.new(0, animal.Head.Size.Y*1.5)).p)
-        local humPos, inView = WorldToViewport(animal.HumanoidRootPart.Position)
-        local Distance = distanceFrom(CurrentCamera.CFrame.p, animal.HumanoidRootPart.Position)
-        local obstructed
-        local oString
-        
-        anim.Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
-        anim.Line.To =  Vector2.new(humPos.x, humPos.y)
-        anim.Line.Thickness = settings.esp.Thickness
-        
-        anim.Name.Position = Vector2.new(headPos.x, headPos.y)
-        anim.Name.Center = true
-        anim.Name.Outline = settings.esp.TextShadow
-        anim.Name.Size = settings.esp.TextSize
-        
-        if anim.Model:FindFirstChild("Legendary") then
-            if settings.esp.legendary then
-                anim.Name.Text = "Legendary ".. animal.Name
-                anim.Name.Color = Color3.fromRGB(255,255,0)
-                anim.Line.Color = Color3.fromRGB(255,255,0)
-            else 
-                anim.Name.Text = animal.Name
-                anim.Name.Color = settings.esp.AnimColor
-                anim.Line.Color = settings.esp.AnimColor
-            end
-        else
-            anim.Name.Text = animal.Name
-            anim.Name.Color = settings.esp.AnimColor
-            anim.Line.Color = settings.esp.AnimColor 
-        end
-        
-        if settings.esp.ObstructedInfo then
-            obstructed = checkObstructed(CurrentCamera.CFrame.p, animal.HumanoidRootPart)
-            if obstructed == false then
-                oString = "[CLEAR]"
-            else
-                oString = "[OBSTRUCTED]"
-            end
-            
-            anim.Info.Text = "["..tostring(math.round(Distance)).."m]".. "["..math.round(animal.Health.Value).."%]".. oString
-        else
-            anim.Info.Text = "["..tostring(math.round(Distance)).."m]".. "["..math.round(animal.Health.Value).."%]"
-        end 
-            
-        anim.Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)
-        anim.Info.Center = true
-        anim.Info.Outline = settings.esp.TextShadow
-        anim.Info.Size = settings.esp.TextSize - 4
-        anim.Info.Color = Color3.new(255,255,255)
-        
-        for i,v in pairs(anim) do
-            if i == "Line" then
-                v.Transparency = settings.esp.LineTransparency
-            elseif i ~= "Model" then
-                v.Transparency = settings.esp.TextTransparency
-            end
-        end
-        if inView then  
-            for i,v in pairs(anim) do
-                if i ~= "Model" then
-                    if settings.esp.showanimals then
-                        v.Visible = settings.esp["Show"..i]
-                    else
-                        if settings.esp.legendary and anim.Model:FindFirstChild("Legendary") then
-                            v.Visible = settings.esp["Show"..i]
-                            else
-                            v.Visible = false
-                        end
-                    end
-                end
-            end
-        else
-            for i,v in pairs(anim) do
-                if i ~= "Model" then
-                    v.Visible = false
-                end
-            end
-        end
-    end
-end
-
-for _,player in pairs(Players:GetPlayers()) do
-    local plr = player.Name
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Head") and player.Character:FindFirstChild("Humanoid") then
-            if settings.esp.toggle == true and settings.esp.showplayers and plrs[player.Name] ~= nil then
-                local humPos, inView = WorldToViewport(player.Character.HumanoidRootPart.Position)
-                local headPos = WorldToViewport(player.Character.Head.CFrame * (CFrame.new(0, player.Character.Head.Size.Y, 0) + Vector3.new(0, player.Character.Head.Size.Y*1.5)).p)   --WorldToViewport(player.Character.Head.Position)
-                local Distance = distanceFrom(CurrentCamera.CFrame.p, player.Character.HumanoidRootPart.Position)
-                local obstructed
-                local oString = " "
-                
-                plrs[player.Name].Line.From = Vector2.new(CurrentCamera.ViewportSize.x / 2, CurrentCamera.ViewportSize.y / 1.5)
-                plrs[player.Name].Line.To =  Vector2.new(humPos.x, humPos.y)
-                plrs[player.Name].Line.Thickness = settings.esp.Thickness
-                
-                plrs[player.Name].Name.Text = plr
-                plrs[player.Name].Name.Position = Vector2.new(headPos.x, headPos.y)
-                plrs[player.Name].Name.Center = true
-                plrs[player.Name].Name.Outline = settings.esp.TextShadow
-                plrs[player.Name].Name.Size = settings.esp.TextSize
-                
-                
-            if settings.esp.ObstructedInfo then
-                obstructed = checkObstructed(CurrentCamera.CFrame.p, player.Character.HumanoidRootPart)
-                if obstructed == false then
-                    oString = "[CLEAR]"
-                else
-                    oString = "[OBSTRUCTED]"
-                end
-                plrs[player.Name].Info.Text = "["..tostring(math.round(Distance)).."m] ".. oString
-            else
-                plrs[player.Name].Info.Text = "["..tostring(math.round(Distance)).."m]"
-            end 
-                
-                plrs[player.Name].Info.Outline = settings.esp.TextShadow
-                plrs[player.Name].Info.Position = Vector2.new(headPos.x, headPos.y) + Vector2.new(0,10)--Vector2.new(humPos.x, humPos.y)z
-                plrs[player.Name].Info.Color = Color3.new(255,255,255)
-                
-                updateBox(plrs[player.Name].Box, player.Character.HumanoidRootPart.CFrame, Vector3.new(2, 3, 0)  * (player.Character.Head.Size.Y or LocalPlayer.Character.Head.Size.Y))
-                
-                for i,v in pairs(plrs[player.Name]) do
-                    if i == "Line" then
-                    v.Transparency = settings.esp.LineTransparency
-                        else
-                    v.Transparency = settings.esp.TextTransparency
-                    end
-                end
-                
-                setBox(plrs[player.Name].Box, "Transparency", settings.esp.LineTransparency)
-                setBox(plrs[player.Name].Box, "Thickness", settings.esp.Thickness)
-                
-                if settings.esp.ShowTeam == true then
-                    plrs[player.Name].Line.Color = player.TeamColor.Color
-                    plrs[player.Name].Name.Color = player.TeamColor.Color
-                    setBox(plrs[player.Name].Box, "Color", player.TeamColor.Color)
-                else
-                    plrs[player.Name].Name.Color = settings.esp.PlayerColor
-                    plrs[player.Name].Line.Color = settings.esp.PlayerColor
-                    setBox(plrs[player.Name].Box, "Color", settings.esp.PlayerColor)
-                end
-                
-                
-                if inView then  --checks if player is in view
-                    setBox(plrs[player.Name].Box, "Visible", settings.esp.ShowBox)
-                    for i,v in pairs(plrs[player.Name]) do
-                        v.Visible = settings.esp["Show"..i]
-                    end
-                else
-                    setBox(plrs[player.Name].Box, "Visible", false)
-                    for i,v in pairs(plrs[player.Name]) do
-                        v.Visible = false
-                    end
-                end
-            
-            elseif (settings.esp.toggle == false or settings.esp.showplayers == false) and plrs[player.Name] ~= nil and plrs[player.Name].Line ~= nil then
-                
-                for i,v in pairs(plrs[player.Name]) do
-                    v.Visible = false
-                end
-                setBox(plrs[player.Name].Box, "Visible", false)
-                updateBox(plrs[player.Name].Box)
-            end
-        end
-    end
-end
-end)
-
+ 
 
 RunService.RenderStepped:Connect(function()
     radiuscircle.Position = Vector2.new(Mouse.x, Mouse.y+35)
@@ -1213,72 +876,9 @@ end
 
 -- tabs
 local CheatsTab = library.newtab({name = "Cheats"})
---local AFTab = library.newtab({name = "Autofarms"})
 local MiscTab = library.newtab({name = "Misc"})
 
 --sections
---[[
-ore = library.newsection({name = "Ore Autofarm", tab = AFTab,side = "left", size = 60,})
-library.newdropdown({
-    name = "Pickaxe Slot",
-    options = {"4", "5", "6"},
-    tab = AFTab,
-    section = ore,
-    callback = function(slot) 
-       afsettings.slots.ofarm = slot 
-    end
-})
-
-library.newtoggle({
-	name = "ON/OFF",
-	section = ore,
-	tab = AFTab,
-	textcolor = Color3.fromRGB(0,255,0),
-	callback = function(bool)
-	    if afsettings.bearbool then return notify("no", "already autofarming") end
-	    afsettings.bearbool = bool
-	end
-})
-
-
-bear = library.newsection({name = "Bear Autofarm", tab = AFTab,side = "right", size = 60,})
-library.newdropdown({
-    name = "Gun Slot",
-    options = {"1", "2"},
-    tab = AFTab,
-    section = bear,
-    callback = function(slot) 
-       afsettings.slots.bfarm = slot 
-    end
-})
-
-library.newtoggle({
-	name = "ON/OFF",
-	section = bear,
-	tab = AFTab,
-	textcolor = Color3.fromRGB(0,255,0),
-	callback = function(bool)
-	    if afsettings.orebool then return notify("no", "already autofarming") end
-	    afsettings.bearbool = bool
-	end
-})
-
-
-settings = library.newsection({name = "Settings", tab = AFTab,side = "right", size = 125,})
-library.newcolorpicker({
-	name = "Path Color",
-	def = Color3.fromRGB(255,255,255),
-	section = settings,
-	tab = AFTab,
-	transp = 0,
-	transparency = true,
-	callback = function(color)
-	    print(color)
-	end
-})
-]]
---
-
 aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 275,})
     library.newtoggle({
 	    name = "Aimbot",
@@ -1417,6 +1017,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    tab = CheatsTab,
 	    callback = function(bool)
 	        settings.esp.toggle = bool
+	        ESP:Toggle(bool)
 	    end
     })
 
@@ -1425,7 +1026,8 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
     	section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.showplayers = bool
+	        settings.esp.players = bool
+	        ESP.Players = bool
     	end
     })
 
@@ -1434,7 +1036,8 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.showanimals = bool
+	        settings.esp.animals = bool
+	        ESP.Animals = bool
 	    end
     })
 
@@ -1444,6 +1047,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    tab = CheatsTab,
 	    callback = function(bool)
 	        settings.esp.legendary = bool
+	        ESP.Legendary = bool
 	    end
     })
 
@@ -1452,7 +1056,28 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.showores = bool
+	        settings.esp.ores = bool
+	        ESP.Ores = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Items",
+	    section = esp,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        settings.esp.items = bool
+	        ESP.Items = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Money Bags",
+	    section = esp,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        settings.esp.moneybags = bool
+	        ESP.Moneybags = bool
 	    end
     })
 
@@ -1461,7 +1086,8 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.ShowTeam = bool
+	        settings.esp.teamcolor = bool
+	        ESP.TeamColor = bool
 	    end
     })
 
@@ -1470,7 +1096,8 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.ShowLine = bool
+	        settings.esp.tracers = bool
+	        ESP.Tracers = bool
     	end
     })
 
@@ -1479,49 +1106,23 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    tab = CheatsTab,
 	    callback = function(bool)
-	        settings.esp.ShowBox = bool
+	        settings.esp.boxes = bool
+	        ESP.Boxes = bool
 	    end
     })
-
 
     library.newtoggle({
-    	name = "Visibility",
-    	section = esp,
-    	def = true,
-    	tab = CheatsTab,
-    	callback = function(bool)
-    	    settings.esp.ObstructedInfo = bool
-    	end
-    })
-
-    library.newslider({
-	    name = "Line Transparency",
-	    ended = false,
-	    min = 0,
-	    max = 10,
-    	def = 0,
+	    name = "Names",
 	    section = esp,
 	    tab = CheatsTab,
-	    callback = function(num)
-	        settings.esp.LineTransparency = (10-num)/10
-	    end
-    })
-
-    library.newslider({
-	    name = "Text Transparency",
-	    ended = false,
-	    min = 0,
-	    max = 10,
-	    def = 0,
-	    section = esp,
-	    tab = CheatsTab,
-	    callback = function(num)
-	        settings.esp.TextTransparency = (10-num)/10
+	    callback = function(bool)
+	        settings.esp.names = bool
+	        ESP.Names = bool
 	    end
     })
 
     library.newcolorpicker({
-	    name = "Player Color",
+	    name = "Default Color",
 	    def = settings.esp.PlayerColor,
 	    section = esp,
 	    tab = CheatsTab,
@@ -1529,6 +1130,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    transparency = false,
 	    callback = function(color)
 	        settings.esp.PlayerColor = Color3.fromHSV(color[1],color[2],color[3])
+	        ESP.Color = settings.esp.PlayerColor
 	    end
     })
 
@@ -1546,7 +1148,6 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 
 
 charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 225,})
-
     library.newkeybind({name = "Ragdoll Fly", def = settings.keys.ragdollfly, section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
 
     library.newtoggle({
