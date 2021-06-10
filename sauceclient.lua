@@ -48,7 +48,7 @@ local settings = {
     },
     keys = {
         scaffold = "R",
-        buywool = "Q",
+        buywool = "Z",
         nuker = "T"
     },
     filename = 'sauce.client'
@@ -193,7 +193,7 @@ rs.RenderStepped:Connect(function()
                 for i,v in pairs(workspace.Map.Blocks:GetChildren()) do
     				if v.Size.magnitude<=10 and (v.Position-plr.Character.HumanoidRootPart.Position).magnitude<=20 and (v.Position-plr.Character.HumanoidRootPart.Position).magnitude>=8 then
     					local x,y,z = math.ceil(v.Position.X/3),math.ceil(v.Position.Y/3),math.ceil(v.Position.Z/3)
-    					coroutine.wrap(function() RemoteFolder.BreakBlock:InvokeServer({blockRef={blockPosition=Vector3.new(x,y,z)},hitPosition=v.Position,hitNormal=Vector3.new(0,0,1)}) end)()
+    					coroutine.wrap(function() remotefolder.BreakBlock:InvokeServer({blockRef={blockPosition=Vector3.new(x,y,z)},hitPosition=v.Position,hitNormal=Vector3.new(0,0,1)}) end)()
     				end
     			end 
             end
