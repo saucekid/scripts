@@ -12,12 +12,13 @@
  ░ ░        ░  ░   ░  ░ ░  ░  ░      ░  ░    ░    
  ░ ░        
 Credits:
-ThisStuff - Instant Reload and TP bypass
+ThisStuff - Instant Reload, no spread
 casual_degenerate(discord) - quick respawn 
 =======================================================================
 	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
 
+repeat wait() until game.ContentProvider.RequestQueueSize > 0
 if _G.Executed1 then repeat wait() until false end
 _G.Executed1 = true
 
@@ -36,6 +37,7 @@ local Entities = game.workspace:FindFirstChild("WORKSPACE_Entities");
 for _, connection in ipairs(getconnections(ScriptContext.Error)) do
 connection:Disable();
 end
+
 
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
@@ -58,6 +60,7 @@ ContainerUIModule = LoadModule("ContainerUI");
 ProjectileHandlerModule = LoadModule("ProjectileHandler");
 end
 
+pcall(function() loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))() end)
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
 local library
 local radiuscircle = Drawing.new('Circle')
@@ -83,18 +86,7 @@ local weapons = {}
 weapons.ogvalues = {}
 weapons.realweapons = {}
 
-local horses = {}
-
-
 --====================================={SETTINGS}=====================================--
-local afsettings = {}
-afsettings.PathColor = Color3.fromRGB(0, 10, 0)
-afsettings.bearbool = false
-afsettings.orebool = false
-afsettings.slots = {}
-afsettings.slots.ofarm = "3"
-afsettings.slots.bfarm = "1"
-
 local settings = {}
 settings.sizepulse = false;
 settings.ragdollspeed = 1;
@@ -147,20 +139,21 @@ settings.esp.tracers = false;
 settings.esp.boxes = false;
 settings.esp.names = true;
 settings.esp.teamcolor = false;
-settings.keys = {}
-settings.keys.Suicide = "K"
-settings.keys.Harmonica = "N"
-settings.keys.Ragdoll = "L"
-settings.keys.ragdollfly = "Z"
-settings.keys.silentaim = "P"
-settings.keys.callhorse = "J"
 
-settings.horse = {}
-settings.horse.infiniteboost = false
-settings.horse.nohorseragdoll = false
-settings.horse.horsenames = {}
-settings.horse.speed = 50
-settings.horse.editspeed = false
+settings.keys = {};
+settings.keys.Suicide = "K";
+settings.keys.Harmonica = "N";
+settings.keys.Ragdoll = "L";
+settings.keys.ragdollfly = "Z";
+settings.keys.silentaim = "P";
+settings.keys.callhorse = "J";
+
+settings.horse = {};
+settings.horse.infiniteboost = false;
+settings.horse.nohorseragdoll = false;
+settings.horse.horsenames = {};
+settings.horse.speed = 50;
+settings.horse.editspeed = false;
 if Global.PlayerData:GetSortedHorses()[1] then
     settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
 end
@@ -475,27 +468,27 @@ end)
 function getAnimalClosestToMouse()
     local target = nil
     local maxDist = settings.aim.fovcircleradius
-    for _,v in pairs(plrs) do
-        if v.Model and v.Model:FindFirstChild("HumanoidRootPart") then
-            if v.Model.Health.Value ~= 0 then
-                local pos, vis = CurrentCamera:WorldToViewportPoint(v.Model.HumanoidRootPart.Position)
+    for _,v in pairs(Entities.Animals:GetChildren()) do
+        if v and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Health") and v.Name ~= "Cow" and not v.Name:find("Horse") then
+            if v.Health.Value ~= 0 then
+                local pos, vis = CurrentCamera:WorldToViewportPoint(v.HumanoidRootPart.Position)
                 local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
                 if dist < maxDist and vis then
                     if settings.aim.target == "Automatic" then
-                        local torsoPos = CurrentCamera:WorldToViewportPoint(v.Model.HumanoidRootPart.Position)
+                        local torsoPos = CurrentCamera:WorldToViewportPoint(v.HumanoidRootPart.Position)
                         local torsoDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(torsoPos.X, torsoPos.Y)).magnitude
-                        local headPos = CurrentCamera:WorldToViewportPoint(v.Model.Head.Position)
+                        local headPos = CurrentCamera:WorldToViewportPoint(v.Head.Position)
                         local headDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(headPos.X, headPos.Y)).magnitude
                         if torsoDist > headDist then
-                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model.Head) then return nil end
-                            target = v.Model.Head
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Head) then return nil end
+                            target = v.Head
                         else
-                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model.HumanoidRootPart) then return nil end
-                            target = v.Model.HumanoidRootPart
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.HumanoidRootPart) then return nil end
+                            target = v.HumanoidRootPart
                         end
                     else
-                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Model[settings.aim.target]) then return nil end
-                        target = v.Model[settings.aim.target]
+                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v[settings.aim.target]) then return nil end
+                        target = v[settings.aim.target]
                     end
                     maxDist = dist
                 end
@@ -869,7 +862,7 @@ NetworkModule:FireServer("BreakGlass", id, Vector3.new());
 end
 end
 --===================================={GUI MAKING}====================================--
-library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/drawinglib.lua"))() do
+library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/drawinglib.lua"))() do
 library.new({size = Vector2.new(315,515), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
 end
 
@@ -1440,7 +1433,7 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
     
     library.newbutton({name = "Join Smallest Server",section = general,tab = MiscTab,callback = function(...) 
         if syn then
-            spawn(loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/JoinLowestPlayer.lua"))())
+            coroutine.resume((coroutine.create(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/JoinLowestPlayer.lua"))()  end)))
         else
             notify("Exploit Not Compatible!", "Sorry, this function is Synapse only")
         end
