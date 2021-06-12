@@ -12,13 +12,12 @@
  ░ ░        ░  ░   ░  ░ ░  ░  ░      ░  ░    ░    
  ░ ░        
 Credits:
-ThisStuff - Instant Reload, no spread
+ThisStuff - Instant Reload and TP bypass
 casual_degenerate(discord) - quick respawn 
 =======================================================================
 	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
 
-repeat wait() until game.ContentProvider.RequestQueueSize > 0
 if _G.Executed1 then repeat wait() until false end
 _G.Executed1 = true
 
@@ -38,7 +37,7 @@ for _, connection in ipairs(getconnections(ScriptContext.Error)) do
 connection:Disable();
 end
 
-
+loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))()
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
 local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
@@ -60,7 +59,6 @@ ContainerUIModule = LoadModule("ContainerUI");
 ProjectileHandlerModule = LoadModule("ProjectileHandler");
 end
 
-pcall(function() loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))() end)
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
 local library
 local radiuscircle = Drawing.new('Circle')
@@ -86,7 +84,18 @@ local weapons = {}
 weapons.ogvalues = {}
 weapons.realweapons = {}
 
+local horses = {}
+
+
 --====================================={SETTINGS}=====================================--
+local afsettings = {}
+afsettings.PathColor = Color3.fromRGB(0, 10, 0)
+afsettings.bearbool = false
+afsettings.orebool = false
+afsettings.slots = {}
+afsettings.slots.ofarm = "3"
+afsettings.slots.bfarm = "1"
+
 local settings = {}
 settings.sizepulse = false;
 settings.ragdollspeed = 1;
@@ -139,21 +148,20 @@ settings.esp.tracers = false;
 settings.esp.boxes = false;
 settings.esp.names = true;
 settings.esp.teamcolor = false;
+settings.keys = {}
+settings.keys.Suicide = "K"
+settings.keys.Harmonica = "N"
+settings.keys.Ragdoll = "L"
+settings.keys.ragdollfly = "Z"
+settings.keys.silentaim = "P"
+settings.keys.callhorse = "J"
 
-settings.keys = {};
-settings.keys.Suicide = "K";
-settings.keys.Harmonica = "N";
-settings.keys.Ragdoll = "L";
-settings.keys.ragdollfly = "Z";
-settings.keys.silentaim = "P";
-settings.keys.callhorse = "J";
-
-settings.horse = {};
-settings.horse.infiniteboost = false;
-settings.horse.nohorseragdoll = false;
-settings.horse.horsenames = {};
-settings.horse.speed = 50;
-settings.horse.editspeed = false;
+settings.horse = {}
+settings.horse.infiniteboost = false
+settings.horse.nohorseragdoll = false
+settings.horse.horsenames = {}
+settings.horse.speed = 50
+settings.horse.editspeed = false
 if Global.PlayerData:GetSortedHorses()[1] then
     settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
 end
@@ -168,8 +176,11 @@ ESP:AddObjectListener(Entities.Animals, {
         return settings.esp.AnimColor
     end,
     Validator = function(obj)
-        if obj:FindFirstChild("Health") and obj.Health.Value <= 200 and obj.Name ~= "Cow" and not string.find(obj.Name, "Horse") then
-            return true
+        if obj.Name ~= "Cow" and not string.find(obj.Name, "Horse") then
+            local health = obj:WaitForChild("Health");
+            if health and obj.Health.Value <= 200 then
+                return true
+            end
         end
         return false
     end,
@@ -186,7 +197,8 @@ ESP:AddObjectListener(Entities.Animals, {
         return Color3.fromRGB(255,255,0)
     end,
     Validator = function(obj)
-        if obj:FindFirstChild("Health") and obj.Health.Value > 200 then
+        local health = obj:WaitForChild("Health");
+        if health and obj.Health.Value > 200 then
             return true
         end
         return false
