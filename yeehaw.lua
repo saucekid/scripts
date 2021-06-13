@@ -119,12 +119,13 @@ settings.mineaura = false;
 settings.semiautosell = false;
 settings.mineauradistance = 11;
 settings.ragdollwalk = false;
+settings.ultrainstinct = false;
 
 settings.aim = {}
 settings.aim.aimbot = false;
 settings.aim.silentaim = false;
 settings.aim.smoothness = 0.5;
-settings.aim.target = "Head";
+settings.aim.target = "Automatic";
 settings.aim.mode = "Player";
 settings.aim.visiblecheck = false;
 settings.aim.teamcheck = false;
@@ -209,16 +210,14 @@ ESP:AddObjectListener(Entities.Animals, {
 
 ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Geometry"], {
     Recursive = true,
-    Type = "Model",
+    Type = "ParticleEmitter",
     CustomName = "Thunderstruck Tree",
     PrimaryPart = function(obj)
-        if obj.PrimaryPart.Name == "TreePivot" then
-           return obj.Trunk 
-        end
+        return obj.Parent
     end,
     Color = Color3.new(255,255,0),
     Validator = function(obj)
-        if (obj.Name:find("Tree") or obj.Name:find("Redwood")) and obj.PrimaryPart.Name == "TreePivot" and obj.Trunk:FindFirstChild("Strike2") then
+        if obj.Name == "Strike2" then
             return true
         end
         return false
@@ -260,16 +259,9 @@ ESP:AddObjectListener(workspace.Ignore, {
     PrimaryPart = function(obj)
         return obj.PrimaryPart
     end,
-    CustomName = function(obj)
-    	local SplitLocation = string.find(obj.Name,"%l%u") 
-	    local FirstString = string.sub(obj.Name,0,SplitLocation) 
-	    local SecondString = string.sub(obj.Name,SplitLocation + 1) 
-	    local FinalString = FirstString .. " " .. SecondString
-	    return FinalString
-    end,
     Color = Color3.fromRGB(0,255,0),
     Validator = function(obj)
-        if obj.PrimaryPart and string.find(obj.PrimaryPart.Name, "Meshes/") then
+        if string.match(obj.Name, "Ore") or string.match(obj.Name, "Ruby") or string.match(obj.Name, "Sapphire") or string.match(obj.Name, "Emerald") or string.match(obj.Name, "Diamond") or string.match(obj.Name, "Meat") or string.match(obj.Name, "Pelt") or string.match(obj.Name, "Tooth") or string.match(obj.Name, "Claw") or string.match(obj.Name, "Skin") then
             return true
         end
         return false
@@ -628,14 +620,15 @@ RunService.RenderStepped:Connect(function()
     if settings.aim.aimbot == true then
         local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
         if keyheld == true and target then
-            local first = (target.Position + (target.Velocity*Vector3.new(1,0,1)/6))
-            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100), first.Z)
-            local partpos = settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(second)
+            local first = (target.Position + ((target.Velocity*Vector3.new(1,0,1)/6)* ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100)))
+            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 300), first.Z)
+            local partpos = WorldToViewport(second) --settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(second)
             mousemoverel((partpos.x - Mouse.x) * settings.aim.smoothness, ((partpos.y * 0.93) - Mouse.y) * settings.aim.smoothness)
         end
     end
 end)
 
+local oldgrav = workspace.Gravity
 RunService.Heartbeat:Connect(function()
     local horse = Global.WildLife:GetRidingAnimal()
     if horse then
@@ -646,8 +639,10 @@ RunService.Heartbeat:Connect(function()
         end
     end
     if settings.ragdollwalk then
-		if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.PlayerCharacter:IsRagdolled(game.Players.LocalPlayer.Character.HumanoidRootPart) then
+	    if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.PlayerCharacter:IsRagdolled(game.Players.LocalPlayer.Character.HumanoidRootPart) then
+		    workspace.Gravity = 0
 		    LocalPlayer.Character:TranslateBy(LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection)
+		    else workspace.Gravity = oldgrav
 		end
     end
 end)
@@ -762,13 +757,22 @@ end
 return OldGetUp(self);
 end
 
+local OldGetProjectileSpread = SharedUtilsModule.GetProjectileSpread;
+SharedUtilsModule.GetProjectileSpread = function(a, b, c, d)
+if (settings.aim.silentaim or settings.nospread) then
+c.accuracy = 1;
+end
+return OldGetProjectileSpread(a, b, c, d);
+end
+
 local OldInitProjectiles
 OldInitProjectiles = hookfunction(ProjectileHandlerModule.InitProjectiles, function(c, Value, Data, Other, Callback)
     if settings.nospread then
-        Other.accuracy = Random.new():NextNumber(0.9, 1)
+        Other.accuracy = Random.new():NextNumber(0.95, 1)
     end
     return OldInitProjectiles(c, Value, Data, Other, Callback)
 end)
+
 
 local OldHorseBackAccMod = ProjectileHandlerModule.GetHorseBackAccMod
 ProjectileHandlerModule.GetHorseBackAccMod = function(...)
@@ -795,7 +799,9 @@ if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
 if (target) then
-return settings.aim.mode == "Animal" and target.Position or target.Position + (target.Velocity*Vector3.new(1,0,1)/6)
+            local first = (target.Position + ((target.Velocity*Vector3.new(1,0,1)/6)* ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100)))
+            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 300), first.Z)
+return second--settings.aim.mode == "Animal" and target.Position or target.Position + (target.Velocity*Vector3.new(1,0,1)/6)
 end
 end
 end
@@ -834,16 +840,13 @@ NetworkModule.FireServer = function(self, remote, ...)
     return OldFireServer(self, remote, ...)
 end
 
-local mt = getrawmetatable(game)
-local old = mt.__namecall 
-setreadonly(mt, false) 
-mt.__namecall = newcclosure(function(self,...) 
-    local args = {...} 
-    if getnamecallmethod() == 'FireServer' and self.Name == "ACRoll" and settings.infinitestamina then --and type(args[1]) == string then
-         return 
+Global.ReplicatedState:GetStateChangedSignal("Stamina"):Connect(function()
+    if Global.ReplicatedState.State.Stamina ~= 100 and settings.infinitestamina then
+        Global.ReplicatedState.State.Stamina = 100
     end
-    return old(self,unpack(args)) 
 end)
+
+
 
 local OldCharacterRagdoll = PlayerCharacterModule.Ragdoll;
 PlayerCharacterModule.Ragdoll = function(...)
@@ -854,7 +857,7 @@ end
 
 local OldCanRoll = PlayerCharacterModule.CanRoll
 PlayerCharacterModule.CanRoll = function(...)
-    if settings.alwaysroll then
+    if settings.alwaysroll or settings.ultrainstinct then
         return true end;
     return OldCanRoll(...);
 end
@@ -912,6 +915,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    name = "Aimbot",
     	section = aim,
 	    tab = CheatsTab,
+	    def = settings.aim.aimbot,
 	    callback = function(bool)
 	        settings.aim.aimbot = bool
     	end
@@ -922,6 +926,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    name = "Silent Aim",
 	    section = aim,
 	    tab = CheatsTab,
+	    def = settings.aim.silentaim,
 	    callback = function(bool)
 	       settings.aim.silentaim = bool
 	    end
@@ -963,6 +968,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    name = "Visible Check",
 	    section = aim,
 	    tab = CheatsTab,
+	    def = settings.aim.visiblecheck,
 	    callback = function(bool)
 	        settings.aim.visiblecheck = bool
 	    end
@@ -972,6 +978,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    name = "Team Check",
 	    section = aim,
 	    tab = CheatsTab,
+	    def = settings.aim.teamcheck,
 	    callback = function(bool)
 	        settings.aim.teamcheck = bool
 	    end
@@ -981,6 +988,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    name = "FOV Circle",
 	    section = aim,
 	    tab = CheatsTab,
+	    def = settings.aim.fovcircle,
 	    callback = function(bool)
 	        settings.aim.fovcircle = bool
 	    end
@@ -1043,6 +1051,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    section = esp,
 	    --textcolor = Color3.fromRGB(0,255,0),
 	    tab = CheatsTab,
+	    def = settings.esp.toggle,
 	    callback = function(bool)
 	        settings.esp.toggle = bool
 	        ESP:Toggle(bool)
@@ -1053,6 +1062,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
     	name = "Players",
     	section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.players,
 	    callback = function(bool)
 	        settings.esp.players = bool
 	        ESP.Players = bool
@@ -1063,6 +1073,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Animals",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.animals,
 	    callback = function(bool)
 	        settings.esp.animals = bool
 	        ESP.Animals = bool
@@ -1073,6 +1084,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Legendary Animals",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.legendary,
 	    callback = function(bool)
 	        settings.esp.legendary = bool
 	        ESP.Legendary = bool
@@ -1083,6 +1095,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Thunderstruck",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.thunderstruck,
 	    callback = function(bool)
 	        settings.esp.thunderstruck = bool
 	        ESP.Thunderstruck = bool
@@ -1093,6 +1106,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Ores",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.ore,
 	    callback = function(bool)
 	        settings.esp.ores = bool
 	        ESP.Ores = bool
@@ -1103,6 +1117,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Items",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.items,
 	    callback = function(bool)
 	        settings.esp.items = bool
 	        ESP.Items = bool
@@ -1113,6 +1128,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Money Bags",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.moneybags,
 	    callback = function(bool)
 	        settings.esp.moneybags = bool
 	        ESP.Moneybags = bool
@@ -1123,6 +1139,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Show Team Color",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.teamcolor,
 	    callback = function(bool)
 	        settings.esp.teamcolor = bool
 	        ESP.TeamColor = bool
@@ -1133,6 +1150,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Tracers",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.tracers,
 	    callback = function(bool)
 	        settings.esp.tracers = bool
 	        ESP.Tracers = bool
@@ -1143,6 +1161,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Boxes",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.boxes,
 	    callback = function(bool)
 	        settings.esp.boxes = bool
 	        ESP.Boxes = bool
@@ -1153,6 +1172,7 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    name = "Names",
 	    section = esp,
 	    tab = CheatsTab,
+	    def = settings.esp.names,
 	    callback = function(bool)
 	        settings.esp.names = bool
 	        ESP.Names = bool
@@ -1206,6 +1226,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "Infinite Stamina",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.infinitestamina,
 	    callback = function(bool)
 	        settings.infinitestamina = bool
 	    end
@@ -1215,6 +1236,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "No Fall Damage",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.nofalldamage,
 	    callback = function(bool)
 	        settings.nofalldamage = bool
 	    end
@@ -1224,6 +1246,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "No Jump Cooldown",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.nojumpcooldown,
 	    callback = function(bool)
 	        settings.nojumpcooldown = bool
 	        if JumpConnection then
@@ -1240,6 +1263,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "Anti Ragdoll",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.antiragdoll,
 	    callback = function(bool)
 	        settings.antiragdoll = bool
 	    end
@@ -1249,6 +1273,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "Instant Get Up",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.instantgetup,
 	    callback = function(bool)
 	        settings.instantgetup = bool
 	    end
@@ -1258,6 +1283,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "Instant Break Free",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.instantbreakfree,
 	    callback = function(bool)
 	        settings.instantbreakfree = bool
 	    end
@@ -1266,6 +1292,7 @@ charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left",
 	    name = "Roll Anywhere",
 	    section = charsec,
 	    tab = CheatsTab,
+	    def = settings.alwaysroll,
 	    callback = function(bool)
 	        settings.alwaysroll = bool
 	    end
@@ -1293,6 +1320,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "No Recoil",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.norecoil,
 	    callback = function(bool)
 	        settings.norecoil = bool
 	    end
@@ -1302,6 +1330,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "No Spread",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.nospread,
 	    callback = function(bool)
 	        settings.nospread = bool
 	    end
@@ -1311,6 +1340,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "No Delay",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.nodelay,
 	    callback = function(bool)
 	        settings.nodelay = bool
 	    end
@@ -1320,6 +1350,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "Instant Reload",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.instantreload,
 	    callback = function(bool)
 	        settings.instantreload = bool
 	    end
@@ -1329,6 +1360,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "Wallbang",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.infinitepenetration,
 	    callback = function(bool)
 	        settings.infinitepenetration = bool
 	    end
@@ -1338,6 +1370,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "Use In Water, etc.",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.alwaysguns,
 	    callback = function(bool)
 	        settings.alwaysguns = bool
 	    end
@@ -1347,6 +1380,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    name = "Mine Aura",
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.mineaura,
 	    callback = function(bool)
 	        settings.mineaura = bool
 	        if bool == true then
@@ -1363,6 +1397,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
 	    def = 11,
 	    section = guns,
 	    tab = CheatsTab,
+	    def = settings.mineauradistance,
 	    callback = function(num)
 	        settings.mineauradistance = num
 	    end
@@ -1410,6 +1445,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205
 	    name = "Body Size Pulse",
 	    section = misc,
 	    tab = MiscTab,
+	    def  = settings.sizepulse,
 	    callback = function(bool)
 	        settings.sizepulse = bool
 	    end
@@ -1419,6 +1455,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205
 	    name = "Anti Racism",
 	    section = misc,
 	    tab = MiscTab,
+	    def  =settings.antiracist,
 	    callback = function(bool)
 	        settings.antiracist = bool
 	    end
@@ -1428,6 +1465,7 @@ misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205
 	    name = "Ragdoll Walk",
 	    section = misc,
 	    tab = MiscTab,
+	    def  =settings.ragdollwalk,
 	    callback = function(bool)
 	        settings.ragdollwalk = bool
 	    end
@@ -1454,6 +1492,7 @@ mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 
 	        end
 	    end
     })
+
 
 general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 140,})
     library.newtoggle({
@@ -1513,6 +1552,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
 	    name = "Infinite Boosts",
 	    section = horse,
 	    tab = MiscTab,
+	    def =settings.horse.infiniteboost,
 	    callback = function(bool)
 	        settings.horse.infiniteboost = bool
 	    end
@@ -1522,6 +1562,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
 	    name = "No Ragdoll",
 	    section = horse,
 	    tab = MiscTab,
+	    def = settings.horse.nohorseragdoll,
 	    callback = function(bool)
 	        settings.horse.nohorseragdoll = bool
 	    end
@@ -1531,6 +1572,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
 	    name = "Edit Speed",
     	section = horse,
 	    tab = MiscTab,
+	    def = settings.horse.editspeed,
 	    callback = function(bool)
 	        settings.horse.editspeed = bool
     	end
