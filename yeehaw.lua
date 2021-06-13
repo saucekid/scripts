@@ -138,6 +138,7 @@ settings.esp = {}
 settings.esp.toggle = false;
 settings.esp.players = false;
 settings.esp.animals = false;
+settings.esp.thunderstruck = false;
 settings.esp.ores = false;
 settings.esp.items = false
 settings.esp.moneybags = false;
@@ -206,6 +207,25 @@ ESP:AddObjectListener(Entities.Animals, {
     IsEnabled = "Legendary"
 })
 
+ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Geometry"], {
+    Recursive = true,
+    Type = "Model",
+    CustomName = "Thunderstruck Tree",
+    PrimaryPart = function(obj)
+        if obj.PrimaryPart.Name == "TreePivot" then
+           return obj.Trunk 
+        end
+    end,
+    Color = Color3.new(255,255,0),
+    Validator = function(obj)
+        if obj.Name:find("Tree") and obj.PrimaryPart.Name == "TreePivot" and obj.Trunk:FindFirstChild("Strike2") then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Thunderstruck"
+})
+    
 ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits, {
     Recursive = true,
     Type = "Model",
@@ -262,6 +282,7 @@ ESP:Toggle(settings.esp.toggle)
 ESP.Animals = settings.esp.animals
 ESP.Players = settings.esp.players
 ESP.Ores = settings.esp.ores
+ESP.Thunderstruck = settings.esp.thunderstruck
 ESP.Legendary = settings.esp.legendary
 ESP.Moneybags = settings.esp.moneybags
 ESP.Items = settings.esp.items
@@ -357,8 +378,8 @@ function getPlayerClosestToMouse()
     local maxDist = settings.aim.fovcircleradius
     for _,v in pairs(Players:GetPlayers()) do
         if v.Character and v ~= LocalPlayer then
-            if v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("HumanoidRootPart")  then
-                if settings.aim.teamcheck and v.Team == LocalPlayer.Team then return nil end
+            if v.Character:FindFirstChild("Humanoid") and v.Character:FindFirstChild("HumanoidRootPart") then
+                if settings.aim.teamcheck and v.Team == LocalPlayer.Team then continue end
                 local pos, vis = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
                 local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
                 if dist < maxDist and vis then
@@ -607,7 +628,9 @@ RunService.RenderStepped:Connect(function()
     if settings.aim.aimbot == true then
         local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
         if keyheld == true and target then
-            local partpos = settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(target.Position + (target.Velocity))
+            local first = (target.Position + (target.Velocity*Vector3.new(1,0,1)/6))
+            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100), first.Z)
+            local partpos = settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(second)
             mousemoverel((partpos.x - Mouse.x) * settings.aim.smoothness, ((partpos.y * 0.93) - Mouse.y) * settings.aim.smoothness)
         end
     end
@@ -772,7 +795,7 @@ if (settings.aim.silentaim) then
 if (getfenv(2) == getfenv(GunItemModule.new)) then
 local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
 if (target) then
-return settings.aim.mode == "Animal" and target.Position or target.Position + (target.Velocity)
+return settings.aim.mode == "Animal" and target.Position or target.Position + (target.Velocity*Vector3.new(1,0,1)/6)
 end
 end
 end
@@ -1053,6 +1076,16 @@ esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 3
 	    callback = function(bool)
 	        settings.esp.legendary = bool
 	        ESP.Legendary = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Thunderstruck",
+	    section = esp,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        settings.esp.thunderstruck = bool
+	        ESP.Thunderstruck = bool
 	    end
     })
 
