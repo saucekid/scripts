@@ -218,7 +218,7 @@ ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Geometry"], {
     end,
     Color = Color3.new(255,255,0),
     Validator = function(obj)
-        if (obj.Name:find("Tree") or obj.Name:find("Wood"))  and obj.PrimaryPart.Name == "TreePivot" and obj.Trunk:FindFirstChild("Strike2") then
+        if (obj.Name:find("Tree") or obj.Name:find("Redwood")) and obj.PrimaryPart.Name == "TreePivot" and obj.Trunk:FindFirstChild("Strike2") then
             return true
         end
         return false
