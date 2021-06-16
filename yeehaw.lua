@@ -117,6 +117,7 @@ settings.semiautosell = false;
 settings.mineauradistance = 11;
 settings.ragdollwalk = false;
 settings.ultrainstinct = false;
+settings.fullbright = false
 
 settings.aim = {}
 settings.aim.aimbot = false;
@@ -757,6 +758,10 @@ local Fullbright = function(state)
             Lighting[i] = v
         end
     end
+end
+
+if settings.fullbright then
+    Fullbright(true)
 end
 
 local OldCalculateRecoil = GunItemModule.CalculateRecoil;
@@ -1538,6 +1543,7 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 	    name = "Fullbright",
 	    section = general,
 	    tab = MiscTab,
+	    def = settings.fullbright,
 	    callback = function(bool)
 	        Fullbright(bool)
 	    end
