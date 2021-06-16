@@ -156,7 +156,6 @@ settings.keys.callhorse = "J"
 settings.horse = {}
 settings.horse.infiniteboost = false
 settings.horse.nohorseragdoll = false
-settings.horse.horsenames = {}
 settings.horse.speed = 50
 settings.horse.editspeed = false
 if Global.PlayerData:GetSortedHorses()[1] then
@@ -571,9 +570,9 @@ for i, v in next, getgc(true) do
     end
 end
 
-
+local horsenames = {}
 for i, v in next, Global.PlayerData:GetSortedHorses() do
-    table.insert(settings.horse.horsenames, v.Breed)
+    table.insert(horsenames, v.Breed)
 end
 
 spawn(function()
@@ -1639,7 +1638,7 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
 
     library.newdropdown({
         name = "Horse",
-        options = settings.horse.horsenames,
+        options = horsenames,
         tab = MiscTab,
         section = horse,
         callback = function(horsename) 
