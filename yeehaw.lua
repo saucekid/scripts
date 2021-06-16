@@ -18,7 +18,7 @@ casual_degenerate(discord) - quick respawn
 	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
 
-if _G.Executed1 then repeat wait() until false end
+repeat wait() until game:IsLoaded() and not _G.Executed1
 _G.Executed1 = true
 
 local Players = game:GetService("Players");     ----------------------sorry for messy code
@@ -27,7 +27,9 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage");
 local ScriptContext = game:GetService("ScriptContext");
 local VirtualUser = game:GetService("VirtualUser");
 local RunService = game:GetService("RunService");
+local HttpService = game:GetService("HttpService");
 local UserInputService = game:GetService("UserInputService");
+
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 local CurrentCamera = workspace.CurrentCamera;
@@ -88,15 +90,10 @@ local horses = {}
 
 
 --====================================={SETTINGS}=====================================--
-local afsettings = {}
-afsettings.PathColor = Color3.fromRGB(0, 10, 0)
-afsettings.bearbool = false
-afsettings.orebool = false
-afsettings.slots = {}
-afsettings.slots.ofarm = "3"
-afsettings.slots.bfarm = "1"
 
 local settings = {}
+settings.filename = "yee.haw"
+
 settings.sizepulse = false;
 settings.ragdollspeed = 1;
 settings.antiracist = false;
@@ -130,7 +127,6 @@ settings.aim.mode = "Player";
 settings.aim.visiblecheck = false;
 settings.aim.teamcheck = false;
 settings.aim.fovcircle = false;
-settings.aim.fovcirclecolor = Color3.fromRGB(255,255,255);
 settings.aim.fovcircleradius = 100;
 settings.aim.fovcirclethickness = 2;
 settings.aim.fovcircletransp = 1;
@@ -144,12 +140,10 @@ settings.esp.ores = false;
 settings.esp.items = false
 settings.esp.moneybags = false;
 settings.esp.legendary = false;
-settings.esp.PlayerColor = Color3.fromRGB(255, 255, 255);
-settings.esp.AnimColor = Color3.fromRGB(0, 255, 255);
 settings.esp.tracers = false;
-settings.esp.boxes = false;
+settings.esp.boxes = true;
 settings.esp.names = true;
-settings.esp.teamcolor = false;
+settings.esp.teamcolor = true;
 settings.keys = {}
 settings.keys.Suicide = "K"
 settings.keys.Harmonica = "N"
@@ -168,15 +162,57 @@ if Global.PlayerData:GetSortedHorses()[1] then
     settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
 end
 
+settings.saving = {}
+settings.saving.autosave = false
+
+--saving functions
+local function existsFile(name)
+    return pcall(function()
+        return readfile(name)
+    end)
+end
+
+function Load()
+    if not existsFile(settings.filename) then return end
+    local _, Result = pcall(readfile, settings.filename);
+    if _ then 
+        local _, Table = pcall(HttpService.JSONDecode, HttpService, Result);
+        if _ then
+            for i, v in pairs(Table) do
+                if settings[i] ~= nil  then
+                    settings[i] = v;
+                    pcall(settings[i], v);
+                end
+            end
+        end
+    end
+end
+
+function Save()
+    if writefile then
+        writefile(settings.filename, HttpService:JSONEncode(settings));
+    end
+end
+
+game.Players.PlayerRemoving:Connect(function(plr)
+    if plr == game.Players.LocalPlayer and settings.saving.autosave then
+        Save()
+    end
+end)
+
+Load()
+
+settings.aim.fovcirclecolor = Color3.new(1,1,1);
+settings.esp.PlayerColor = Color3.new(1, 1, 1); --colors dont save sorry
+settings.esp.AnimColor = Color3.new(0, 1, 1);
+
 ESP:AddObjectListener(Entities.Animals, {
     Type = "Model",
     PrimaryPart = "HumanoidRootPart",
     CustomName = function(obj)
         return obj.Name
     end,
-    Color = function(obj)
-        return settings.esp.AnimColor
-    end,
+    Color = settings.esp.AnimColor,
     Validator = function(obj)
         if obj.Name ~= "Cow" and not string.find(obj.Name, "Horse") then
             local health = obj:WaitForChild("Health");
@@ -247,6 +283,8 @@ ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Interactables"].Mi
 })
 
 ESP:AddObjectListener(workspace.Ignore, {
+    Recursive = false,
+    Name = "MoneyBag",
     Type = "Model",
     PrimaryPart = "Bag",
     CustomName = "Money Bag",
@@ -255,6 +293,7 @@ ESP:AddObjectListener(workspace.Ignore, {
 })
 
 ESP:AddObjectListener(workspace.Ignore, {
+    Recursive = false,
     Type = "Model",
     PrimaryPart = function(obj)
         return obj.PrimaryPart
@@ -1045,7 +1084,7 @@ aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size =
 	    end
     })
 
-esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 300,})
+esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 305,})
     library.newtoggle({
 	    name = "ON/OFF",
 	    section = esp,
@@ -1404,7 +1443,7 @@ guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size 
     })
 
 
-
+--misc
 misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205,})
     library.newkeybind({name = "Suicide", def = settings.keys.Suicide, section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
     
@@ -1606,11 +1645,27 @@ horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 
         end
     })
 
-
 library.newkeybind({name = "Call Horse", def = settings.keys.callhorse, section = horse, tab = MiscTab, callback = function(key) settings.keys.callhorse = key end})
+
 
 discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
     library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
 
+
+--settings
+save = library.newsection({name = "Saving", tab = MiscTab,side = "right", size = 60,})
+    library.newtoggle({
+	    name = "Autosave",
+    	section = save,
+	    tab = MiscTab,
+	    def = settings.saving.autosave,
+	    callback = function(bool)
+	        settings.saving.autosave = bool
+    	end
+    })
+
+    library.newbutton({name = "Save",section = save,tab = MiscTab,callback = function() Save() end})
+
+--
 library.opentab(CheatsTab)
 library.init()
