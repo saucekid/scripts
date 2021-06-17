@@ -323,6 +323,7 @@ ESP.Boxes = settings.esp.boxes
 ESP.Color = settings.esp.PlayerColor
 ESP.Health = false
 --====================================={FUNCTIONS}=====================================--
+
 local function notify(title,text,dur)
     game:GetService("StarterGui"):SetCore("SendNotification",{
         Title = title,
@@ -1545,6 +1546,7 @@ general = library.newsection({name = "General", tab = MiscTab,side = "right", si
 	    def = settings.fullbright,
 	    callback = function(bool)
 	        Fullbright(bool)
+	        settings.fullbright = bool
 	    end
     })
     
