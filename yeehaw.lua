@@ -39,6 +39,7 @@ for _, connection in ipairs(getconnections(ScriptContext.Error)) do
 connection:Disable();
 end
 
+loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))()
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
 local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
@@ -200,7 +201,9 @@ game.Players.PlayerRemoving:Connect(function(plr)
     end
 end)
 
-Load()
+if syn then
+    Load()
+end
 
 settings.aim.fovcirclecolor = Color3.new(1,1,1);
 settings.esp.PlayerColor = Color3.new(1, 1, 1); --colors dont save sorry
@@ -820,7 +823,7 @@ end)
 local OldHorseBackAccMod = ProjectileHandlerModule.GetHorseBackAccMod
 ProjectileHandlerModule.GetHorseBackAccMod = function(...)
     if settings.nospread then
-        return 1.3
+        return 1.01
     end
     return OldHorseBackAccMod(...)
 end
