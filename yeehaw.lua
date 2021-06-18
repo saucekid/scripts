@@ -39,7 +39,6 @@ for _, connection in ipairs(getconnections(ScriptContext.Error)) do
 connection:Disable();
 end
 
-loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))()
 local LoadModule = require(ReplicatedStorage.Modules.Load);
 local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
 local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
