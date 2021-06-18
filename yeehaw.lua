@@ -167,6 +167,7 @@ settings.saving.autosave = false
 
 --saving functions
 local function existsFile(name)
+    if not readfile then return end
     return pcall(function()
         return readfile(name)
     end)
@@ -816,10 +817,6 @@ OldInitProjectiles = hookfunction(ProjectileHandlerModule.InitProjectiles, funct
     end
     return OldInitProjectiles(c, Value, Data, Other, Callback)
 end)
-
-getsenv(ProjectileHandlerModule).wait = newcclosure(function()
-    return rs.RenderStepped:Wait();
-end);
 
 local OldHorseBackAccMod = ProjectileHandlerModule.GetHorseBackAccMod
 ProjectileHandlerModule.GetHorseBackAccMod = function(...)
