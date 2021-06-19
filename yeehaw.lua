@@ -1,4 +1,6 @@
+
 --[[
+
 ▓██   ██▓▓█████ ▓█████  ██░ ██  ▄▄▄       █     █░
  ▒██  ██▒▓█   ▀ ▓█   ▀ ▓██░ ██▒▒████▄    ▓█░ █ ░█░
   ▒██ ██░▒███   ▒███   ▒██▀▀██░▒██  ▀█▄  ▒█░ █ ░█ 
@@ -15,4 +17,1661 @@ casual_degenerate(discord) - quick respawn
 =======================================================================
 	Join the discord: https://discord.gg/DnyxZRwQh3
 ]]--
-for n,e in pairs({(function(e,...)local D="This file was obfuscated using PSU Obfuscator 4.0.A | https://www.psu.dev/ & discord.gg/psu";local J=e[((#{849;73;595;}+903936566))];local b=e[((212826318-#("why the fuck would we sell a deobfuscator for a product we created.....")))];local N=e[(500055292)];local f=e[(324095871)];local V=e[((#{282;839;(function(...)return 690,709,731,...;end)(487,256)}+85380276))];local E=e[((#{361;479;835;636;(function(...)return 639,655,235,332;end)()}+19193434))];local s=e[((644545849-#("If you see this, congrats you're gay")))];local v=e[(855851529)];local Y=e[(391494768)];local W=e[(19102455)];local u=e[(817619980)];local M=e[((#{469;}+531090678))];local h=e[((527483983-#("you dumped constants by printing the deserializer??? ladies and gentlemen stand clear we have a genius in the building.")))];local S=e.AGVvC;local a=e[(818480826)];local O=e.RiEuJknm;local x=e[((#{957;424;597;185;}+263843280))];local I=e[(311747566)];local z=e[(40002091)];local c=e.Y2ZeXwg;local C=e[((481977460-#("Luraph v12.6 has been released!: changed absolutely fucking nothing but donate to my patreon!")))];local q=e[(338569947)];local G=e[(370800626)];local l=e[((970764317-#("Xenvant Likes cock - Perth")))];local w=e['G5gspg'];local F=e[(987827969)];local g=e['GQM1hH3xf'];local _=e[(609394057)];local d=e[((#{(function(...)return 136,245,...;end)(673,824)}+775891723))];local X=e[((#{661;}+122123432))];local t=e[((473238075-#("When the exploiter is sus")))];local T=e[((#{282;289;368;}+267653792))];local p=e[((987081211-#("why does psu.dev attract so many ddosing retards wtf")))];local L=((getfenv)or(function(...)return(_ENV);end));local o,i,n=({}),(""),(L(l));local r=((n["\98\105"..e[a]..e.kp88gyfr.."\50"])or(n[""..e[c]..e[x]..e[a]])or({}));local o=(((r)and(r["\98\120\111"..e[u]]))or(function(e,o)local n,l=l,f;while((e>f)and(o>f))do local r,a=e%t,o%t;if r~=a then l=l+n;end;e,o,n=(e-r)/t,(o-a)/t,n*t;end;if e<o then e=o;end;while e>f do local o=e%t;if o>f then l=l+n;end;e,n=(e-o)/t,n*t;end;return(l);end));local y=(t^F);local A=(y-l);local m,B,k;local y=(i[""..e[c]..e[b].."\116\101"]);local Q=(i[""..e[E].."\104\97"..e[u]]);local h=(i[""..e[h].."\115\117"..e[c]]);local h=(i[""..e[p]..e[C].."\98"]);local P=(n["\116\111"..e["O4CByM"]..e[C]..e[g]..e[c]..e[d]..e[u]]);local Z=(n["\112"..e[s].."\105"..e[u]..e[p]]);local i=(n["\116\121\112\101"]);local i=(n["\115\101"..e[a]..e[g]..e[d].."\116"..e[s]..e[a]..e[s].."\98"..e[w]..e[d]]);local b=(n[""..e[g]..e[s].."\116\104"]["\102"..e[w].."\111\111\114"]);local i=(n["\114"..e[s]..e.spFqhw0do.."\115\101\116"]);local i=((n["\117"..e['O4CByM']..e[v]..e[s].."\99\107"])or(n["\116\97"..e[c].."\108"..e[d]][""..e[C]..e['O4CByM'].."\112\97\99"..e["W5WvE5f6"]]));local v=(n[""..e[p].."\101\108\101"..e[E].."\116"]);local U=((n["\109"..e[s]..e[a].."\104"]["\108"..e[I]..e[d].."\120\112"])or(function(e,n,...)return((e*t)^n);end));m=((r["\108"..e[p].."\104\105"..e[O]..e[a]])or(function(n,e,...)if(e<f)then return(B(n,-(e)));end;return((n*t^e)%t^F);end));k=(r[""..e[c]..e[s].."\110"..e[I]])or(function(n,e,...)return(((n+e)-o(n,e))/t);end);B=((r["\114"..e[p].."\104"..e[x].."\102\116"])or(function(n,e,...)if(e<f)then return(m(n,-(e)));end;return(b(n%t^F/t^e));end));local t=(r[""..e[c]..e['O4CByM'].."\111"..e[a]])or(function(e,...)return(A-e);end);local A=(r["\98\111"..e[u]])or(function(n,e,...)return(A-k(A-n,A-e));end);if((not(n[""..e[c]..e[x].."\116\51\50"]))and(not(n["\98"..e[x].."\116"])))then r[""..e[w].."\115\104\105\102"..e[a]]=m;r[""..e[c].."\110\111"..e[a]]=t;r[""..e[c].."\111"..e[u]]=A;r["\98\97"..e['O4CByM']..e[I]]=k;r[""..e[c].."\120\111"..e[u]]=o;r[""..e[u].."\115"..e[J]..e[x].."\102\116"]=B;end;local k=(((n[""..e[a]..e[s]..e[c]..e[w].."\101"][""..e[E].."\114"..e[d].."\97"..e[a]..e[d]]))or((function(e,...)return({i({},f,e);});end)));local t=(n[""..e[a]..e[s]..e[c].."\108\101"][""..e[x].."\110"..e[p]..e[d]..e[u]..e[a]]);local t=(n[""..e[a].."\97\98"..e[w]..e[d]][""..e[u]..e[d]..e[g].."\111\118"..e[d]]);local d=(n[""..e[a].."\97"..e[c].."\108"..e[d]]["\99"..e[_].."\110\99"..e[s].."\116"]);n["\98"..e[x]..e[a]..e["kp88gyfr"]..e[X]]=r;local n=((-S+(function()local t,a=f,l;(function(l,e,o,n)n(e(l,n,l,e),n(e,l,e,n),l(o and n,e,e,e)and l(n,o and e,l,o),l(l,o and n,e,e and n))end)(function(o,e,n,r)if t>G then return o end t=t+l a=(a+q)%z if(a%W)>=V then return e(r(o,o,e and n,o),e(o and o,e,n,e),e(o,n and e,e,e)and n(r,n,r and r,r),n(n and r,n,e,r))else return o end return n end,function(n,e,r,o)if t>T then return e end t=t+l a=(a+M)%N if(a%Y)<(206)then return o else return n(r(r,n,n,o)and r(n and o,r,e,n),o(r,o,n,n),e(o,o,r,n),e(r,n and e,o,e))end return o(e(e,o,n,n),o(r,o and e,n,e),e(e and e,e,o,n)and e(r,n,e,r and o),n(e,r,r,e and n))end,function(e,n,o,r)if t>(494)then return o end t=t+l a=(a+((#{420;710;866;}+514)))%(46759)if(a%(1222))>=((#{359;(function(...)return;end)()}+610))then a=(a+((988-#("psu 34567890fps, luraph 1fps, xen 0fps"))))%(14315)return e else return o(n(r,o,o,n),r(n,n,e and o,o),e(n,e,n and r,o),e(n,n,n,e))end return o(r(n,o,o,n),n(r,e,e,n),e(r,e and e,o,o)and n(o,r,e,e),r(n and o,n,e,e)and e(n,o,r,e and r))end,function(o,n,e,r)if t>(230)then return r end t=t+l a=(a-(880))%((48100-#("https://www.youtube.com/watch?v=Lrj2Hq7xqQ8")))if(a%(360))<=(180)then return e else return o(r(r,n,e and o,e),n(o,n,e,n and e),e(o,o and n,o,o),o(r,n,r,o))end return e(e(e,n,e,n),n(e and n,n,e,n),n(n,o and o,e and r,e),o(e,e,e,n))end)return a;end)()));local a=(#D+(165));local r,p=({}),({});for e=f,a-l do local n=Q(e);r[e]=n;p[e]=n;p[n]=e;end;local f,t=(function(o)local t,e,c=y(o,l,((98-#("uh oh everyone watch out pain exist coming in with the backspace method one dot two dot man dot"))));if((t+e+c)~=((#{758;20;919;438;(function(...)return 958,...;end)(983)}+242)))then n=n+(67);a=a+(56);end;o=h(o,(5));local n,t,c=(""),(""),({});local e=l;local function i()local n=P(h(o,e,e),((#{141;(function(...)return 166,...;end)()}+34)));e+=l;local l=P(h(o,e,e+n-l),((221-#("Luraph: Probably considered the worst out of the three, Luraph is another Lua Obfuscator. It isnt remotely as secure as Ironbrew or Synapse Xen, and it isn't as fast as Ironbrew either."))));e+=n;return(l);end;n=p[i()];c[l]=n;while(e<#o)do local e=i();if r[e]then t=r[e];else t=n..h(n,l,l);end;r[a]=n..h(t,l,l);c[#c+l],n,a=t,t,a+l;end;return(d(c));end)("PSU|23425s101022121t1827622021P1O1C1F11161D21921W1d27622821r16171q171W21i1n141v1A16233131927622x1Q21821O12121b1d1125Y2541a27621Z1Y1h21327v27X27Z23E1o1727622c21d1N101j18172642521427622621B1c1821n22n112761A25425b27M1021u217171a15131e191W21F1J1B1q21622d1b27622E21R1R16111K1d21L2121m1n23C28227622a21N1e1F1S21f21h1r1p1322q1H2762251Y1Q161M21321J29a1R1122N23621b151A1826B23Y162762321r1o1F171N24u26115276237131h1M1P2351k29w102371M1h1627W151B11121L22u1N27a2BR2bt101T17191K24V2602921021V217191l21622H28R1022021O101421j28j24o25W2C42392As1N27i2Ci25z2512CM21z21H1J1N1V1T1d25t24O2762De26o25r22p22E2C421u1Z1I1M21H21d1J27Q22R1g27621Y2b11O1h1n1r2c91y2171f29m191121M2cl2762361N1K141G1M1723i1E2ce22F21e191826x24B2b7102361J1F1A1b1222H21F2CM22i21h121F1b1C1m21z21O2c42212131q1Y21J1D1p1g21N22j2bh1022U1A132C726Y23x2fn22T28V1T1t1123J1c27622R28b16182F5171D151V1j21n2272An2C51H1s1127M111B1U121t1V1L2cZ1d24L2bg28S21D141C1u25025K1F2AB21j1l1s2b22C01h111y21b2Ax1727023Z2cM2Cg2ci102HB2282F12841728y2G21222j21C2Ce22Q27M1324d26Z28g102g41D2g62f527h1o22u1Q2Fn22C21228x1522g2112GG22B21e1o21g2141m101i161221J21J2Ee2EG17172342Fr27721M21E2392HW27621x2172ba21F22L2J22341s1u21N2262CM2ec2Ee1S1R1n21N2dJ27622u1j1r1d1N1T2a11t23C2bQ28T1T1c28L27W27y1626l23o2G22772131o1P141e21I28M2D71123a2fn234122E11Q24z25c2cM22b2131h1l101l112542622es21V1y2961N1j24M25w1J2bi2BT2172171S1q2bw21N21i28c29s2fY1D25n2562c422V122an1H2gz1U21Z2hp1022821o1D1o1S1N1124v2672J222a21F1O26c2eR27621W1X171g1R1Q26Z2HI2762lU2BU1N1b1o24x25Z2du1022d2A62Jp2131U15112K628N162552gw1022B21n1D28324d26q2j222V181B23f1L2i321z21e1s21m28m2k824426U2cm2k31C21i2192mu2aM2mr2Lv2gJ2gL2Gn2Gp2Gr2Gt2372gM28h28J21j2171115182a71b2351m2832cN2131v2L01n21C29I24y25z2BQ2fD2n51121N219181f2bV25i2552bq2KP1T1r2mT21721k1i1s2692mq102nl1B1928a112d22cM2mD16131b2Fr21E22b29f2391r2GO2pe2Pg2PI1S2482nY2LE2K727Z2442692mz22R28928b2Nu171O1n2ga2Ga1L1h24426e28V1021Y1z11112l91d2Ll1I2p51n1n21021H10161R1b2M81h2292132lD2Et171r21D2181m2aS2Bd21M21l2ju2JW2Jy1126R2472i323029m151n172Rb2c922B21P2Or22P1K111r2Jn28r2E123F2C428T192CI2D91623p27029f2311C1a1E21M214151R1t1L2e623e1s2J22372bV22w2kH2g32Pp1F2pQ1g152bv2FI2EG26z23q1e2Dv21b29j2hd2Hf2oI2Ok182321C2es2202152eW181925z2LS2762dl12182Pf2U521h29V2G31H1j1I1r1R2a7142kL23i29F2qi28A1D21M2O32h71d121624i25E2Fn2mS1j1424K2uw27N21D1f27s2Fa2c42dw15192142ip1R2Hy2CM2uY28a1o21U21e2eS2282dQ2Mu1q23p26W2or22c2Dm101B2132132tZ21D2Gf2JS1F2jO161F2B22P7111h2mT2SY2gE2Vm2M42M61N23N26s2Ko1J1227m22U2AA29g2191b1t21R2151T2BU21827l27621v21i28R2vp2Cs2l81j2402Sp27622221127q27s27U2Qd1622921d2fN22U2g91V1m2182242fn22r1h2pp142CK2HJ2181t1n1y2NS26S2482FN21T21e102bT24O2Nc2nE2SC1624Z25F2cE22V1629623e1p2ES22R1C2gk2C024o2L42UB27W2QR2nb2fN21y21g1j29624i25Q2Or21T1y2Jx1V1n2Qr2r023e2or23B1o1T1p1o2bk2uT2Ka2kc2371i2l91c172c81l1f2I626W24029F2262171H132zH1p2122181j1p1E1n23128q2X12ch2TB121126K23r2h41023B2sX2Wx21M21O2w71P1I1D1E1j1m26X2462BQ2241z1C2Wn21R21c1H2Aj1424z25D2L5152Z12961M23D2I322a2131r21p2nv28o1F2mz27C27E27g27I21I21P101R2102dq1621S21r311221L1K21E21i2AN2C82ca23d2w729X2fh2Fj26L24U21227622w1s2cQ132212kz21Z191i171H171B1721S225311521u22l310y22g22E1c2c829L2uF1o1u21T21Y1r21m2252CE22U2w41n23e1H2TK2PN2LV1N2Yq2Vw2bV2RV1t102k129321n2bB2bd29P310H1M23b2ce2vn2H71R2cX27622P18142zw1r29U311231142WN21o2wg2M726y23T29A102132562Ry2762312Un1F1V1u2UE1t23D2yk27622b21o1Q1r1A21J311P2xI31252Le2Rp1N310r2wn1021e22I2Ce2381T2B31Y2XR2762382t029N2182272eS2mS2BV1225x24g1i315821k1a2QR2G9310X1m21G2M41l1I192GQ26724x2J221y191p182FM2MI1X2iT1D266258313Q22a21j2g72PF1z21f2jv2Jx2A122I2RH2O61h2Lg2li2lK2Lm2GM1q2lp26c314x2fo313M1M1q29N2ZW26c23V2j222x27r26h24F1227622N1O2522i22TL2Jo2kJ27w2d72JI2CM22E21F2Bv2SY21S24V2452cw2Cy1M151L316i2sh2T92cI172bk1c22V15310m3163310Y1q182KY318O2E61m2Ze310F191J2wM1N2DZ25125N2KC2ap1b1h1P1921I3118311A17314029G21C27W1a1x2Xd27r1726z23w315q2Ng1l25525p2Gg31712h72h92Zc21j311M1T2Dr122332TU2Hq1t2a72sn2vS2762z72Ra2iQ1s1t1B26C2492Ce23b1M181t23P2wK2Xb2111d2172192192792762fD2ZU2Zw2xi21M313Q22631422bC1N1x21i2iX2g53147315Q27q2fk22A2Kc22w28r141D2Rt31781126428f27631131821g315F2182Jj314E2V51T18314g21031612x121813131t21t24b2Dd2de21s26726723821L29f22W1a1z31b621821f21M1L22f2FY171J21q2i32MS1Q1B2Ui1n2Eh2xx28428621P312W1L2592nc2vu31681b24Y2Cv2u32ws1t21q21q2Wt24z2632Cm22321a2nt2182bY1M318Q102382sD2s42E11925X24K2IQ2i42dZ142QR21m2RN315j2rr31bz2RV24Y25U313Q2362Rk2Rm2RO2EH315K21f1P1k27023w2gg2352eF1g1g21M21c1121d31022Sk1L2Sm2702B62uB2Xv1r24e26y2bQ317131731H29p29r29T22g2Tv21931bX2M624V2V22ND21N2sF24o2mB2BI1A1N24F272310m2Sj2SL2JY2N82K81M2G128h2122962kJ312B2C91k23m26x2c42242112ae31Ar2C924G2YH27622D1h31g02362Yn31gn29621821926K23k2c428i1A2u52bU1B21c31B9313R2Dz1h1t312O21M31Ch2c516312x1R213313j315821i31el26h2442oR22F2lm1721k1z2Kz1124j31h3310n1M1J31Ar23H313Q21u21C1r2p721p2A6181o21121F2Da21T31bF2og1H21C1x1m1G161B29k2v51721Z21k2KC31Dp2vW311o2xh2YY31h431h61422N26m25x2Or22b311828v1B2152ns22l2181O315821m142Kf1D1L2Rv21o21f151d1S1621r314M2ng31HC21921u2bQ2KW2s51921D312h1G22921j2j22321B1I23h1D2cM2J92e529n2R022w1r316U13171k2zj2Oi2ci2132161a312W1821A2ch1L21d29Q29S172302oq27623b312V2gi2961e1h22z1r2ce2sr2H72682FU2ao2AQ2As25531e129x318e2E031Cm21L192J222t1M132532z529x1411315F31Ag2ES23731ED31gS31iK2H531J62r031BL31Gr2CA219316t1022S112bD1I25X29128s21n101326P31I527631N22yK2gP1p2va26L23L2OR2M32m52M721h2nS24d26S2762SC1Q2De2761213314T2De2pJ27G24F24F31Nu2eX1028931b72Pj1d1325F25F2762pJ1a1425225231OH1S1b1524I24i31ON181623I23I31ON191722A22a31oN2G623Q23Q31on2C91M31Ei2pj141a21s21S31On2BX24o31cP2Pj121c21x21X31ON131d24p24P31oN101E28931on111f21d21D31oN1U1G23123131ON1V1h21z21Z31oN1S1i24q24Q31on31Ad25g25g31On1q1k21V21V31On1r1L24n24n31oN1o1M22o22o31on1p2BE24U31ON1m31QX31pa2M73106312l2Ir1S1k1q23U23U31on1l1r31b731on2PJ23j23j31On1j1t22j22j31On1g1u1c2kc2Pj1h1v21a21A31ON21A1W25525531on21b1X22S22S31on2181y31Ck31ON2191Z22B22B31oN21621023l23L31oN2172112kJ31On21421222E22e31oN21521325O25O31oN21221421621631on21321524024031oN21021623223231On21121721p311Y31rc1Y21825725731ON1z2192LG31on1W21A1E313Q2PJ1x21b24w24w31oN21q21C25n25n31on21r21d25m25m31On21o21E22422431on21p21F21W21w31on21m21G2vY31nU1z2qy28921G21G31Oc1322F22f31on31oJ152FN2pJ31oP23423431oT1621b21B31OY1724624631P31823023031p71922622631oN31pC142Ce2pJ2Bx24x24x31on31pl25e25e31Pp1d23A23a31PU1e23r23r31Py1f22x22x31q31g24A24a31Q81H22n22N31Qd1i24M24m31QI1j23k23k31QM1k25H25h31Qr1L1o31jX31Rc31qx2uF31R12Qv31R51O23z23Z31oN1n1P21y21Y31On31RE23e23e31Ri1r21521531RM2Ag21F31rQ1t22i22i31rv1U25425431On31S12VC31s51w24l24L31sA1x23T23t31SF1y24124131Sj1z24S24s31SO2101x1x31st21124r24r31sx21223P23p31T221323y23Y31t721422322331TC2151D29f2pJ31TI2QZ31tM21722m22M31on31TS25l25L31TW31kf21U31U021a25B25B31oN31u6314o31ua21C1u1u31Uf21D24U31r431rC31UL1P1P31uP21F24z24Z31UU21G24724731Uy1w2891231v231v425p25p31V81424524531on31OP2sK31vg2r631vk23523531VO21M21M31Vs22p22p31vW31LC2cM31w01B23923931w41c22k22k31W81f310M2PJ31pV25r25r31wG22z22z31wK25025031WO21821831Ws24C24C31Ww1S312O31rc31QN23623631X42iv31qW1M22h22h31xB21121131xD21c21C31Xh1p22L22l31Xm1q23N23n31XQ23c23c31xU21r21R31XX22V22V31y121n31N931Rc31s125A25a31Y824b24b31yc21H2R931rC31sg24324331yK1w1w31yO25q25q31YS22y22y31Yw25825831Z023H23H31z41v2oU31rc31TD24J24j31TH2161k1k31zF25325331ZJ21823O23O31zn24824831ZQ25D25d31zU21b31V231zx22g22G320124e24e31uK21E233233320925J25j320d23V23v31UY1X1331V131v31S31oD24y24y320P259259320t1523B23B31VG24924931VK22722731Vo1i316831Rc2C931dx321722R22R31PG1b22c22C321E25i25i31w81Q31nW31RC31pv25C25C31WG23723731wk31cE31Wo1a2I32PJ31qe22w22W31ww22D22D31x024v24V31x4222222322a23W23w31xb31uI31xd23s23s322k1b2bq2pj31Re31Uz31xQ24k24K31xU22822831XX23M23M31Y1318O31Y51V24t24t31Y821K21k31yC22q22q31yG21021031yK22u22u31yO21L21l31yS25625631yw2Fy31Z021E2Y831Rc31T824h24h31z8251251324422122131zF23X23x324b22522531ZN23G23G31Zq1Y1Y324l21T21T31zX23D23d320125k25k324U229229320924D24D320D2wB31Uy21214325731V424224231Uy2131528931cK27h28r31SI31RC31OJ319a31NU31nZ1031VA2Qz2PJ31oU329y1023n24F1o1426E26E27625Z25Z31OH1O2u531wy2761X21R23U24431CE31CE2bz2fR2Sk31ck31PB1a24g24G32aH2Gm31WU32aH2YK31x232AL27p27e31ry1c2Pj31pq32a6111x323k31u32891131Ar1031rY31U3111J31rX31ry32BI315b2vw32781S31Pl23f23F31nU31L62ss326J1a111g2aN31cE326j322q31VY32aF27626f26f32AH2eK32ak1032am23F22t31Vy31vy32As32A129l1332a41632Cu31Nu32c62CQ1432CU1i1O2eK22022032AH2w731Sd32Al21L182td31VA152Pj31oZ23823831NU1529231va2IZ112tZ32cY31nu1d2G231VY31nu2aE31Nx10323C31zE32dX32DU1031nv32dX111c2GL314t111U2oU32e01132dw31Nx31PX32dX"),(#D-(90));local function l(n,e,...)if(n==576572884)then return(((o(((e)-875340)-812238,789731))-521409)-435819);elseif(n==452419148)then return(((o((e)-879906,183039))-264918)-740545);elseif(n==112418805)then return(o((o((e)-351794,54056))-621094,708975));elseif(n==486162297)then return(o(o(o((e)-595385,21741),931475),410832));elseif(n==456503102)then return(o(o(o(((e)-227539)-304567,849837),922997),897586));elseif(n==23987761)then return((o(o((e)-277417,570658),592280))-938507);elseif(n==289471475)then return(o(((e)-183332)-548395,476493));elseif(n==949266357)then return(o(o(o(o((e)-490078,698981),216297),833569),100473));elseif(n==669972181)then return((((e)-918451)-174019)-2883);elseif(n==148008671)then return(o((((e)-783217)-108768)-799446,341478));elseif(n==58589858)then return((o(o((e)-333471,328734),356287))-357293);elseif(n==574612354)then return((o((e)-502323,417614))-422241);elseif(n==340323310)then return((o((((e)-839642)-590484)-454833,876426))-734775);else end;end;local w=e['mpzzBZ'];local x=e[((315895788-#("woooow u hooked an opcode, congratulations~ now suck my cock")))];local l=e['e7wenEp'];local d=e['PI1nSw'];local u=e[(473238050)];local a=e[(970764291)];local r=e[(324095871)];local g=e["ZTrD96hn"];local function s(n,e,l)if(l)then local e=(n/u^(e-a))%u^((l-a)-(e-a)+a);return(e-(e%a));else local e=u^(e-a);return(((n%(e+e)>=e)and(a))or(r));end;end;local function c()local e=o(y(f,t,t),n);n=e%l;t=(t+a);return(e);end;local function r()local e,c,r,a=y(f,t,t+w);e=o(e,n);n=e%l;c=o(c,n);n=c%l;r=o(r,n);n=r%l;a=o(a,n);n=a%l;t+=x;return((a*d)+(r*g)+(c*l)+e);end;local function d()local e,a=y(f,t,t+u);e=o(e,n);n=e%l;a=o(a,n);n=a%l;t=t+u;return((a*l)+e);end;local P="\35";local function S(...)return({...}),v(P,...);end;local function O(...)local B=e[((#{814;}+711634903))];local C=e[((#{202;688;938;351;}+987827965))];local S=e[((#{201;736;261;347;(function(...)return 856,590,587;end)()}+417762966))];local O=e[((#{989;637;442;(function(...)return 564,607;end)()}+131774465))];local l=e[((970764306-#("concat was here")))];local L=e[(455084882)];local I=e[((#{(function(...)return 1,558,823,...;end)(837,659,938)}+315895722))];local v=e[((433236019-#("guys someone play Among Us with memcorrupt he is so lonely :(")))];local D=e[(167583078)];local a=e[(324095871)];local m=e['qB0x5hRaeY'];local g=e[(473238050)];local x=e[(293385795)];local P=e[((#{91;173;398;246;(function(...)return 300,764;end)()}+839867508))];local M=e["kTzVwW"];local z=e[((#{946;653;271;(function(...)return 989,29,14,...;end)()}+167491168))];local Y=e[(544364651)];local _=e[(62091483)];local F=e.e7wenEp;local w=e.mpzzBZ;local X=e[(878756452)];local G=e[(413726831)];local A=e[((#{314;252;}+754007090))];local W=e[((438019267-#("PSU|161027525v21222B11273172751L275102731327523d27f22I27f21o26o24Y21J1827F1X27f1r27F23823a26w1... oh wait")))];local function k(...)local e=({});local u=({});local E=({});for i=a,r(n)-l,l do local d=c(n);if(d%x==B)then local n=c(n);e[i]=(n~=a);elseif(d%x==W)then while(true)do local r=r(n);if(r==a)then e[i]=('');break;end;if(r>G)then local a,c=(''),(h(f,t,t+r-l));t=t+r;for e=l,#c,l do local e=o(y(h(c,e,e)),n);n=e%F;a=a..p[e];end;e[i]=a;else local l,a=(''),({y(f,t,t+r-l)});t=t+r;for a,e in Z(a)do local e=o(e,n);n=e%F;l=l..p[e];end;e[i]=l;end;break;end;elseif(d%x==a)then while(true)do local t=r(n);local o=r(n);local r=l;local t=(s(o,l,Y)*(g^C))+t;local n=s(o,x,P);local o=((-l)^s(o,C));if(n==a)then if(t==a)then e[i]=b(o*a);break;else n=l;r=a;end;elseif(n==O)then e[i]=(t==a)and(o*(l/a))or(o*(a/a));break;end;local n=U(o,n-L)*(r+(t/(g^X)));e[i]=n%l==a and b(n)or n break;end;elseif(d%x==w)then while(true)do local n=r(n);e[i]=h(f,t,t+n-l);t=t+n;break;end;else e[i]=nil end;end;local o=r(n);for e=a,o-l,l do u[e]=({});end;for k=a,o-l,l do local o=c(n);if(o~=a)then o=o-l;local t,y,f,i,h,p=a,a,a,a,a,a;local x=s(o,l,w);if(x==g)then h=(c(n));t=(d(n));i=u[(r(n))];elseif(x==a)then h=(c(n));f=(d(n));t=(d(n));i=(d(n));elseif(x==w)then h=(c(n));f=(d(n));t=(d(n));i=u[(r(n))];elseif(x==A)then h=(c(n));f=(d(n));t=(d(n));i=(r(n));p=({});for e=l,f,l do p[e]=({[a]=c(n),[l]=d(n)});end;elseif(x==l)then h=(c(n));t=(d(n));i=(r(n));elseif(x==m)then end;if(s(o,D,D)==l)then y=u[r(n)];else y=u[k+l];end;if(s(o,m,m)==l)then f=e[f];end;if(s(o,A,A)==l)then i=e[i];end;if(s(o,I,I)==l)then t=e[t];end;if(s(o,B,B)==l)then p=({});for e=l,c(),l do p[e]=r();end;end;local e=u[k];e[S]=f;e['VUYHY']=i;e[-_]=p;e[-v]=h;e["ZX82I2sQ"]=y;e[-895082.5731945175]=t;end;end;local o=d(n);for e=a,r(n)-l,l do E[e]=k();end;local n=c(n);return({[-z]=a;['LPPfXb']=e;['uJZY']=n;[M]=u;['TEwjsBwEk']=o;['ajcn']=E;});end;return(k(...));end;local function x(e,n,s,...)local o=0;local n=e['LPPfXb'];local l=e[567355];local g=s['\86\101\99\116\111\114\51'];local w=e['ajcn'];local c=e["TEwjsBwEk"];local t=e['uJZY'];return(function(...)local n={};local u=l[o];local l=-895082.5731945175;local o='VUYHY';local e=-622734;local e=(850968458);local y=-861832;local e=({});local f=(v(P,...)-1);local p={...};local a="ZX82I2sQ";local h={};local e=(true);local r=-(1);local d=727557;local e=g and 1 or 0;for e=0,f,e do if(e>=t)then h[e-t]=p[e+1];else n[e]=p[e+1];end;end;local f=f-t+1;repeat local e=u;local t=e[y];u=e[a];if(t<=16)then if(t<=7)then if(t<=3)then if(t<=1)then if(t==0)then local l=e[l];local t=n[l+2];local a=n[l]+t;n[l]=a;if(t>0)then if(a<=n[l+1])then u=e[o];n[l+3]=a;end;elseif(a>=n[l+1])then u=e[o];n[l+3]=a;end;elseif(t<=1)then n[e[l]]=x(w[e[o]],(nil),s);end;elseif(t==2)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];elseif(t<=3)then n[e[l]]=n[e[o]];end;elseif(t<=5)then if(t==4)then local l=e[l];local o,e=S(n[l](i(n,l+1,e[o])));r=e+l-1;local e=0;for l=l,r do e=e+1;n[l]=o[e];end;elseif(t<=5)then n[e[l]]=n[e[o]];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=s[e[o]];e=e[a];n[e[l]]=s[e[o]];e=e[a];n[e[l]]=n[e[o]][e[d]];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=#n[e[o]];e=e[a];local t=e[l];n[t]=n[t](i(n,t+1,e[o]));for e=t+1,c do n[e]=nil;end;e=e[a];n[e[l]]=n[e[o]][n[e[d]]];e=e[a];local t=e[l];n[t]=n[t](n[t+1]);for e=t+1,c do n[e]=nil;end;e=e[a];n[e[l]]=e[o];e=e[a];local t=(_185);(function()local t=e[o];local o=n[t];for e=t+1,e[d]do o=o..n[e];end;n[e[l]]=o;e=e[a];end){};local t=(_145);(function()local l=e[l];n[l](i(n,l+1,e[o]));for e=l+1,c do n[e]=nil;end;e=e[a];end){};e=e[a];end;elseif(t>6)then n[e[l]]=k(256);elseif(t<7)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];end;elseif(t<=11)then if(t<=9)then if(t==8)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];local t=(_61);(function()n[e[l]]=e[o];e=e[a];end){};n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];local t=(_77);(function()n[e[l]]=e[o];e=e[a];end){};n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];local t=(_42);(function()n[e[l]]=e[o];e=e[a];end){};local t=(_127);(function()n[e[l]]=e[o];e=e[a];end){};e=e[a];elseif(t<=9)then local e=e[l];n[e]=n[e](i(n,e+1,r));for e=e+1,r do n[e]=nil;end;end;elseif(t==10)then n[e[l]]=s[e[o]];elseif(t<=11)then n[e[l]]=k(e[o]);end;elseif(t<=13)then if(t==12)then n[e[l]]();elseif(t<=13)then local l=e[l];r=l+f-1;for e=0,f do n[l+e]=h[e];end;for e=r+1,c do n[e]=nil;end;end;elseif(t<=14)then n[e[l]]=e[o];elseif(t>15)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];elseif(t<16)then do return;end;end;elseif(t<=25)then if(t<=20)then if(t<=18)then if(t>17)then n[e[l]]=n[e[o]][n[e[d]]];elseif(t<18)then local l=e[l];n[l](i(n,l+1,e[o]));for e=l+1,c do n[e]=nil;end;end;elseif(t==19)then e=e[a];local o=e[l];r=o+f-1;for e=0,f do n[o+e]=h[e];end;for e=r+1,c do n[e]=nil;end;e=e[a];local l=e[l];do return i(n,l,r);end;e=e[a];e=e[a];elseif(t<=20)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];end;elseif(t<=22)then if(t>21)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];elseif(t<22)then local a=e[o];local o=n[a];for e=a+1,e[d]do o=o..n[e];end;n[e[l]]=o;end;elseif(t<=23)then n[e[l]]=n[e[o]];e=e[a];n[e[l]]=e[o];e=e[a];local t=e[l];n[t](i(n,t+1,e[o]));for e=t+1,c do n[e]=nil;end;e=e[a];n[e[l]]=s[e[o]];e=e[a];n[e[l]]=s[e[o]];e=e[a];local t=e[l];local c=n[e[o]];n[t+1]=c;n[t]=c[e[d]];e=e[a];n[e[l]]=e[o];e=e[a];local t=e[l];local c,o=S(n[t](i(n,t+1,e[o])));r=o+t-1;local o=0;for e=t,r do o=o+1;n[e]=c[o];end;e=e[a];local o=e[l];n[o]=n[o](i(n,o+1,r));for e=o+1,r do n[e]=nil;end;e=e[a];n[e[l]]();e=e[a];e=e[a];elseif(t==24)then local l=e[l];local o=n[e[o]];n[l+1]=o;n[l]=o[e[d]];elseif(t<=25)then n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];end;elseif(t<=29)then if(t<=27)then if(t==26)then elseif(t<=27)then local e=e[l];n[e]=n[e](n[e+1]);for e=e+1,c do n[e]=nil;end;end;elseif(t>28)then local l=e[l];n[l]=n[l](i(n,l+1,e[o]));for e=l+1,c do n[e]=nil;end;elseif(t<29)then local l=e[l];n[l]=0+(n[l]);n[l+1]=0+(n[l+1]);n[l+2]=0+(n[l+2]);local a=n[l];local t=n[l+2];if(t>0)then if(a>n[l+1])then u=e[o];else n[l+3]=a;end;elseif(a<n[l+1])then u=e[o];else n[l+3]=a;end;end;elseif(t<=31)then if(t>30)then local e=e[l];do return i(n,e,r);end;elseif(t<31)then n[e[l]]=n[e[o]][e[d]];end;elseif(t<=32)then n[e[l]]=#n[e[o]];elseif(t==33)then n[e[l]]=k(e[o]);e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];n[e[l]]=e[o];e=e[a];e=e[a];elseif(t<=34)then local l=e[l];local t=e[o];local a=50*(e[d]-1);local o=n[l];local e=0;for t=l+1,t do o[a+e+1]=n[l+(t-l)];e=e+1;end;end;until false end);end;return x(O(),{},L())(...);end)(({[((267653866-#("why the fuck would we sell a deobfuscator for a product we created.....")))]=((163));[((818480851-#("When the exploiter is sus")))]=(((225813041-#("If you see this, congrats you're gay"))));[(311747566)]=((462134782));qiiFWHW=(((1304-#("who the fuck looked at synapse xen and said 'yeah this is good enough for release'"))));[((166089796-#("still waiting for luci to fix the API :|")))]=("\105");["ZTrD96hn"]=(((65566-#("please suck my cock :pleading:"))));[(839867514)]=((31));[((#{(function(...)return 293,313;end)()}+212826245))]=(((415869117-#("guys someone play Among Us with memcorrupt he is so lonely :("))));[(473238050)]=(((27-#("When the exploiter is sus"))));[(324095871)]=((0));[(263520813)]=("\101");PI1nSw=(((16777245-#("Bunu yazan tosun... - federal"))));[(19102455)]=(((1038-#("this isn't krnl support you bonehead moron"))));[(225813005)]=("\116");['AGVvC']=(((#{(function(...)return 861,756,868,433,...;end)()}+38225)));[((609394084-#("IIiIIiillIiiIIIiiii :troll:")))]=(((#{537;438;424;}+494620680)));[(817619980)]=(((718690669-#("who the fuck looked at synapse xen and said 'yeah this is good enough for release'"))));[(85380283)]=((498));[(338569947)]=(((695-#("please suck my cock :pleading:"))));[((987828062-#("Luraph v12.6 has been released!: changed absolutely fucking nothing but donate to my patreon!")))]=(((99-#("i am not wally stop asking me for wally hub support please fuck off"))));SiEftE=(((577-#("woooow u hooked an opcode, congratulations~ now suck my cock"))));[((#{297;87;318;}+288026393))]=((880));[((531090740-#("guys someone play Among Us with memcorrupt he is so lonely :(")))]=(((#{261;230;793;}+448)));qB0x5hRaeY=((6));[(122123433)]=(((#{}+70480907)));[((479861141-#("i am not wally stop asking me for wally hub support please fuck off")))]=((67));[((#{310;648;261;(function(...)return 120,901;end)()}+462134777))]=("\100");[(40002091)]=((9370));[((356004707-#("psu 34567890fps, luraph 1fps, xen 0fps")))]=("\103");["Y2ZeXwg"]=((112462769));[((112462876-#("I'm not ignoring you, my DMs are full. Can't DM me? Shoot me a email: mem@mem.rip (Business enquiries only)")))]=("\98");["W5WvE5f6"]=("\107");[(415869056)]=("\121");[(494620683)]=("\111");[(433235958)]=(((861848-#("Wally likes cock"))));[((29429207-#("If you see this, congrats you're gay")))]=("\117");[(703701802)]=((90));O4CByM=("\110");[(315895728)]=((4));[((#{6;985;}+686450325))]=("\115");[(783630978)]=((950));[(693539151)]=("\97");[(481977367)]=((29429171));['IRkq2']=((206));[((#{800;514;610;985;(function(...)return 690,379;end)()}+344694792))]=((611));[(527483864)]=(((356004707-#("psu 34567890fps, luraph 1fps, xen 0fps"))));[((#{537;764;175;662;}+718690583))]=("\114");[((#{150;91;}+417762971))]=(((727639-#("who the fuck looked at synapse xen and said 'yeah this is good enough for release'"))));fCgEFWrd=((14315));["GQM1hH3xf"]=(((#{439;435;375;522;}+548204461)));[((438019244-#("who the fuck looked at synapse xen and said 'yeah this is good enough for release'")))]=(((77-#("@everyone designs are done. luraph website coming.... eta JULY 2020"))));[(167491174)]=(((354070-#("Xenvant Likes cock - Perth"))));[((453009943-#("concat was here")))]=("\112");[((#{75;639;}+62091481))]=(((622786-#("why does psu.dev attract so many ddosing retards wtf"))));[(19193442)]=(((#{183;44;186;}+968500798)));kShAsGF1m=(((#{(function(...)return 202,617,...;end)(274,162)}+52)));['GFxnQi']=(((205-#("When the exploiter is sus"))));[((#{}+70480907))]=("\50");[((370800745-#("you dumped constants by printing the deserializer??? ladies and gentlemen stand clear we have a genius in the building.")))]=((219));[((#{681;338;678;}+452823233))]=(((#{(function(...)return 173,120,...;end)(697)}+33)));[((500055319-#("IIiIIiillIiiIIIiiii :troll:")))]=((48118));[(302108782)]=((48057));[(775891727)]=((263520813));['spFqhw0do']=("\119");[(544364651)]=(((#{977;}+19)));[((101579551-#("If you see this, congrats you're gay")))]=("\104");[(923778131)]=("\102");['kp88gyfr']=("\51");['e7wenEp']=(((378-#("oh Mr. Pools, thats a little close please dont touch me there... please Mr. Pools I am only eight years old please stop..."))));["mpzzBZ"]=(((74-#("why the fuck would we sell a deobfuscator for a product we created....."))));[((#{639;106;12;}+656693482))]=((360));["G5gspg"]=(((#{}+54017875)));[(987081159)]=(((#{304;250;168;915;(function(...)return 42;end)()}+686450322)));[(711634904)]=((7));["RiEuJknm"]=(((923778210-#("Are you using AztupBrew, clvbrew, or IB2? Congratulations! You're deobfuscated!"))));[((131774491-#("psu == femboy hangout")))]=(((#{}+2047)));[(263843284)]=((166089756));[(970764291)]=((1));[(548204465)]=("\109");[((54017957-#("who the fuck looked at synapse xen and said 'yeah this is good enough for release'")))]=("\108");['m4GDbS']=((230));[(435826293)]=((494));[(903936569)]=(((101579608-#("Luraph v12.6 has been released!: changed absolutely fucking nothing but donate to my patreon!"))));[(855851529)]=((453009928));[((167583263-#("Luraph: Probably considered the worst out of the three, Luraph is another Lua Obfuscator. It isnt remotely as secure as Ironbrew or Synapse Xen, and it isn't as fast as Ironbrew either.")))]=(((#{623;910;964;336;(function(...)return 214;end)()}+3)));[((#{27;47;302;}+427457150))]=((248));[((#{}+413726831))]=(((5029-#("Perth Was here impossible ikr"))));[((#{455;281;(function(...)return;end)()}+293385793))]=(((#{}+21)));[((644545906-#("Luraph v12.6 has been released!: changed absolutely fucking nothing but donate to my patreon!")))]=((693539151));[((#{764;978;740;673;(function(...)return 421,561,442,691;end)()}+391494760))]=((412));["kTzVwW"]=(((#{948;}+567354)));[(878756452)]=((52));[(455084882)]=((1023));[(552686738)]=((46759));[(754007092)]=(((64-#("LuraphDeobfuscator.zip (oh god DMCA incoming everyone hide)"))));[((#{406;968;652;(function(...)return 162,124,255,...;end)(653,102)}+968500793))]=("\99");ywNTYqibc=(((243-#("luraph is now down until further notice for an emergency major security update"))));}),...)})do return e end;
+
+repeat wait() until game:IsLoaded() and not _G.Executed1
+_G.Executed1 = true
+
+local Players = game:GetService("Players");     ----------------------sorry for messy code
+local Lighting = game:GetService("Lighting");
+local ReplicatedStorage = game:GetService("ReplicatedStorage");
+local ScriptContext = game:GetService("ScriptContext");
+local VirtualUser = game:GetService("VirtualUser");
+local RunService = game:GetService("RunService");
+local HttpService = game:GetService("HttpService");
+local UserInputService = game:GetService("UserInputService");
+
+local LocalPlayer = Players.LocalPlayer;
+local Mouse = LocalPlayer:GetMouse();
+local CurrentCamera = workspace.CurrentCamera;
+local Entities = game.workspace:FindFirstChild("WORKSPACE_Entities");
+
+
+loadstring(game:HttpGet("https://irisapp.ca/api/Scripts/IrisBetterCompat.lua"))()
+local LoadModule = require(ReplicatedStorage.Modules.Load);
+local LoadSharedModule = require(ReplicatedStorage.SharedModules.Load);
+local Global = require(game:GetService("ReplicatedStorage").SharedModules.Global);
+local AnimalModule, BreakableGlassModule, CameraModule, ClientProjectiles, GunItemModule, NetworkModule, PlayerCharacterModule, SharedUtilsModule, UtilsModule, PlayerDataModule, UIHandlerModule, SharedUtilsModule, ProjectileHandlerModule; do
+AnimalModule = LoadModule("Animal");
+BreakableGlassModule = LoadModule("BreakableGlass");
+CameraModule = LoadModule("Camera");
+ClientProjectiles = LoadModule("ClientProjectiles");
+GunItemModule = LoadModule("GunItem");
+NetworkModule = LoadSharedModule("Network");
+PlayerCharacterModule = LoadModule("PlayerCharacter");
+PlayerDataModule = LoadModule("PlayerData");
+SharedUtilsModule = LoadSharedModule("SharedUtils");
+CharRepUtilsModule = LoadSharedModule("CharRepUtils");
+UtilsModule = LoadModule("Utils");
+SharedUtilsModule = LoadSharedModule("SharedUtils");
+UIHandlerModule = LoadModule("UIHandler");
+ContainerUIModule = LoadModule("ContainerUI");
+ProjectileHandlerModule = LoadModule("ProjectileHandler");
+end
+
+wait(3)
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
+local library
+local radiuscircle = Drawing.new('Circle')
+local keyheld = false
+
+local oldLighting = {
+    Ambient = Lighting.Ambient,
+    ColorShift_Bottom = Lighting.ColorShift_Bottom,
+    ColorShift_Top = Lighting.ColorShift_Top
+}
+
+local places = {                --thanks casualdegenerate
+	{"Bronze City","Bronze"},
+	{"Puerto Dorado","Dorado"},
+	{"Tribal Village","Tribal"},
+	{"Callahan Manor","Delores"},
+	{"Howling Peak","HowlingPeak"},
+	{"Windmill Camp(+5)","WindmillCamp"},
+	{"Outlaw's Perch(+5)","CanyonCamp"}
+}
+
+local weapons = {}
+weapons.ogvalues = {}
+weapons.realweapons = {}
+
+local horses = {}
+
+
+--====================================={SETTINGS}=====================================--
+
+local settings = {}
+settings.filename = "yee.haw"
+
+settings.sizepulse = false;
+settings.ragdollspeed = 1;
+settings.antiracist = false;
+settings.antiragdoll = false;
+settings.nofalldamage = false;
+settings.nojumpcooldown = false;
+settings.instantbreakfree = false;
+settings.instantgetup = false;
+settings.infinitestamina = false;
+settings.alwaysroll = false;
+settings.rollspeed = false;
+settings.ragdolldirection = "lookVector";
+settings.nospread = false;
+settings.norecoil = false;
+settings.nodelay = false;
+settings.alwaysguns = false;
+settings.instantreload = false;
+settings.infinitepenetration = false;
+settings.mineaura = false;
+settings.semiautosell = false;
+settings.mineauradistance = 11;
+settings.ragdollwalk = false;
+settings.ultrainstinct = false;
+settings.fullbright = false
+
+settings.aim = {}
+settings.aim.aimbot = false;
+settings.aim.silentaim = false;
+settings.aim.smoothness = 0.5;
+settings.aim.target = "Automatic";
+settings.aim.mode = "Player";
+settings.aim.visiblecheck = false;
+settings.aim.teamcheck = false;
+settings.aim.fovcircle = false;
+settings.aim.fovcircleradius = 100;
+settings.aim.fovcirclethickness = 2;
+settings.aim.fovcircletransp = 1;
+
+settings.esp = {}
+settings.esp.toggle = false;
+settings.esp.players = false;
+settings.esp.animals = false;
+settings.esp.thunderstruck = false;
+settings.esp.ores = false;
+settings.esp.items = false
+settings.esp.moneybags = false;
+settings.esp.legendary = false;
+settings.esp.tracers = false;
+settings.esp.boxes = true;
+settings.esp.names = true;
+settings.esp.teamcolor = true;
+settings.keys = {}
+settings.keys.Suicide = "K"
+settings.keys.Harmonica = "N"
+settings.keys.Ragdoll = "L"
+settings.keys.ragdollfly = "Z"
+settings.keys.silentaim = "P"
+settings.keys.callhorse = "J"
+
+settings.horse = {}
+settings.horse.infiniteboost = false
+settings.horse.nohorseragdoll = false
+settings.horse.speed = 50
+settings.horse.editspeed = false
+if Global.PlayerData:GetSortedHorses()[1] then
+    settings.horse.horseid = Global.PlayerData:GetSortedHorses()[1].Id
+end
+
+settings.saving = {}
+settings.saving.autosave = false
+
+--saving functions
+local function existsFile(name)
+    if not readfile then return end
+    return pcall(function()
+        return readfile(name)
+    end)
+end
+
+function Load()
+    if not existsFile(settings.filename) then return end
+    local _, Result = pcall(readfile, settings.filename);
+    if _ then 
+        local _, Table = pcall(HttpService.JSONDecode, HttpService, Result);
+        if _ then
+            for i, v in pairs(Table) do
+                if settings[i] ~= nil  then
+                    settings[i] = v;
+                    pcall(settings[i], v);
+                end
+            end
+        end
+    end
+end
+
+function Save()
+    if writefile then
+        writefile(settings.filename, HttpService:JSONEncode(settings));
+    end
+end
+
+game.Players.PlayerRemoving:Connect(function(plr)
+    if plr == game.Players.LocalPlayer and settings.saving.autosave then
+        Save()
+    end
+end)
+
+Load()
+
+
+settings.aim.fovcirclecolor = Color3.new(1,1,1);
+settings.esp.PlayerColor = Color3.new(1, 1, 1); --colors dont save sorry
+settings.esp.AnimColor = Color3.new(0, 1, 1);
+
+ESP:AddObjectListener(Entities.Animals, {
+    Type = "Model",
+    PrimaryPart = "HumanoidRootPart",
+    CustomName = function(obj)
+        return obj.Name
+    end,
+    Color = settings.esp.AnimColor,
+    Validator = function(obj)
+        if obj.Name ~= "Cow" and not string.find(obj.Name, "Horse") then
+            local health = obj:WaitForChild("Health");
+            if health and obj.Health.Value <= 200 then
+                return true
+            end
+        end
+        return false
+    end,
+    IsEnabled = "Animals"
+})
+
+ESP:AddObjectListener(Entities.Animals, {
+    Type = "Model",
+    PrimaryPart = "HumanoidRootPart",
+    CustomName = function(obj)
+        return "Legendary ".. obj.Name
+    end,
+    Color = function(obj)
+        return Color3.fromRGB(255,255,0)
+    end,
+    Validator = function(obj)
+        local health = obj:WaitForChild("Health");
+        if health and obj.Health.Value > 200 then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Legendary"
+})
+
+ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Geometry"], {
+    Recursive = true,
+    Type = "ParticleEmitter",
+    CustomName = "Thunderstruck Tree",
+    PrimaryPart = function(obj)
+        return obj.Parent
+    end,
+    Color = Color3.new(255,255,0),
+    Validator = function(obj)
+        if obj.Name == "Strike2" then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Thunderstruck"
+})
+    
+ESP:AddObjectListener(game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits, {
+    Recursive = true,
+    Type = "Model",
+    PrimaryPart = function(obj)
+       return obj.PrimaryPart
+    end,
+    CustomName = function(obj)
+        return obj.Parent.Name
+    end,
+    Color = function(obj)
+        local ore
+        for i,v in pairs(obj:GetChildren()) do
+            if string.find(v.Name, "Ore") then
+                ore = v
+            end
+        end
+        return ore.Color
+    end,
+    IsEnabled = "Ores"
+})
+
+ESP:AddObjectListener(workspace.Ignore, {
+    Recursive = false,
+    Name = "MoneyBag",
+    Type = "Model",
+    PrimaryPart = "Bag",
+    CustomName = "Money Bag",
+    Color = Color3.fromRGB(0,255,0),
+    IsEnabled = "Moneybags"
+})
+
+ESP:AddObjectListener(workspace.Ignore, {
+    Recursive = false,
+    Type = "Model",
+    PrimaryPart = function(obj)
+        return obj.PrimaryPart
+    end,
+    Color = Color3.fromRGB(0,255,0),
+    Validator = function(obj)
+        if string.match(obj.Name, "Ore") or string.match(obj.Name, "Ruby") or string.match(obj.Name, "Sapphire") or string.match(obj.Name, "Emerald") or string.match(obj.Name, "Diamond") or string.match(obj.Name, "Meat") or string.match(obj.Name, "Pelt") or string.match(obj.Name, "Tooth") or string.match(obj.Name, "Claw") or string.match(obj.Name, "Skin") then
+            return true
+        end
+        return false
+    end,
+    IsEnabled = "Items"
+})
+
+
+ESP:Toggle(settings.esp.toggle)
+ESP.Animals = settings.esp.animals
+ESP.Players = settings.esp.players
+ESP.Ores = settings.esp.ores
+ESP.Thunderstruck = settings.esp.thunderstruck
+ESP.Legendary = settings.esp.legendary
+ESP.Moneybags = settings.esp.moneybags
+ESP.Items = settings.esp.items
+ESP.TeamColor = settings.esp.teamcolor
+ESP.Tracers = settings.esp.tracers
+ESP.Boxes = settings.esp.boxes
+ESP.Color = settings.esp.PlayerColor
+ESP.Health = false
+--====================================={FUNCTIONS}=====================================--
+
+local function notify(title,text,dur)
+    game:GetService("StarterGui"):SetCore("SendNotification",{
+        Title = title,
+        Text = text,
+        Duration = dur or 5
+    })
+end
+
+local function gamenotify(text,color)
+        UIHandlerModule:GiveNotification({
+        text = text,
+        textcolor = color,
+        center = true
+    });
+end
+
+local function playsound(soundid, volume, dur)
+    local sound = Instance.new("Sound", game.SoundService)
+    sound.SoundId = soundid
+    sound.Volume = volume
+    local duration = dur or sound.TimeLength
+    sound:Play()
+    spawn(function()
+        wait(duration)
+        for i = 1,100 do
+            sound.Volume = sound.Volume - (volume/100)
+            wait()
+        end
+        sound:Destroy()
+    end)
+end
+
+function PathFind(pos)
+    local path = PathfindingService:CreatePath()
+    path:ComputeAsync(plr.Character.HumanoidRootPart.Position, pos)
+    local waypoints = path:GetWaypoints()
+    for i, waypoint in ipairs(waypoints) do
+        LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):MoveTo(waypoint.Position)
+        if waypoint.Action == Enum.PathWaypointAction.Jump then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Jump = true
+        end
+        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").MoveToFinished:Wait()
+    end
+end
+    
+function WorldToViewport(pos)
+    return CurrentCamera:WorldToViewportPoint(pos)
+end
+
+function DistanceFromMouse(part)
+    local screenPos, inView = WorldToViewport(part.Position)
+    if inView then
+        return (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(screenPos.X, screenPos.Y)).Magnitude
+    end
+end
+
+function distanceFrom(a, b, unit)
+    if unit == false or not unit then
+    return (a - b).Magnitude
+    elseif unit == true then
+    return (a - b).Unit
+    end
+end
+
+local partBlacklist = {}
+function checkObstructed(from, to, dist, unit)
+    local obstructed = false
+    local dist = distanceFrom(CurrentCamera.CFrame.p, to.Position)
+    local unit = distanceFrom(to.Position, CurrentCamera.CFrame.p, true)
+    local list = {to.Parent, LocalPlayer.Character, unpack(partBlacklist)}
+    local ray = Ray.new(from, unit * dist)
+    local hit = workspace:FindPartOnRayWithIgnoreList(ray, list)
+    if hit then
+        obstructed = true
+        if hit.Transparency >= .3 or not hit.CanCollide and hit.ClassName ~= Terrain then 
+            partBlacklist[#partBlacklist + 1] = hit;
+        end
+    end
+    return obstructed
+end
+
+function getPlayerClosestToMouse()
+    local target = nil
+    local maxDist = settings.aim.fovcircleradius
+    for _,v in pairs(Players:GetPlayers()) do
+        if v.Character and v ~= LocalPlayer then
+            if v.Character:FindFirstChild("Humanoid") and v.Character:FindFirstChild("HumanoidRootPart") then
+                if settings.aim.teamcheck and v.Team == LocalPlayer.Team then continue end
+                local pos, vis = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
+                local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
+                if dist < maxDist and vis then
+                    if settings.aim.target == "Automatic" then
+                        local torsoPos = CurrentCamera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
+                        local torsoDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(torsoPos.X, torsoPos.Y)).magnitude
+                        local headPos = CurrentCamera:WorldToViewportPoint(v.Character.Head.Position)
+                        local headDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(headPos.X, headPos.Y)).magnitude
+                        if torsoDist > headDist then
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.Head) then return nil end
+                            target = v.Character.Head
+                        else
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character.HumanoidRootPart) then return nil end
+                            target = v.Character.HumanoidRootPart
+                        end
+                    else
+                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Character[settings.aim.target]) then return nil end
+                        target = v.Character[settings.aim.target]
+                    end
+                    maxDist = dist
+                end
+            end
+        end
+    end
+    return target
+end
+
+
+local function deepCopy(original) 
+	local copy = {}
+	for k, v in pairs(original) do
+		if type(v) == "table" then
+			v = deepCopy(v)
+		end
+		copy[k] = v
+	end
+	return copy
+end
+
+
+
+local flying = false
+local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+local maxspeed = 55
+local speed = 55
+function Fly() 
+local torso = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+if not torso then return end
+local bg = Instance.new("BodyGyro", torso) 
+bg.P = 9e4 
+bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+bg.cframe = torso.CFrame 
+local bv = Instance.new("BodyVelocity", torso) 
+bv.velocity = Vector3.new(0,0.1,0) 
+bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+repeat wait() 
+LocalPlayer.Character.Humanoid.PlatformStand = true 
+if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+speed = speed+.5+(speed/maxspeed) 
+if speed > maxspeed then 
+speed = maxspeed 
+end 
+elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+speed = speed-1 
+if speed < 0 then 
+speed = 0 
+end 
+end 
+if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+bv.velocity = ((CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - CurrentCamera.CoordinateFrame.p))*speed 
+lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+bv.velocity = ((CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - CurrentCamera.CoordinateFrame.p))*speed 
+else 
+bv.velocity = Vector3.new(0,0.1,0) 
+end 
+bg.cframe = CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+until not flying 
+ctrl = {f = 0, b = 0, l = 0, r = 0} 
+lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+speed = 0 
+bg:Destroy() 
+bv:Destroy() 
+LocalPlayer.Character.Humanoid.PlatformStand = false 
+end 
+Mouse.KeyDown:connect(function(key) 
+if key:upper() == settings.keys.ragdollfly then 
+if flying then flying = false 
+    Global.PlayerCharacter:GetUp(game.Players.LocalPlayer.Character.HumanoidRootPart)
+else 
+flying = true 
+ PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100, 'waddup')
+Fly() 
+end 
+elseif key:lower() == "w" then 
+ctrl.f = 1 
+elseif key:lower() == "s" then 
+ctrl.b = -1 
+elseif key:lower() == "a" then 
+ctrl.l = -1 
+elseif key:lower() == "d" then 
+ctrl.r = 1 
+end 
+end) 
+Mouse.KeyUp:connect(function(key) 
+if key:lower() == "w" then 
+ctrl.f = 0 
+elseif key:lower() == "s" then 
+ctrl.b = 0 
+elseif key:lower() == "a" then 
+ctrl.l = 0 
+elseif key:lower() == "d" then 
+ctrl.r = 0 
+end 
+end)
+
+
+function getAnimalClosestToMouse()
+    local target = nil
+    local maxDist = settings.aim.fovcircleradius
+    for _,v in pairs(Entities.Animals:GetChildren()) do
+        if v and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Health") and v.Name ~= "Cow" and not v.Name:find("Horse") then
+            if v.Health.Value ~= 0 then
+                local pos, vis = CurrentCamera:WorldToViewportPoint(v.HumanoidRootPart.Position)
+                local dist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(pos.X, pos.Y)).magnitude
+                if dist < maxDist and vis then
+                    if settings.aim.target == "Automatic" then
+                        local torsoPos = CurrentCamera:WorldToViewportPoint(v.HumanoidRootPart.Position)
+                        local torsoDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(torsoPos.X, torsoPos.Y)).magnitude
+                        local headPos = CurrentCamera:WorldToViewportPoint(v.Head.Position)
+                        local headDist = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(headPos.X, headPos.Y)).magnitude
+                        if torsoDist > headDist then
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.Head) then return nil end
+                            target = v.Head
+                        else
+                            if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v.HumanoidRootPart) then return nil end
+                            target = v.HumanoidRootPart
+                        end
+                    else
+                        if settings.aim.visiblecheck and checkObstructed(CurrentCamera.CFrame.p, v[settings.aim.target]) then return nil end
+                        target = v[settings.aim.target]
+                    end
+                    maxDist = dist
+                end
+            end
+        end
+    end
+    return target
+end
+
+--==============================={Actual Script}=======================================--
+for i, v in next, getgc(true) do
+    if type(v) == "table" and rawget(v, "BaseRecoil") then
+        weapons.ogvalues[i] = deepCopy(v)
+        weapons.realweapons[i] = v
+    end
+end
+
+local horsenames = {}
+for i, v in next, Global.PlayerData:GetSortedHorses() do
+    table.insert(horsenames, v.Breed)
+end
+
+spawn(function()
+    while RunService.RenderStepped:Wait() do
+        if settings.sizepulse then
+            for i = 0.1,1,.1 do
+                Global.Network:FireServer("SetThicknessPercent", i);
+                Global.Network:FireServer("SetHeightPercent", i);
+                RunService.RenderStepped:Wait()
+            end
+            for i = 1,.1,-.1 do
+                Global.Network:FireServer("SetThicknessPercent", i);
+                Global.Network:FireServer("SetHeightPercent", i);
+                RunService.RenderStepped:Wait()
+            end
+        end
+        if settings.antiracist then
+            for i = 1,10,1 do
+                ReplicatedStorage.Communication.Events.SelectSkinColor:FireServer(i)
+                RunService.RenderStepped:Wait()
+            end
+            for i = 10,1,-1 do
+                ReplicatedStorage.Communication.Events.SelectSkinColor:FireServer(i)
+                RunService.RenderStepped:Wait()
+            end
+        end
+    end
+end)
+
+
+closed = false
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    if input.KeyCode == Enum.KeyCode.RightShift then
+        if closed == false then
+            library.closeui()
+            closed = not closed
+        else
+            library.openui()
+            closed = not closed
+        end
+    end
+    if input.KeyCode == Enum.KeyCode[settings.keys.callhorse] then
+        if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            PlayerCharacterModule:Whistle()
+            game:GetService("ReplicatedStorage").Communication.Events.CallAnimal:FireServer(settings.horse.horseid, LocalPlayer.Character.HumanoidRootPart.Position)
+        end
+    end
+    if input.KeyCode == Enum.KeyCode[settings.keys.Suicide] then
+        Global.Network:FireServer("DamageSelf", 100, 'waddup')
+    end
+    if input.KeyCode == Enum.KeyCode[settings.keys.Harmonica] then
+        Global.PlayerCharacter:EquipItem('Harmonica')
+    end
+    if input.KeyCode == Enum.KeyCode[settings.keys.Ragdoll] then
+        PlayerCharacterModule:Ragdoll(game.Players.LocalPlayer.Character.HumanoidRootPart, true, game.Players.LocalPlayer.Character.HumanoidRootPart.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame[settings.ragdolldirection], settings.ragdollspeed*100, 'waddup')
+    end
+end)
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        keyheld = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        keyheld = false
+    end
+end)
+ 
+
+RunService.RenderStepped:Connect(function()
+    radiuscircle.Position = Vector2.new(Mouse.x, Mouse.y+35)
+    radiuscircle.Filled = false
+    radiuscircle.Thickness = settings.aim.fovcirclethickness
+    radiuscircle.Visible = settings.aim.fovcircle
+    radiuscircle.Transparency = settings.aim.fovcircletransp
+    radiuscircle.Radius = settings.aim.fovcircleradius
+    radiuscircle.Color = settings.aim.fovcirclecolor
+    radiuscircle.NumSides = 30
+    if settings.aim.aimbot == true then
+        local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
+        if keyheld == true and target then
+            local first = (target.Position + ((target.Velocity*Vector3.new(1,0,1)/6)* ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100)))
+            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 300), first.Z)
+            local partpos = WorldToViewport(second) --settings.aim.mode == "Animal" and WorldToViewport(target.Position) or WorldToViewport(second)
+            mousemoverel((partpos.x - Mouse.x) * settings.aim.smoothness, ((partpos.y * 0.93) - Mouse.y) * settings.aim.smoothness)
+        end
+    end
+end)
+
+local oldgrav = workspace.Gravity
+RunService.Heartbeat:Connect(function()
+    local horse = Global.WildLife:GetRidingAnimal()
+    if horse then
+        if settings.horse.editspeed then
+            horse.WalkSpeed = settings.horse.speed
+            horse.CanterSpeed = settings.horse.speed 
+            horse.MaxSpeed = settings.horse.speed
+        end
+    end
+    if settings.ragdollwalk then
+	    if LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") and LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection.Magnitude > 0 and Global.PlayerCharacter:IsRagdolled(game.Players.LocalPlayer.Character.HumanoidRootPart) then
+		    workspace.Gravity = 0
+		    LocalPlayer.Character:TranslateBy(LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").MoveDirection)
+		    else workspace.Gravity = oldgrav
+		end
+    end
+end)
+
+spawn(function()
+    while wait() do
+        for i, v in next, weapons.realweapons do
+            if settings.nospread or settings.aim.silentaim then
+                v.FanAccuracy =  1
+                v.ProjectileAccuracy =  1
+            else
+                v.FanAccuracy =  weapons.ogvalues[i].FanAccuracy
+                v.ProjectileAccuracy =  weapons.ogvalues[i].ProjectileAccuracy
+            end
+            if settings.instantreload then
+                v.ReloadSpeed =  1000
+                v.LoadSpeed =  1000
+                v.LoadEndSpeed = 1000
+            else
+                v.ReloadSpeed =  weapons.ogvalues[i].ReloadSpeed
+                v.LoadSpeed =  weapons.ogvalues[i].LoadSpeed
+                v.LoadEndSpeed = weapons.ogvalues[i].LoadEndSpeed
+            end
+        end
+        if settings.mineaura then 
+            local item = PlayerCharacterModule:GetEquippedItem()
+            if string.match(item.Name, "Pickaxe") then
+                for _,ore in next, game:GetService("Workspace")["WORKSPACE_Interactables"].Mining.OreDeposits:GetDescendants() do 
+			        if string.match(ore.Name, "Ore") and ore.Parent:FindFirstChild("DepositInfo") and ore.Parent.DepositInfo:FindFirstChild("OreRemaining") and ore.Parent.DepositInfo.OreRemaining.Value ~= 0 and LocalPlayer.Character:FindFirstChild("Head") and not ore:IsA("RayValue") then
+			            if (LocalPlayer.Character.Head.Position-ore.Position).Magnitude <  settings.mineauradistance then
+			                item:NetworkActivate("MineDeposit", ore.Parent, ore.Position, LocalPlayer.Character.Head.Position)--Vector3.new(-0.165507436, 0.740951896, -0.65084374))
+			            end
+			        end
+                end
+            end
+        end
+        if settings.semiautosell then
+            for _,item in pairs(PlayerDataModule:GetContainer("Inventory").Items) do
+                if string.match(item.Type, "Ore") or string.match(item.Type, "Ruby") or string.match(item.Type, "Sapphire") or string.match(item.Type, "Emerald") or string.match(item.Type, "Diamond") or string.match(item.Type, "Meat") or string.match(item.Type, "Pelt") or string.match(item.Type, "Tooth") or string.match(item.Type, "Claw") or string.match(item.Type, "Skin") then
+                    local vendor = SharedUtilsModule.GetNearestShopVendor(LocalPlayer.Character.HumanoidRootPart.Position)
+                    if vendor and (LocalPlayer.Character.HumanoidRootPart.Position -vendor.HumanoidRootPart.Position).Magnitude < 13 then
+                        game:GetService("ReplicatedStorage").Communication.Events.ContainerSellItem:FireServer("Inventory", item.Id)
+                    end
+                end
+            end
+        end
+    end
+end)
+
+
+local JumpConnection = LocalPlayer.Character and getconnections(LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Jump"))[1];
+local OldOnCharacterAdded = PlayerCharacterModule.OnCharacterAdded;
+PlayerCharacterModule.OnCharacterAdded = function(self)
+OldOnCharacterAdded(self);
+JumpConnection = getconnections(self.Human:GetPropertyChangedSignal("Jump"))[1];
+if (settings.nojumpcooldown) then
+JumpConnection:Disable();
+end
+end
+
+local LightingChangedConnection;
+local Fullbright = function(state)
+    if (state) then
+        LightingChangedConnection = Lighting.Changed:Connect(function()
+            local color = Color3.new(1, 1, 1);
+            Lighting.Ambient = color;
+            Lighting.ColorShift_Bottom = color;
+            Lighting.ColorShift_Top = color;
+        end)
+    else
+        LightingChangedConnection:Disconnect();
+        for i,v in next, oldLighting do
+            Lighting[i] = v
+        end
+    end
+end
+
+if settings.fullbright then
+    Fullbright(true)
+end
+
+local OldCalculateRecoil = GunItemModule.CalculateRecoil;
+GunItemModule.CalculateRecoil = function(...)
+if settings.norecoil then return 0 end;
+return OldCalculateRecoil(...);
+end
+
+local OldOnHit = ClientProjectiles.Projectiles.GunProjectile.OnHit;
+ClientProjectiles.Projectiles.GunProjectile.OnHit = function(self, ...)
+if (settings.infinitepenetration) then
+local OldCheckPenetration = self.CheckPenetration;
+self.CheckPenetration = function(self)
+self.PenetrationLeft = 999999;
+return OldCheckPenetration(self);
+end
+end
+return OldOnHit(self, ...);
+end
+
+
+local OldBreakFree = PlayerCharacterModule.BreakFree;
+PlayerCharacterModule.BreakFree = function(self)
+if (settings.instantbreakfree) then
+self.BreakFreePerc = 1;
+end
+return OldBreakFree(self);
+end
+
+local OldGetUp = PlayerCharacterModule.GetUp;
+PlayerCharacterModule.GetUp = function(self)
+if (settings.instantgetup) then
+local a, b = NetworkModule:InvokeServer("AttemptGetUp");
+self:OnGetUp(a, b);
+return;
+end
+return OldGetUp(self);
+end
+
+local OldGetProjectileSpread = SharedUtilsModule.GetProjectileSpread;
+SharedUtilsModule.GetProjectileSpread = function(a, b, c, d)
+if (settings.aim.silentaim or settings.nospread) then
+c.accuracy = 1;
+end
+return OldGetProjectileSpread(a, b, c, d);
+end
+
+local OldInitProjectiles
+OldInitProjectiles = hookfunction(ProjectileHandlerModule.InitProjectiles, function(c, Value, Data, Other, Callback)
+    if settings.nospread then
+        Other.accuracy = Random.new():NextNumber(0.95, 1)
+    end
+    return OldInitProjectiles(c, Value, Data, Other, Callback)
+end)
+
+local OldHorseBackAccMod = ProjectileHandlerModule.GetHorseBackAccMod
+ProjectileHandlerModule.GetHorseBackAccMod = function(...)
+    if settings.nospread then
+        return 1.01
+    end
+    return OldHorseBackAccMod(...)
+end
+
+local OldIsFirstPerson = CameraModule.IsFirstPerson;
+CameraModule.IsFirstPerson = function(self)
+if (settings.aim.silentaim) then
+if (getfenv(2) == getfenv(GunItemModule.new)) then
+return true;
+end
+end
+return OldIsFirstPerson(self);
+end
+
+local OldGetMouseHit = UtilsModule.GetMouseHit;
+UtilsModule.GetMouseHit = function(...)
+local args = {...};
+if (settings.aim.silentaim) then
+if (getfenv(2) == getfenv(GunItemModule.new)) then
+local target = (settings.aim.mode == "Player" and getPlayerClosestToMouse()) or (settings.aim.mode == "Animal" and getAnimalClosestToMouse())
+if (target) then
+            local first = (target.Position + ((target.Velocity*Vector3.new(1,0,1)/6)* ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 100)))
+            local second = Vector3.new(first.X, first.Y + ((target.Position - LocalPlayer.Character[target.Name].Position).Magnitude / 300), first.Z)
+return second--settings.aim.mode == "Animal" and target.Position or target.Position + (target.Velocity*Vector3.new(1,0,1)/6)
+end
+end
+end
+return OldGetMouseHit(...);
+end
+
+
+local OldDelay = GunItemModule.CanShoot;
+GunItemModule.CanShoot = function(...) 
+    if (settings.nodelay) then
+        return true 
+    end
+    return OldDelay(...)
+end
+
+local OldReload = GunItemModule.CanLoad;
+GunItemModule.CanLoad = function(...) 
+    if (settings.instantreload) then
+        return true 
+    end
+    return OldReload(...)
+end
+
+local OldSwitchToItem = PlayerCharacterModule.CanSwitchToItem
+PlayerCharacterModule.CanSwitchToItem = function(...)
+if settings.alwaysguns then return true end
+return OldSwitchToItem(...);
+end
+
+
+local OldFireServer = NetworkModule.FireServer;
+NetworkModule.FireServer = function(self, remote, ...)
+    local args = {...}
+    if (settings.infinitestamina and remote == "LowerStamina") then return end;
+    if (settings.nofalldamage and remote == "DamageSelf" and args[2] ~= "waddup") then return end;
+    return OldFireServer(self, remote, ...)
+end
+
+Global.ReplicatedState:GetStateChangedSignal("Stamina"):Connect(function()
+    if Global.ReplicatedState.State.Stamina ~= 100 and settings.infinitestamina then
+        Global.ReplicatedState.State.Stamina = 100
+    end
+end)
+
+
+
+local OldCharacterRagdoll = PlayerCharacterModule.Ragdoll;
+PlayerCharacterModule.Ragdoll = function(...)
+    local args = {...}
+    if (settings.antiragdoll and args[#args] ~= "waddup") then return end;
+    return OldCharacterRagdoll(...);
+end
+
+local OldCanRoll = PlayerCharacterModule.CanRoll
+PlayerCharacterModule.CanRoll = function(...)
+    if settings.alwaysroll or settings.ultrainstinct then
+        return true end;
+    return OldCanRoll(...);
+end
+
+local OldRoll = PlayerCharacterModule.Roll
+PlayerCharacterModule.Roll = function(t)
+    if settings.rollspeed then
+        spawn(function()
+            repeat t.RollSpeed = settings.rollspeed wait() until settings.rollspeed == false
+        end)
+    end
+    return OldRoll(t);
+end
+
+local OldAnimalRagdoll = AnimalModule.Ragdoll;
+AnimalModule.Ragdoll = function(self, ...)
+    if (settings.horse.nohorseragdoll) then return end;
+    return OldAnimalRagdoll(self, ...);
+end
+
+local OldAnimalBoost = AnimalModule.Boost;
+    AnimalModule.Boost = function(self)
+    OldAnimalBoost(self);
+    if (settings.horse.infiniteboost) then
+        self.Boosts = self.MaxBoosts;
+    end
+end
+
+
+local BreakableGlass = {}; do
+for k, v in next, debug.getupvalue(BreakableGlassModule.GetBreakableGlass, 1) do
+if (type(k) == "userdata") then
+table.insert(BreakableGlass, v.Id);
+end
+end
+end
+local BreakAllGlass = function()
+for _, id in ipairs(BreakableGlass) do
+NetworkModule:FireServer("BreakGlass", id, Vector3.new());
+end
+end
+--===================================={GUI MAKING}====================================--
+library = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/drawinglib.lua"))() do
+library.new({size = Vector2.new(315,515), name = "yeehaw", mousedisable = false, font = 2, titlecolor = Color3.fromRGB(255,163,26)})
+end
+
+
+-- tabs
+local CheatsTab = library.newtab({name = "Cheats"})
+local MiscTab = library.newtab({name = "Misc"})
+
+--sections
+aim = library.newsection({name = "Aimbot", tab = CheatsTab,side = "left", size = 275,})
+    library.newtoggle({
+	    name = "Aimbot",
+    	section = aim,
+	    tab = CheatsTab,
+	    def = settings.aim.aimbot,
+	    callback = function(bool)
+	        settings.aim.aimbot = bool
+    	end
+    })
+
+
+    library.newtoggle({
+	    name = "Silent Aim",
+	    section = aim,
+	    tab = CheatsTab,
+	    def = settings.aim.silentaim,
+	    callback = function(bool)
+	       settings.aim.silentaim = bool
+	    end
+    })
+
+    library.newdropdown({
+        name = "Mode",
+        options = {"Player", "Animal"},
+        tab = CheatsTab,
+        section = aim,
+        callback = function(mode) 
+            settings.aim.mode = mode
+        end
+    })
+    library.newdropdown({
+        name = "Target Part",
+        options = {"Head", "HumanoidRootPart", "Automatic"},
+        tab = CheatsTab,
+        section = aim,
+        callback = function(part) 
+            settings.aim.target = part
+        end
+    })
+
+    library.newslider({
+	    name = "Aim Smoothness",
+	    ended = false,
+	    min = 1,
+	    max = 10,
+	    def = settings.aim.smoothness*10,
+	    section = aim,
+	    tab = CheatsTab,
+	    callback = function(num)
+	    settings.aim.smoothness = num/10
+	end
+    })
+
+    library.newtoggle({
+	    name = "Visible Check",
+	    section = aim,
+	    tab = CheatsTab,
+	    def = settings.aim.visiblecheck,
+	    callback = function(bool)
+	        settings.aim.visiblecheck = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Team Check",
+	    section = aim,
+	    tab = CheatsTab,
+	    def = settings.aim.teamcheck,
+	    callback = function(bool)
+	        settings.aim.teamcheck = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "FOV Circle",
+	    section = aim,
+	    tab = CheatsTab,
+	    def = settings.aim.fovcircle,
+	    callback = function(bool)
+	        settings.aim.fovcircle = bool
+	    end
+    })
+
+    library.newslider({
+	    name = "Circle Radius",
+	    ended = false,
+	    min = 1,
+	    max = 100,
+	    def = settings.aim.fovcircleradius/10,
+	    section = aim,
+	    tab = CheatsTab,
+	    callback = function(num)
+	    settings.aim.fovcircleradius = num*10
+	end
+    })
+
+    library.newslider({
+	    name = "Circle Thickness",
+	    ended = false,
+	    min = 1,
+	    max = 10,
+	    def = 2,
+	    section = aim,
+	    tab = CheatsTab,
+	    callback = function(num)
+	        settings.aim.fovcirclethickness = num
+	    end
+    })
+
+    library.newslider({
+	    name = "Circle Transparency",
+	    ended = false,
+	    min = 1,
+	    max = 10,
+	    def = settings.aim.fovcircletransp,
+	    section = aim,
+	    tab = CheatsTab,
+	    callback = function(num)
+	        settings.aim.fovcircletransp = (10-num)/10
+	    end
+    })
+
+    library.newcolorpicker({
+	    name = "Circle Color",
+	    def = settings.aim.fovcirclecolor,
+	    section = aim,
+	    tab = CheatsTab,
+	    transp = 0,
+	    transparency = false,
+	    callback = function(color)
+	        settings.aim.fovcirclecolor = Color3.fromHSV(color[1],color[2],color[3])
+	    end
+    })
+
+esp = library.newsection({name = "ESP", tab = CheatsTab,side = "right", size = 305,})
+    library.newtoggle({
+	    name = "ON/OFF",
+	    section = esp,
+	    --textcolor = Color3.fromRGB(0,255,0),
+	    tab = CheatsTab,
+	    def = settings.esp.toggle,
+	    callback = function(bool)
+	        settings.esp.toggle = bool
+	        ESP:Toggle(bool)
+	    end
+    })
+
+    library.newtoggle({
+    	name = "Players",
+    	section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.players,
+	    callback = function(bool)
+	        settings.esp.players = bool
+	        ESP.Players = bool
+    	end
+    })
+
+    library.newtoggle({
+	    name = "Animals",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.animals,
+	    callback = function(bool)
+	        settings.esp.animals = bool
+	        ESP.Animals = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Legendary Animals",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.legendary,
+	    callback = function(bool)
+	        settings.esp.legendary = bool
+	        ESP.Legendary = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Thunderstruck",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.thunderstruck,
+	    callback = function(bool)
+	        settings.esp.thunderstruck = bool
+	        ESP.Thunderstruck = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Ores",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.ore,
+	    callback = function(bool)
+	        settings.esp.ores = bool
+	        ESP.Ores = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Items",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.items,
+	    callback = function(bool)
+	        settings.esp.items = bool
+	        ESP.Items = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Money Bags",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.moneybags,
+	    callback = function(bool)
+	        settings.esp.moneybags = bool
+	        ESP.Moneybags = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Show Team Color",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.teamcolor,
+	    callback = function(bool)
+	        settings.esp.teamcolor = bool
+	        ESP.TeamColor = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Tracers",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.tracers,
+	    callback = function(bool)
+	        settings.esp.tracers = bool
+	        ESP.Tracers = bool
+    	end
+    })
+
+    library.newtoggle({
+	    name = "Boxes",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.boxes,
+	    callback = function(bool)
+	        settings.esp.boxes = bool
+	        ESP.Boxes = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Names",
+	    section = esp,
+	    tab = CheatsTab,
+	    def = settings.esp.names,
+	    callback = function(bool)
+	        settings.esp.names = bool
+	        ESP.Names = bool
+	    end
+    })
+
+    library.newcolorpicker({
+	    name = "Default Color",
+	    def = settings.esp.PlayerColor,
+	    section = esp,
+	    tab = CheatsTab,
+	    transp = 0,
+	    transparency = false,
+	    callback = function(color)
+	        settings.esp.PlayerColor = Color3.fromHSV(color[1],color[2],color[3])
+	        ESP.Color = settings.esp.PlayerColor
+	    end
+    })
+
+    library.newcolorpicker({
+	    name = "Animal Color",
+	    def = settings.esp.AnimColor,
+	    section = esp,
+	    tab = CheatsTab,
+	    transp = 0,
+	    transparency = true,
+	    callback = function(color)
+	        settings.esp.AnimColor = Color3.fromHSV(color[1],color[2],color[3])
+	    end
+    })
+
+
+charsec = library.newsection({name = "Character", tab = CheatsTab,side = "left", size = 225,})
+    library.newkeybind({name = "Ragdoll Fly", def = settings.keys.ragdollfly, section = charsec, tab = CheatsTab, callback = function(key) settings.keys.ragdollfly = key end})
+
+    library.newtoggle({
+	    name = "TP Bypass/Invisible",
+	    section = charsec,
+	    tab = CheatsTab,
+	    callback = function(bool)
+	        if bool == true then
+	            getconnections(ReplicatedStorage.Communication.Events.ACTrigger.OnClientEvent)[1]:Disable()
+	        else
+	            getconnections(ReplicatedStorage.Communication.Events.ACTrigger.OnClientEvent)[1]:Enable()
+	        end
+	    end
+    })
+
+
+    library.newtoggle({
+	    name = "Infinite Stamina",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.infinitestamina,
+	    callback = function(bool)
+	        settings.infinitestamina = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "No Fall Damage",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.nofalldamage,
+	    callback = function(bool)
+	        settings.nofalldamage = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "No Jump Cooldown",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.nojumpcooldown,
+	    callback = function(bool)
+	        settings.nojumpcooldown = bool
+	        if JumpConnection then
+                if bool then
+                    JumpConnection:Disable();
+                else
+                    JumpConnection:Enable();
+                end
+            end
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Anti Ragdoll",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.antiragdoll,
+	    callback = function(bool)
+	        settings.antiragdoll = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Instant Get Up",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.instantgetup,
+	    callback = function(bool)
+	        settings.instantgetup = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Instant Break Free",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.instantbreakfree,
+	    callback = function(bool)
+	        settings.instantbreakfree = bool
+	    end
+    })
+    library.newtoggle({
+	    name = "Roll Anywhere",
+	    section = charsec,
+	    tab = CheatsTab,
+	    def = settings.alwaysroll,
+	    callback = function(bool)
+	        settings.alwaysroll = bool
+	    end
+    })
+    library.newslider({
+	    name = "Roll Speed",
+	    ended = true,
+	    min = 0,
+	    max = 5,
+	    def = 0,
+	    section = charsec,
+	    tab = CheatsTab,
+	    callback = function(num)
+	        if num == 0 then
+	            settings.rollspeed = false
+	            return
+	        end
+	        settings.rollspeed = num
+	    end
+    })
+
+
+guns = library.newsection({name = "Tools", tab = CheatsTab,side = "right", size = 180,})
+    library.newtoggle({
+	    name = "No Recoil",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.norecoil,
+	    callback = function(bool)
+	        settings.norecoil = bool
+	    end
+    })
+    
+    library.newtoggle({
+	    name = "No Spread",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.nospread,
+	    callback = function(bool)
+	        settings.nospread = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "No Delay",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.nodelay,
+	    callback = function(bool)
+	        settings.nodelay = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Instant Reload",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.instantreload,
+	    callback = function(bool)
+	        settings.instantreload = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Wallbang",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.infinitepenetration,
+	    callback = function(bool)
+	        settings.infinitepenetration = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Use In Water, etc.",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.alwaysguns,
+	    callback = function(bool)
+	        settings.alwaysguns = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Mine Aura",
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.mineaura,
+	    callback = function(bool)
+	        settings.mineaura = bool
+	        if bool == true then
+	           notify("Mine Aura Activated", "Equip your pickaxe and go up to an ore") 
+	        end
+	    end
+    })
+
+    library.newslider({
+	    name = "Mine Aura Range",
+	    ended = bool,
+	    min = 5,
+	    max = 13,
+	    def = 11,
+	    section = guns,
+	    tab = CheatsTab,
+	    def = settings.mineauradistance,
+	    callback = function(num)
+	        settings.mineauradistance = num
+	    end
+    })
+
+
+--misc
+misc = library.newsection({name = "Fun", tab = MiscTab,side = "left", size = 205,})
+    library.newkeybind({name = "Suicide", def = settings.keys.Suicide, section = misc, tab = MiscTab, callback = function(key) settings.keys.Suicide = key end})
+    
+    library.newkeybind({name = "Ragdoll", def = settings.keys.Ragdoll , section = misc, tab = MiscTab, callback = function(key) settings.keys.Ragdoll = key end})
+    
+    library.newkeybind({name = "Equip Harmonica", def = settings.keys.Harmonica, section = misc, tab = MiscTab, callback = function(key) settings.keys.Harmonica = key end})
+    
+    library.newslider({
+	    name = "Ragdoll Speed",
+	    ended = bool,
+	    min = 0,
+	    max = 20,
+	    def = 1,
+	    section = misc,
+	    tab = MiscTab,
+	    callback = function(num)
+	        settings.ragdollspeed = num
+	    end
+    })
+
+    library.newdropdown({
+        name = "Ragdoll Direction",
+        options = {"Up", "Right", "Forward"},
+        tab = MiscTab,
+        section = misc,
+        callback = function(direct) 
+            if direct == "Up" then
+                settings.ragdolldirection = 'UpVector'
+            elseif direct == 'Right' then
+                settings.ragdolldirection = 'RightVector'
+            elseif direct == 'Forward' then
+                settings.ragdolldirection = 'LookVector'
+            end
+        end
+    })
+
+    library.newtoggle({
+	    name = "Body Size Pulse",
+	    section = misc,
+	    tab = MiscTab,
+	    def  = settings.sizepulse,
+	    callback = function(bool)
+	        settings.sizepulse = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Anti Racism",
+	    section = misc,
+	    tab = MiscTab,
+	    def  =settings.antiracist,
+	    callback = function(bool)
+	        settings.antiracist = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Ragdoll Walk",
+	    section = misc,
+	    tab = MiscTab,
+	    def  =settings.ragdollwalk,
+	    callback = function(bool)
+	        settings.ragdollwalk = bool
+	    end
+    })
+
+    library.newbutton({name = "Equip Broom",section = misc,tab = MiscTab,callback = function()Global.PlayerCharacter:EquipItem('Broom')end})
+    
+respawns = library.newsection({name = "Quick Respawn", tab = MiscTab,side = "right", size = 165,})
+    for i,v in next, places do
+        library.newbutton({name = v[1], tab = MiscTab, section = respawns, callback = function() game:GetService("ReplicatedStorage").Communication.Functions.Respawn:InvokeServer(v[2]) end})
+    end
+
+mayor = library.newsection({name = "Mayor", tab = MiscTab,side = "left", size = 30,})
+    library.newtextbox({
+        name = "Pardon Player",
+	    section = mayor,
+	    lower = true,
+	    tab = MiscTab,
+	    callback = function(plr)
+	        for i,v in pairs(Players:GetPlayers()) do
+	            if string.lower(v.Name) == plr then
+	                game:GetService("ReplicatedStorage").Communication.Events.AttemptPardonPlayer:FireServer(v)
+	            end
+	        end
+	    end
+    })
+
+
+general = library.newsection({name = "General", tab = MiscTab,side = "right", size = 140,})
+    library.newtoggle({
+	    name = "Fullbright",
+	    section = general,
+	    tab = MiscTab,
+	    def = settings.fullbright,
+	    callback = function(bool)
+	        Fullbright(bool)
+	        settings.fullbright = bool
+	    end
+    })
+    
+    library.newtoggle({
+	    name = "Semi Auto Sell",
+	    section = general,
+	    tab = MiscTab,
+	    callback = function(bool)
+	        settings.semiautosell = bool
+	    end
+    })
+
+    library.newbutton({name = "Break All Glass",section = general,tab = MiscTab,callback = BreakAllGlass})
+    
+    library.newbutton({name = "Join Smallest Server",section = general,tab = MiscTab,callback = function(...) 
+        if syn then
+            coroutine.resume((coroutine.create(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/JoinLowestPlayer.lua"))()  end)))
+        else
+            notify("Exploit Not Compatible!", "Sorry, this function is Synapse only")
+        end
+    end})
+    
+    library.newbutton({name = "Server Hop",section = general,tab = MiscTab,callback = function(...) 
+    local x = {}
+	for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
+		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+			x[#x + 1] = v.id
+		end
+	end
+	if #x > 0 then
+		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
+	else
+		return notify("Serverhop","Couldn't find a server.")
+	end
+    end})
+    
+    library.newbutton({name = "Rejoin",section = general,tab = MiscTab,callback = function(...) 
+        if #Players:GetPlayers() <= 1 then
+		    Players.LocalPlayer:Kick("\nRejoining...")
+		    wait()
+		    game:GetService('TeleportService'):Teleport(game.PlaceId, Players.LocalPlayer)
+	    else
+		    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
+	    end
+    end})
+    
+horse = library.newsection({name = "Horse", tab = MiscTab,side = "left", size = 150,})
+    library.newtoggle({
+	    name = "Infinite Boosts",
+	    section = horse,
+	    tab = MiscTab,
+	    def =settings.horse.infiniteboost,
+	    callback = function(bool)
+	        settings.horse.infiniteboost = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "No Ragdoll",
+	    section = horse,
+	    tab = MiscTab,
+	    def = settings.horse.nohorseragdoll,
+	    callback = function(bool)
+	        settings.horse.nohorseragdoll = bool
+	    end
+    })
+
+    library.newtoggle({
+	    name = "Edit Speed",
+    	section = horse,
+	    tab = MiscTab,
+	    def = settings.horse.editspeed,
+	    callback = function(bool)
+	        settings.horse.editspeed = bool
+    	end
+    })
+
+    library.newslider({
+	    name = "Speed",
+	    ended = false,
+	    min = 1,
+	    max = 100,
+	    def = settings.horse.speed,
+	    section = horse,
+	    tab = MiscTab,
+	    callback = function(num)
+	    settings.horse.speed = num
+	end
+    })
+
+
+    library.newdropdown({
+        name = "Horse",
+        options = horsenames,
+        tab = MiscTab,
+        section = horse,
+        callback = function(horsename) 
+            for i, v in next, Global.PlayerData:GetSortedHorses() do
+               if v.Breed == horsename then
+                   settings.horse.horseid = v.Id
+               end
+            end
+        end
+    })
+
+library.newkeybind({name = "Call Horse", def = settings.keys.callhorse, section = horse, tab = MiscTab, callback = function(key) settings.keys.callhorse = key end})
+
+
+discord = library.newsection({name = "Discord", tab = MiscTab,side = "right", size = 30,})
+    library.newbutton({name = "Copy to Clipboard",section = discord,tab = MiscTab,callback = function()setclipboard('https://discord.gg/qT4KvqY7')end})
+
+
+--settings
+save = library.newsection({name = "Saving", tab = MiscTab,side = "right", size = 60,})
+    library.newtoggle({
+	    name = "Autosave",
+    	section = save,
+	    tab = MiscTab,
+	    def = settings.saving.autosave,
+	    callback = function(bool)
+	        settings.saving.autosave = bool
+    	end
+    })
+
+    library.newbutton({name = "Save",section = save,tab = MiscTab,callback = function() Save() end})
+
+--
+library.opentab(CheatsTab)
+library.init()
