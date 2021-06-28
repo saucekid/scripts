@@ -27,7 +27,7 @@ casual_degenerate(discord) - quick respawn
 
 	UIHandler:GiveNotification({
 
-		text = "don't use break all glass and be careful with gun mods",
+		text = "don't use break all glass & anti-racism and be careful with gun mods",
 
 		textcolor = "Red",
 
