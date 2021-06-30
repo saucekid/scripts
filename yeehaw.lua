@@ -19,6 +19,8 @@ casual_degenerate(discord) - quick respawn
 ]]--
 
 
+if true then return end
+
 	local ReplicatedStorage = game:GetService("ReplicatedStorage");
 
 	local ModLoad = require(ReplicatedStorage.Modules.Load);
