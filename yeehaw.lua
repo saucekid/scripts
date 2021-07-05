@@ -30,6 +30,10 @@ local RunService = game:GetService("RunService");
 local HttpService = game:GetService("HttpService");
 local UserInputService = game:GetService("UserInputService");
 
+for _, connection in ipairs(getconnections(ScriptContext.Error)) do
+connection:Disable();
+end
+
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
 local CurrentCamera = workspace.CurrentCamera;
