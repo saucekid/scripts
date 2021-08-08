@@ -15,10 +15,6 @@ local spawnlocations = {
 local message = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/MessageCreate.lua"))();
 error = {PrimaryColor = Color3.fromRGB(0,0,0), SecondaryColor = Color3.fromRGB(255,0,0), Texts = {{Text = "nothing", Delay = .1}}}
 
-local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
-ESP.Players = options.ShowPlayers 
-ESP.Tracers = options.Tracers
-
 ----[functions]
 function existsFile(name)
     if not readfile then return end
@@ -50,7 +46,6 @@ function save()
 end
 
 function serverhop()
-    spawn(function()
     local x = {}
 	for _, v in ipairs(httpservice:JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
 		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
@@ -60,7 +55,6 @@ function serverhop()
 	if #x > 0 then
 		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
 	end
-	end)
 end
 
 function write(input,color)
@@ -133,6 +127,10 @@ repeat wait() until game:IsLoaded() and game.PlaceId == 2317712696
 local entities = game:GetService("Workspace")["WORKSPACE_Entities"];
 local geometry = game:GetService("Workspace")["WORKSPACE_Geometry"];
 local animals = entities.Animals;
+
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ESPLibrary.lua"))();
+ESP.Players = options.ShowPlayers 
+ESP.Tracers = options.Tracers
 
 local things = {}
 
