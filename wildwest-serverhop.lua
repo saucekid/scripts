@@ -53,7 +53,6 @@ function save()
 end
 
 function serverhop()
-    spawn(function()
     local x = {}
 	for _, v in ipairs(httpservice:JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
 		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
@@ -63,7 +62,6 @@ function serverhop()
 	if #x > 0 then
 		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
 	end
-	end)
 end
 
 function write(input,color)
@@ -111,6 +109,7 @@ loadf()
 if settings.Console then 
     if not rconsoleprint or not rconsoleclear then return message.Create({PrimaryColor = Color3.fromRGB(0,0,0), SecondaryColor = Color3.fromRGB(255,0,0), Texts = {{Text = "Console is Synapse only", Delay = 2}}}) end
     rconsoleclear()
+    rconsolename("sauceHOP")
     write([[
                           _   _ ___________ 
                          | | | |  _  | ___ \
