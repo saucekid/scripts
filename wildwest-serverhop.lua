@@ -173,7 +173,7 @@ else
     coroutine.resume(coroutine.create(function()
         wait(1)
         write("\nIf you want a friend to join, tell them to execute this:", "green")
-        write([[game:GetService("TeleportService"):TeleportToPlaceInstance(]].. tostring(game.PlaceId).. ", ".. tostring(game.JobId).. ")")
+        write([[game:GetService("TeleportService"):TeleportToPlaceInstance(]].. tostring(game.PlaceId).. ", '".. tostring(game.JobId).. "')")
     end))
 end
 
