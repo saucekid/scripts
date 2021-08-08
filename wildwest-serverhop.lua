@@ -53,6 +53,7 @@ function save()
 end
 
 function serverhop()
+    spawn(function()
     local x = {}
 	for _, v in ipairs(httpservice:JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
 		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
@@ -62,6 +63,7 @@ function serverhop()
 	if #x > 0 then
 		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, x[math.random(1, #x)])
 	end
+	end)
 end
 
 function write(input,color)
@@ -120,6 +122,14 @@ if options.Console then
     write("Waiting for game to load... \n")
 end
 
+LocalPlayer.OnTeleport:Connect(function(State)
+    if State == Enum.TeleportState.InProgress and syn then
+        syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/wildwest-serverhop.lua"))()]])
+    elseif State == Enum.TeleportState.Failed then
+        write("Server is full?", "red")
+    end
+end)
+
 repeat wait() until game:IsLoaded() and game.PlaceId == 2317712696 
 
 ----[get legendry and thunder]
@@ -147,14 +157,11 @@ if #things <= 0 then
     if options.Console then
         write("Nothing Found :(", "red")
         wait()
-        write("Hopping...")
     else
         message.Create(error) 
         wait(1)
     end
-    serverhop()
-    wait(3)
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/wildwest-serverhop.lua"))()
+    return serverhop()
 end
 
 closestspawn = getClosestSpawn(things[1].Position)
@@ -162,6 +169,12 @@ game:GetService("ReplicatedStorage").Communication.Functions.Respawn:InvokeServe
 
 if not options.Console then
     message.Create({PrimaryColor = Color3.fromRGB(0,0,0), SecondaryColor = Color3.fromRGB(255,255,0), Texts = {{Text = tostring(#things).. " found", Delay = 2}}})
+else
+    coroutine.resume(coroutine.create(function()
+        wait(1)
+        write("\nIf you want a friend to join, tell them to execute this:", "green")
+        write([[game:GetService("TeleportService"):TeleportToPlaceInstance(]].. tostring(game.PlaceId).. ", ".. tostring(game.JobId).. ")")
+    end))
 end
 
 ESP:Toggle(true)
