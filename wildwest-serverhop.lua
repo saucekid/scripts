@@ -30,7 +30,7 @@ function existsFile(name)
     end)
 end
 
-function load()
+function loadf()
     if not existsFile("serverhop.json") then return end
     local _, Result = pcall(readfile, "serverhop.json");
     if _ then 
@@ -104,7 +104,7 @@ end
 
 --couldve used getgenv() but krnl not have :(
 save()
-load()  
+loadf()  
 
 if options.Console then 
     if not rconsoleprint or not rconsoleclear then return message.Create({PrimaryColor = Color3.fromRGB(0,0,0), SecondaryColor = Color3.fromRGB(255,0,0), Texts = {{Text = "Console is Synapse only", Delay = 2}}}) end
@@ -153,6 +153,7 @@ if #things <= 0 then
         wait(1)
     end
     serverhop()
+    wait(3)
     return loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/wildwest-serverhop.lua"))()
 end
 
