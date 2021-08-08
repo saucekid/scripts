@@ -1,12 +1,8 @@
-
 ----[variable]
 local httpservice = game:GetService("HttpService");
 local runservice = game:GetService("RunService");
 local players = game:GetService("Players");
 local LocalPlayer = players.LocalPlayer;
-local entities = game:GetService("Workspace")["WORKSPACE_Entities"];
-local geometry = game:GetService("Workspace")["WORKSPACE_Geometry"];
-local animals = entities.Animals;
 
 local spawnlocations = {
     ["Bronze"] = Vector3.new(753, 38, -842);
@@ -134,6 +130,10 @@ end)
 repeat wait() until game:IsLoaded() and game.PlaceId == 2317712696 
 
 ----[get legendry and thunder]
+local entities = game:GetService("Workspace")["WORKSPACE_Entities"];
+local geometry = game:GetService("Workspace")["WORKSPACE_Geometry"];
+local animals = entities.Animals;
+
 local things = {}
 
 for _,anim in pairs(animals:GetChildren()) do
