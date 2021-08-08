@@ -1,8 +1,9 @@
+
 ----[variable]
 local httpservice = game:GetService("HttpService");
 local runservice = game:GetService("RunService");
 local players = game:GetService("Players");
-local LocalPlayer = Players;
+local LocalPlayer = players.LocalPlayer;
 local entities = game:GetService("Workspace")["WORKSPACE_Entities"];
 local geometry = game:GetService("Workspace")["WORKSPACE_Geometry"];
 local animals = entities.Animals;
