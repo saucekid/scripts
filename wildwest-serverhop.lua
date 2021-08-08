@@ -157,6 +157,7 @@ if #things <= 0 then
     if settings.Console then
         write("Nothing Found :(", "red")
         wait()
+        write("Hopping...")
     else
         message.Create(error) 
         wait(1)
