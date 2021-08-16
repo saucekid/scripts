@@ -14,6 +14,13 @@ local oldGravity = workspace.Gravity
 
 local R15 = Humanoid.RigType == Enum.HumanoidRigType.R15 and true or false
 
+if AUTOCHOOSE then
+    for _, hat in pairs(Character:GetChildren()) do
+        if hat:IsA("Accessory") and (string.find(hat.Name:lower(), "skateboard") or hat.Name == "MeshPartAccessory") then
+            SKATEBOARD_HAT = hat.Name
+        end
+    end
+end
 SKATEBOARD_HAT = Character:FindFirstChild(SKATEBOARD_HAT)
 if not SKATEBOARD_HAT then 
     return Notification.WallNotification("Oops", "Skateboard hat not found!")
