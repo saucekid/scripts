@@ -240,42 +240,42 @@ function dropBoard()
         BOARD.Transparency = 1
         BOARD.RootPriority = 12
         BOARD.Parent = SKATEMODEL
-        BOARD.Size = Vector3.new(1.5, 0.2, 5)
+        BOARD.Size = Vector3.new(1.5, 0.13, 5)
         BOARD.Anchored = false
         BOARD.CFrame = Character.HumanoidRootPart.CFrame * CFrame.new(0,0,-6)
         BOARD.CustomPhysicalProperties = PhysicalProperties.new(100, GRIP, 0, 10, 10)
 
         local frontl = Instance.new("Part", SKATEMODEL)
         frontl.Transparency = 1
-        frontl.Shape = "Cylinder"
+        --frontl.Shape = "Cylinder"
         frontl.Massless = true
         frontl.Size = Vector3.new(0.4, 0.4, 0.4)
         frontl.CustomPhysicalProperties = PhysicalProperties.new(0.2, GRIP, 0, 10, 10)
-        Motor6D(frontl, BOARD, CFrame.new(.8,.2,1))
+        Motor6D(frontl, BOARD, CFrame.new(.6,.2,1.1))
 
         local frontr = Instance.new("Part", SKATEMODEL)
         frontr.Transparency = 1
-        frontr.Shape = "Cylinder"
+        --frontr.Shape = "Cylinder"
         frontr.Massless = true
         frontr.Size = Vector3.new(0.4, 0.4, 0.4)
         frontr.CustomPhysicalProperties = PhysicalProperties.new(0.2, GRIP, 0, 10, 10)
-        Motor6D(frontr, BOARD, CFrame.new(-.8,.2,1))
+        Motor6D(frontr, BOARD, CFrame.new(-.6,.2,1.1))
 
         local backl = Instance.new("Part", SKATEMODEL)
         backl.Transparency = 1
-        backl.Shape = "Cylinder"
+        --backl.Shape = "Cylinder"
         backl.Massless = true
         backl.Size = Vector3.new(0.4, 0.4, 0.4)
         backl.CustomPhysicalProperties = PhysicalProperties.new(0.2, GRIP, 0, 10, 10)
-        Motor6D(backl, BOARD, CFrame.new(.8,.2,-1))
+        Motor6D(backl, BOARD, CFrame.new(.6,.2,-1.1))
 
         local backr = Instance.new("Part", SKATEMODEL)
         backr.Transparency = 1
-        backr.Shape = "Cylinder"
+        --backr.Shape = "Cylinder"
         backr.Massless = true
         backr.Size = Vector3.new(0.4, 0.4, 0.4)
         backr.CustomPhysicalProperties = PhysicalProperties.new(0.2, GRIP, 0, 10, 10)
-        Motor6D(backr, BOARD, CFrame.new(-.8,.2,-1))
+        Motor6D(backr, BOARD, CFrame.new(-.6,.2,-1.1))
         local Center = Instance.new("Attachment", BOARD)
         FORCE.Parent = BOARD
         FORCE.Attachment0 = Center
