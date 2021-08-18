@@ -339,6 +339,7 @@ function dropBoard()
     
     function rideBoard(deltaTime)
         if not Character or not BOARD or not SKATEBOARD_HAT or not SKATEBOARD_HAT:FindFirstChild("Handle") then RunService:UnbindFromRenderStep("Control") end
+        workspace.Gravity = 96
         CurrentCamera.CameraSubject = fakeChar
         Character.Humanoid.PlatformStand = true
         Character.HumanoidRootPart.CFrame = rideCF--(BOARD.CFrame * CFrame.new(0,3,0)) * CFrame.Angles(0,math.rad(-90),0)
@@ -675,11 +676,11 @@ function dropBoard()
             BG.MaxTorque = Vector3.new(50,20000,50)
             BG.P = 3000
             
-            BV = Instance.new("BodyVelocity", Character.HumanoidRootPart)
+            BV = Instance.new("BodyVelocity", R15 and Character["LeftFoot"] or Character["Left Arm"])
             BV.Velocity = Vector3.new(0,0,0)
             BV.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
             BV.P = 9000
-            
+        
             fakeChar.HumanoidRootPart.Anchored = false
             
             Motor6D(BOARD, R15 and fakeChar["UpperTorso"] or fakeChar.Torso, CFrame.new(), CFrame.new(0,-3.3,0) * CFrame.Angles(0,math.rad(90),0))
@@ -688,7 +689,6 @@ function dropBoard()
             
             FORCE.Enabled = true
             
-            workspace.Gravity = 96
             
             RunService:BindToRenderStep("Control", Enum.RenderPriority.Character.Value, rideBoard)
             
