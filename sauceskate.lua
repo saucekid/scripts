@@ -302,6 +302,9 @@ function dropBoard()
                 v.Massless = true 
                 v.CustomPhysicalProperties = PhysicalProperties.new(100, 0.3, 0.5)
             end
+            if v:IsA("Decal") then
+               v:Destroy()
+            end
             if v:IsA("SpecialMesh") then
                v.MeshId = "rbxassetid://0" 
             end
