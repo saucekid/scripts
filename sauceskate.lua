@@ -33,11 +33,6 @@ BP.P = 9e9
 
 settings().Physics.AllowSleep = false
 settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
-RunService.Stepped:Connect(function() --old net
-    sethiddenprop(LocalPlayer, "MaximumSimulationRadius", math.huge)
-    sethiddenprop(LocalPlayer, "SimulationRadius", math.huge)
-    setsimulationrad(math.huge)
-end)
 
 local velocityCon
 velocityCon = RunService.Heartbeat:connect(function()
