@@ -111,8 +111,14 @@ flags = {
     silent = {},
     autoescape = {},
     tweentp = {},
+    flying = {},
+    jump = {},
+    carspeed = {value = 0},
     tweenspeed = {value = 500},
-    boostspeed = {value = 100}
+    boostspeed = {value = 100},
+    vflyspeed = {value = 1},
+    jumppower = {value = 10},
+    bodypaint = {value = "Gold"}
 }
 
 for _,flag in pairs(flags) do 
@@ -137,7 +143,7 @@ function getbestCar(realname)
         if not inGroup and car.GroupOnly.Value == true then continue end
         local name = realname and car:FindFirstChild("Name").Value or car.Name
         local price = car.Price.Value
-        if price > bestPrice and price <= LocalPlayer.Money.Value and car.TokenRequirement.Value <= LocalPlayer.leaderstats.Tokens.Value then
+        if price >= bestPrice and price <= LocalPlayer.Money.Value and car.TokenRequirement.Value <= LocalPlayer.leaderstats.Tokens.Value then
             bestName = name
             bestPrice = price
         end
@@ -150,12 +156,6 @@ function spawnCar()
     rF.SpawnVehicle:InvokeServer(bestCar)
 end
 
-function flingCar()
-    car = getCar()
-    if not car then return err("no car currently active") end
-    car.PrimaryPart.RotVelocity = Vector3.new(2000,0,0)
-end
-
 function bringCar()
     car = getCar()
     if not car then return err("no car currently active") end
@@ -166,7 +166,17 @@ end
 function boost()
     car = getCar()
     if not car then return err("no car currently active") end
-    car.PrimaryPart.Velocity = (-car.PrimaryPart.CFrame.lookVector*(car.PrimaryPart.Velocity.Magnitude/70)*flags.boostspeed.value)
+    for i = 1,50 do
+        RunService.Stepped:Wait()
+        car.PrimaryPart.Velocity = CFrame.new(car.PrimaryPart.Velocity):Lerp(CFrame.new(-car.PrimaryPart.CFrame.lookVector*(car.PrimaryPart.Velocity.Magnitude/70)*flags.boostspeed.value), 0.02).Position
+    end
+end
+
+function jump()
+    if not flags.jump.value then return end
+    car = getCar()
+    if not car then return end
+    car.PrimaryPart.Velocity = Vector3.new(car.PrimaryPart.Velocity.X,flags.jumppower.value*10,car.PrimaryPart.Velocity.Z)
 end
 
 function destroyCar()
@@ -221,17 +231,126 @@ end
 
 local function TP(destination)
     if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return err("you are dead") end
+    local car = getCar()
+    local hum = LocalPlayer.Character:WaitForChild("Humanoid")
+    local root = hum.Sit and car and car.PrimaryPart or LocalPlayer.Character:FindFirstChild("HumanoidRootPart") 
     if flags.tweentp.value then
-        local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart") 
-        local speed = flags.tweenspeed.value
-        local distance = (root.Position - destination).magnitude
-        local time = distance/speed
-        local tween = game:GetService("TweenService"):Create(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(destination)})
+        speed = flags.tweenspeed.value
+        distance = (root.Position - destination).magnitude
+        time = distance/speed
+        tween = game:GetService("TweenService"):Create(root, TweenInfo.new(time, Enum.EasingStyle.Linear), {CFrame = CFrame.new(destination)})
         tween:Play()
         tween.Completed:Wait()
     else
-        LocalPlayer.Character:SetPrimaryPartCFrame(CFrame.new(destination))
+        root.CFrame = CFrame.new(destination)
     end
+end
+
+
+QEfly = true
+flyspeed = 1
+function sFLY(vfly)
+    local car = getCar()
+    if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+    if vfly and not car then return end
+
+	local T = car.PrimaryPart
+	local CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+	local lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+	local SPEED = 0
+
+	local function FLY()
+		flags.flying(true)
+		local BG = Instance.new('BodyGyro')
+		local BV = Instance.new('BodyVelocity')
+		BG.P = 9e4
+		BG.Parent = T
+		BV.Parent = T
+		BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+		BG.cframe = T.CFrame
+		BV.velocity = Vector3.new(0, 0, 0)
+		BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
+		spawn(function()
+			repeat wait()
+				if not vfly and Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+					Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = true
+				end
+				if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0 then
+					SPEED = 50
+				elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 or CONTROL.Q + CONTROL.E ~= 0) and SPEED ~= 0 then
+					SPEED = 0
+				end
+				if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 or (CONTROL.Q + CONTROL.E) ~= 0 then
+					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+					lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
+				elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and (CONTROL.Q + CONTROL.E) == 0 and SPEED ~= 0 then
+					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B + CONTROL.Q + CONTROL.E) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
+				else
+					BV.velocity = Vector3.new(0, 0, 0)
+				end
+				CurrentCamera.CameraSubject = car
+				BG.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(0,math.rad(180),0)
+			until not flags.flying.value
+			CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
+			SPEED = 0
+			BG:Destroy()
+			BV:Destroy()
+			CurrentCamera.CameraSubject = LocalPlayer.Character
+			if LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+				LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+			end
+		end)
+	end
+	flyKeyDown = Mouse.KeyDown:Connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = (vfly and flags.vflyspeed.value or flyspeed)
+		elseif KEY:lower() == 's' then
+			CONTROL.B = - (vfly and flags.vflyspeed.value or flyspeed)
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = - (vfly and flags.vflyspeed.value or flyspeed)
+		elseif KEY:lower() == 'd' then 
+			CONTROL.R = (vfly and flags.vflyspeed.value or flyspeed)
+		elseif QEfly and KEY:lower() == 'e' then
+			CONTROL.Q = (vfly and flags.vflyspeed.value or flyspeed)*2
+		elseif QEfly and KEY:lower() == 'q' then
+			CONTROL.E = -(vfly and flags.vflyspeed.value or flyspeed)*2
+		end
+		pcall(function() CurrentCamera.CameraType = Enum.CameraType.Track end)
+	end)
+	flyKeyUp = Mouse.KeyUp:Connect(function(KEY)
+		if KEY:lower() == 'w' then
+			CONTROL.F = 0
+		elseif KEY:lower() == 's' then
+			CONTROL.B = 0
+		elseif KEY:lower() == 'a' then
+			CONTROL.L = 0
+		elseif KEY:lower() == 'd' then
+			CONTROL.R = 0
+		elseif KEY:lower() == 'e' then
+			CONTROL.Q = 0
+		elseif KEY:lower() == 'q' then
+			CONTROL.E = 0
+		end
+	end)
+	FLY()
+end
+
+function spawnFLY(collection)
+    wait(1)
+    if collection.Name == LocalPlayer.Character.Name then
+        local car = collection:WaitForChild("Car")
+        sFLY(true)
+    end
+end
+
+function NOFLY()
+	flags.flying(false)
+	if flyKeyDown or flyKeyUp then flyKeyDown:Disconnect() flyKeyUp:Disconnect() end
+	if LocalPlayer.Character:FindFirstChildOfClass('Humanoid') then
+		LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
+	end
+	pcall(function() CurrentCamera.CameraType = Enum.CameraType.Custom end)
 end
 
 function joindiscord()
@@ -264,13 +383,20 @@ LocalPlayer.Idled:connect(function()    --antiafk
     end
 end)
 
-spawn(function()
+task.spawn(function()
     while wait() do
         if flags.autofarm.value then
             local bestCar = getbestCar()
             local car = getCar()
             if not car then
-                rE.SaveCustoms:FireServer({true, "Institutional white", "Platinum"}, bestCar)
+                rE.SaveCustoms:FireServer({
+	                ["BodyPaint"] = {
+		                ["Paint"] = {
+			                ["Material"] = flags.bodypaint.value
+		                }
+	                },
+	                ["Scraps"] = 100000
+                }, bestCar)
                 wait()
                 repeat 
                     rF.SpawnVehicle:InvokeServer(bestCar)
@@ -288,33 +414,43 @@ spawn(function()
     end
 end)
 
+local AccDir = 0
+RunService.Stepped:Connect(function()
+    local car = getCar()
+    if car then
+        if AccDir == 1 and flags.carspeed.value ~= 0 then
+            car.PrimaryPart.Velocity = CFrame.new(car.PrimaryPart.Velocity):Lerp(CFrame.new(-car.PrimaryPart.CFrame.lookVector*car.Parent.Speed.Value*(flags.carspeed.value)), 0.001).Position
+        end
+    end
+end)
 
 local OldNamecall
 OldNamecall = hookmetamethod(game, "__namecall", function(Self, ...)
     local args = {...} 
     if not checkcaller() then 
-        if Self.Name == "BreakParts" and flags.invincible.value then  return end
+        if Self.Name == "BreakParts" and flags.invincible.value then return end
+        if Self.Name == "VehicleInfo" and args[1] == "AccDir" then AccDir = args[2] end
     end
     return OldNamecall(Self, unpack(args))
 end)
 
 --=======\UI\
-local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enum.KeyCode.RightShift)
-    local mainTab = window:CreateTab("Main")
-        local infoSec = mainTab:CreateSector("Info")
+
+local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum.KeyCode.RightShift)
+    local afTab = window:CreateTab("Autofarm")
+        local infoSec = afTab:CreateSector("Info")
             local bestcarstring = "Best Car: "
             bestcar_label = infoSec:AddLabel(bestcarstring)
-            spawn(function()
+            task.spawn(function()
                 while wait() do
                     local bestCar = getbestCar(true)
                     bestcar_label:Set(bestcarstring..bestCar)
                 end
             end)
-            
+
             local moneystring = "Money Earned: "
             moneymade_label = infoSec:AddLabel(moneystring.. "0")
-            
-            spawn(function()
+            task.spawn(function()
                 local moneymade = 0
                 while true do
                     local money = LocalPlayer.Money
@@ -327,7 +463,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enu
             
             local partsstring = "Parts Earned: "
             partsmade_label = infoSec:AddLabel(partsstring.. "0")
-            spawn(function()
+            task.spawn(function()
                 local partsmade = 0
                 while true do
                     local parts = LocalPlayer.Parts
@@ -338,14 +474,14 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enu
                 end
             end)
             
-        local afSec = mainTab:CreateSector("Autofarm", "right")
-            afSec:AddLabel("― Car Autofarm")
+        local afSec = afTab:CreateSector("Vehicle Autofarm", "right")
             af_toggle = afSec:AddToggle("ON/OFF", flags.autofarm.value, flags.autofarm)
             silent_toggle = afSec:AddToggle("Silent", flags.silent.value, flags.silent)
+            paint_dropdown = afSec:AddDropdown("Body Paint", {"Neon", "Silver", "Gold", "Platinum"}, "You must own it", flags.bodypaint)
             
-            afSec:AddLabel("― Auto Escape/Helicopter")
+        local amiscSec = afTab:CreateSector("Misc")
             local escapeCon
-            ae_toggle = afSec:AddToggle("ON/OFF", false, function(bool) 
+            ae_toggle = amiscSec:AddToggle("Auto Escape/Helicopter", false, function(bool) 
                 if bool then 
                     local heli = HelicopterContainer:FindFirstChild("Helicopter")
                     if heli then escape(heli) end 
@@ -354,19 +490,63 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enu
                     if escapeCon then escapeCon:Disconnect() end 
                 end
             end)
+    
+    
+    local vTab = window:CreateTab("Vehicle")
+        local flySec = vTab:CreateSector("Fly"); local flyCon
+            vfly_toggle = flySec:AddToggle("ON/OFF", flags.invincible.value, function(b) 
+                if flyCon then flyCon:Disconnect() end
+                if b then
+                    flyCon = CarCollection.ChildAdded:Connect(spawnFLY)
+                    sFLY(true)
+                else
+                    NOFLY()
+                end
+            end)
+            vfly_toggle:AddKeybind()
+            vflyspeed_slider = flySec:AddSlider("Speed", 1, flags.vflyspeed.value, 100, 1, flags.vflyspeed)
             
-        local carSec = mainTab:CreateSector("Car")
-            invincible_toggle = carSec:AddToggle("No Damage", flags.invincible.value, flags.invincible)
-            boost_keybind = carSec:AddKeybind("Boost",Enum.KeyCode.C, nil, boost)
-            boostspeed_slider = carSec:AddSlider("Boost Speed", 1, flags.boostspeed.value, 1000, 1, flags.boostspeed)
-            spawn_button = carSec:AddButton("Spawn Car", spawnCar)
-            bring_button = carSec:AddButton("Bring Car", bringCar)
-            --fling_button = carSec:AddButton("Fling Car", flingCar)
-            destroy_button = carSec:AddButton("Destroy Car", destroyCar)
+        local speedSec = vTab:CreateSector("Speed", 'right')
+            carspeed_slider = speedSec:AddSlider("Amount", 0, flags.carspeed.value, 50, 1, flags.carspeed)
             
-        local charSec = mainTab:CreateSector("Character", "right")
+        local boostSec = vTab:CreateSector("Boost")
+            boost_keybind = boostSec:AddKeybind("Boost Key",Enum.KeyCode.C, nil, boost)
+            boostspeed_slider = boostSec:AddSlider("Amount", 1, flags.boostspeed.value, 200, 1, flags.boostspeed)
+            
+        local jumpSec = vTab:CreateSector("Jump", 'right')
+            jump_toggle = jumpSec:AddToggle("ON/OFF", flags.jump.value, flags.jump)
+            jump_keybind = jumpSec:AddKeybind("Jump Key",Enum.KeyCode.G, nil, jump)
+            jumppower_slider = jumpSec:AddSlider("Amount", 0, flags.jumppower.value, 50, 1, flags.jumppower)
+            
+        local miscSec = vTab:CreateSector("Misc")
+            invincible_toggle = miscSec:AddToggle("No Damage", flags.invincible.value, flags.invincible)
+            spawn_button = miscSec:AddButton("Spawn Car", spawnCar)
+            bring_button = miscSec:AddButton("Bring Car", bringCar)
+            destroy_button = miscSec:AddButton("Destroy Car", destroyCar)
+            
+            
+    local miscTab = window:CreateTab("Misc")
+        local teleSec = miscTab:CreateSector("Teleports", "right")
+            tpspawn_button = teleSec:AddButton("Spawn", function() rF.TeleportPlr:InvokeServer("LobbySpawn") end)
+            if workspace:FindFirstChild("Crusher Parts") then
+                local teleports = {}
+                local tpNames = {}
+                for _,v in pairs(workspace["Crusher Parts"]:GetChildren()) do
+                    teleports[v.Name] = v.Entrance:FindFirstChildOfClass("Part")
+                    table.insert(tpNames, v.Name)
+                end
+                tp_dropdown = teleSec:AddDropdown("Crushers", tpNames, "Select", function(c) 
+                    local entrance = getClosestEntrance(teleports[c])
+                    if not entrance then return err("no entrance?") end
+                    TP(entrance.Position)
+                end)
+            end
+            teleSec:AddLabel("― Settings")
+            tweentp_toggle = teleSec:AddToggle("Tween", flags.tweentp.value, flags.tweentp)
+            tweenspeed_slider = teleSec:AddSlider("Tween Speed", 1, flags.tweenspeed.value, 1000, 1, flags.tweenspeed)
+            
+        local charSec = miscTab:CreateSector("Character", "right")
             charSec:AddLabel("― Remove Tags")
-            
             local removeCon
             removeTags_button = charSec:AddToggle("ON/OFF", false, function(bool) 
                 if bool then 
@@ -376,28 +556,8 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enu
                     if removeCon then removeCon:Disconnect() end 
                 end 
             end)
-        
-        local teleSec = mainTab:CreateSector("Teleports", "right")
-            if workspace:FindFirstChild("Crusher Parts") then
-                local teleports = {}
-                local tpNames = {}
-                for _,v in pairs(workspace["Crusher Parts"]:GetChildren()) do
-                    teleports[v.Name] = v.Entrance.Part
-                    table.insert(tpNames, v.Name)
-                end
-                    
-                tp_dropdown = teleSec:AddDropdown("Crushers", tpNames, "Select", function(c) 
-                    local entrance = getClosestEntrance(teleports[c])
-                    if not entrance then return err("no entrance?") end
-                    TP(entrance.Position)
-                end)
-            end
             
-            tweentp_toggle = teleSec:AddToggle("Tween", flags.tweentp.value, flags.tweentp)
-            tweenspeed_slider = teleSec:AddSlider("Tween Speed", 1, flags.tweenspeed.value, 1000, 1, flags.tweenspeed)
-            
-    local settingsTab = window:CreateTab("Settings")
-        local serverSector = settingsTab:CreateSector("Servers")
+        local serverSector = miscTab:CreateSector("Servers")
             rejoin_button = serverSector:AddButton("Rejoin", function()
                 if #Players:GetPlayers() <= 1 then
 	    	        Players.LocalPlayer:Kick("\nRejoining...")
@@ -428,9 +588,14 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(410, 400), Enu
             	end
             end)    
             
-        local discSector = settingsTab:CreateSector("Discord", "right")
+        local discSector = miscTab:CreateSector("Discord")
             joindisc_button = discSector:AddButton("Direct Join", joindiscord)
             copydisc_button = discSector:AddButton("Copy to Clipboard", function() if setclipboard then setclipboard('https://discord.gg/DnyxZRwQh3') else print("DnyxZRwQh3") end end)
-        
+                
+        local changeSector = miscTab:CreateSector("Changelogs")
+            changeSector:AddLabel("• Vehicle Fly")
+            changeSector:AddLabel("• Vehicle Jump")         
+            changeSector:AddLabel("• Vehicle Speed")
+            changeSector:AddLabel("• Set Body Paint")
         
     
