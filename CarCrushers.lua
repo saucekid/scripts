@@ -1,3 +1,4 @@
+_G.Executed = true
 repeat wait() until game:IsLoaded()
 
 --=======\Variables\
@@ -113,11 +114,15 @@ flags = {
     tweentp = {},
     flying = {},
     jump = {},
+    crashaura = {},
+    tankaura = {},
     carspeed = {value = 0},
     tweenspeed = {value = 500},
     boostspeed = {value = 100},
     vflyspeed = {value = 1},
     jumppower = {value = 10},
+    crashaurarange = {value = 70},
+    tankaurarange = {value = 70},
     bodypaint = {value = "Gold"}
 }
 
@@ -132,7 +137,7 @@ end
 
 --=======\Functions\
 function getCar()
-    return CarCollection:FindFirstChild(LocalPlayer.Name) and CarCollection[LocalPlayer.Name].Car or false
+    return CarCollection:FindFirstChild(LocalPlayer.Name) and CarCollection[LocalPlayer.Name]:FindFirstChild("Car") or false
 end
 
 function getbestCar(realname)
@@ -163,6 +168,36 @@ function bringCar()
     car.PrimaryPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
 end
 
+function destroyCar()
+    car = getCar()
+    if not car then return err("no car currently active") end
+    if LocalPlayer.Character and LocalPlayer:FindFirstChildOfClass("Humanoid") then 
+        local hum = LocalPlayer:FindFirstChildOfClass("Humanoid")
+        hum.Sit = false 
+        hum.RootPart.Velocity = Vector3.new(0,0,0)
+    end
+    --[[
+    local bodyPosition = car.PrimaryPart:FindFirstChild("BodyPosition") or Instance.new("BodyPosition", car.PrimaryPart)
+    bodyPosition.D = 800
+    bodyPosition.P = 999999999
+    bodyPosition.MaxForce = Vector3.new(999999999,999999999,999999999)
+    bodyPosition.Position = car.PrimaryPart.Position + Vector3.new(0,10,0)
+    ]]
+    for i = 1,5 do
+        local parts = {}
+        local collision
+        for i,v in pairs(car:GetDescendants()) do
+            if v:IsA("BasePart") then
+                if v.Parent == car.Body.HitBoxes and v:IsA("BasePart") then collision = v end
+                table.insert(parts, v)
+            end
+        end
+        car.PrimaryPart.Velocity = Vector3.new(0,1000,0)--car.PrimaryPart.CFrame.lookVector*1000*Vector3.new(1,0,1)
+        rF.BreakParts:InvokeServer(parts, collision, car.PrimaryPart.Velocity.Magnitude, "Default", car.PrimaryPart.Velocity, false)
+        wait()
+    end
+end
+
 function boost()
     car = getCar()
     if not car then return err("no car currently active") end
@@ -179,22 +214,22 @@ function jump()
     car.PrimaryPart.Velocity = Vector3.new(car.PrimaryPart.Velocity.X,flags.jumppower.value*10,car.PrimaryPart.Velocity.Z)
 end
 
-function destroyCar()
-    car = getCar()
-    if not car then return err("no car currently active") end
-    for i = 1,5 do
-        local parts = {}
-        local collision
-        for i,v in pairs(car:GetDescendants()) do
-            if v:IsA("BasePart") then
-                if v.Parent == car.Body.HitBoxes and v.Name == "Collision" then collision = v end
-                table.insert(parts, v)
+function tankCrash()
+    for _,v in pairs(CarCollection:GetChildren()) do
+        if v.Name ~= LocalPlayer.Name and v:FindFirstChild("Car") then
+            if not v.Car.PrimaryPart then continue end
+            for _,part in pairs(v.Car.Body.HitBoxes:GetChildren()) do
+                if part:IsA("BasePart") then
+                    task.spawn(function() 
+                        for i = 1,3 do
+                            rF.TankInvoke:InvokeServer("Fire", Vector3.new(0,0,0), part) 
+                        end
+                    end)
+                end
             end
         end
-        car.PrimaryPart.Velocity = Vector3.new(0,400,0)--car.PrimaryPart.CFrame.lookVector*1000*Vector3.new(1,0,1)
-        rF.BreakParts:InvokeServer(parts, collision, car.PrimaryPart.Velocity.Magnitude, "Default", car.PrimaryPart.Velocity, false)
-        wait()
     end
+    CurrentCamera.CameraSubject = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 end
 
 function getClosestEntrance(part)
@@ -211,7 +246,30 @@ function getClosestEntrance(part)
     end
     return target
 end
-    
+
+function getClosestCar(maxd)
+    local car = getCar()
+    if not car then return end
+    local target = nil
+    local maxDist = maxd
+    local parts = {}
+    for _,v in pairs(CarCollection:GetChildren()) do
+        if v.Name ~= LocalPlayer.Name and v:FindFirstChild("Car") then
+            if not v.Car.PrimaryPart or not car.PrimaryPart then continue end
+            local dist = (car.PrimaryPart.Position - v.Car.PrimaryPart.Position).Magnitude
+            if dist < maxDist then
+                maxDist = dist
+                target = v
+                table.insert(parts, {v, dist})
+            end
+        end
+    end
+    local sortedParts = table.sort(parts, function(a,b)
+    	return a[2] < b[2]
+    end)
+    return target
+end
+
 function removeTags(chr)
     local head = chr:WaitForChild("Head")
     for _,v in pairs(head:GetChildren()) do
@@ -222,10 +280,11 @@ end
 function escape(heli)
     wait(1)
     if heli.Name == "Helicopter" then
+        print("escaping")
         local chr = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
         local hum = chr:WaitForChild("Humanoid")
         local root = chr:WaitForChild("HumanoidRootPart") 
-        TP(heli:FindFirstChildOfClass("BasePart").Position)
+        TP(heli.Seats:FindFirstChildOfClass("Seat").Position)
     end
 end
 
@@ -289,7 +348,7 @@ function sFLY(vfly)
 					BV.velocity = Vector3.new(0, 0, 0)
 				end
 				CurrentCamera.CameraSubject = car
-				BG.cframe = workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(0,math.rad(180),0)
+				BG.cframe = BG.cframe:Lerp(workspace.CurrentCamera.CoordinateFrame*CFrame.Angles(0,math.rad(180),0), .5)
 			until not flags.flying.value
 			CONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
 			lCONTROL = {F = 0, B = 0, L = 0, R = 0, Q = 0, E = 0}
@@ -353,6 +412,37 @@ function NOFLY()
 	pcall(function() CurrentCamera.CameraType = Enum.CameraType.Custom end)
 end
 
+function hover()
+    local car = getCar()
+    if not car then return end
+    local root = car.PrimaryPart
+    
+    local mass = 0
+    for i,v in pairs(car:GetDescendants()) do
+        if v:IsA("BasePart") then
+            mass = mass + (v:GetMass() * workspace.Gravity)
+        end
+    end
+    
+    local bodyPosition = Instance.new("BodyPosition", root)
+    local bodyGyro = Instance.new("BodyGyro", root)
+    
+    height = 10
+    FLOOR_CHECK	= 10
+    floor= Vector3.new(0, 5, 0)
+    
+    while RunService.Stepped:wait() do
+    	local floorRay	= Ray.new(root.Position, -floor.Unit * FLOOR_CHECK)
+        local hit, position, normal	= Workspace:FindPartOnRayWithIgnoreList(floorRay, {car})
+    	if hit then
+    		bodyPosition.MaxForce = Vector3.new(mass / 5, math.huge, mass / 5)
+    		bodyPosition.Position = (CFrame.new(position, position + normal) * CFrame.new(0, 0, -height + 0.5)).p
+    		bodyGyro.MaxTorque = Vector3.new(math.huge, 0, math.huge)
+    		bodyGyro.CFrame = CFrame.new(position, position + normal) * CFrame.Angles(-math.pi/2, 0, 0)
+    	end
+    end
+end
+
 function joindiscord()
     if not syn then return err("synapse only") end
     local json = {
@@ -362,7 +452,7 @@ function joindiscord()
         },
         ["nonce"] = 'a'
         }
-    spawn(function()
+    task.spawn(function()
         print(syn.request({
             Url = 'http://127.0.0.1:6463/rpc?v=1',
             Method = 'POST',
@@ -402,13 +492,13 @@ task.spawn(function()
                     rF.SpawnVehicle:InvokeServer(bestCar)
                     car = getCar()
                     wait() 
-                until car ~= false or not flags.autofarm.value --until PlayerGui.VehicleMenu.Menu.Background.Background.RespawnLabel.Text == "Respawn vehicle [R]"
+                until car ~= false or not flags.autofarm.value
             end
             wait(1)
             if not flags.autofarm.value then return end
-            if flags.silent.value then car:SetPrimaryPartCFrame(CFrame.new(5999.8056640625, 6.4365487098694, 2861.6376953125)) end
+            if flags.silent.value then car:SetPrimaryPartCFrame(CFrame.new(5999, 6, 2860)) end
             destroyCar()
-            wait(1)
+            wait(5)
             rE.Delete:FireServer()
         end
     end
@@ -418,8 +508,43 @@ local AccDir = 0
 RunService.Stepped:Connect(function()
     local car = getCar()
     if car then
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character.HumanoidRootPart.Position.Y < -100 then
+            rF.TeleportPlr:InvokeServer("LobbySpawn")
+        end
         if AccDir == 1 and flags.carspeed.value ~= 0 then
             car.PrimaryPart.Velocity = CFrame.new(car.PrimaryPart.Velocity):Lerp(CFrame.new(-car.PrimaryPart.CFrame.lookVector*car.Parent.Speed.Value*(flags.carspeed.value)), 0.001).Position
+        end
+    end
+end)
+
+task.spawn(function()
+    while wait(.1) do
+        local car = getCar()
+        if car then
+            if flags.tankaura.value then
+                local closestCar = getClosestCar(flags.tankaurarange.value)
+                if closestCar then
+                    for _,part in pairs(closestCar.Car.Body.HitBoxes:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            task.spawn(function() 
+                                for i = 1,3 do
+                                    rF.TankInvoke:InvokeServer("Fire", Vector3.new(0,0,0), part) 
+                                end
+                            end)
+                        end
+                    end
+                end
+            end
+            if flags.crashaura.value then
+                local closestCar = getClosestCar(flags.crashaurarange.value)
+                if closestCar then
+                    for _,part in pairs(car.Body.HitBoxes:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            task.spawn(function() rE.DamageVehicle:FireServer(part or car.Body.HitBoxes:FindFirstChild("Back"), CFrame.new(0,0,0), closestCar, car.PrimaryPart.Velocity.Magnitude) end)
+                        end
+                    end
+                end
+            end
         end
     end
 end)
@@ -435,7 +560,6 @@ OldNamecall = hookmetamethod(game, "__namecall", function(Self, ...)
 end)
 
 --=======\UI\
-
 local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum.KeyCode.RightShift)
     local afTab = window:CreateTab("Autofarm")
         local infoSec = afTab:CreateSector("Info")
@@ -524,6 +648,12 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
             bring_button = miscSec:AddButton("Bring Car", bringCar)
             destroy_button = miscSec:AddButton("Destroy Car", destroyCar)
             
+        local pvpSec = vTab:CreateSector("PVP", 'right')
+            ca_toggle = pvpSec:AddToggle("Crash Aura", flags.crashaura.value, flags.crashaura)
+            carange_slider = pvpSec:AddSlider("Range", 1, flags.crashaurarange.value, 1000, 1, flags.crashaurarange)
+            ta_toggle = pvpSec:AddToggle("Tank Aura", flags.tankaura.value, flags.tankaura)
+            tarange_slider = pvpSec:AddSlider("Range", 1, flags.tankaurarange.value, 1000, 1, flags.tankaurarange)
+            tankcrash_button = pvpSec:AddButton("Kill All (Tank Only)", tankCrash)
             
     local miscTab = window:CreateTab("Misc")
         local teleSec = miscTab:CreateSector("Teleports", "right")
@@ -587,15 +717,15 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
             		return notify("Couldn't find a server")
             	end
             end)    
-            
+
+
         local discSector = miscTab:CreateSector("Discord")
             joindisc_button = discSector:AddButton("Direct Join", joindiscord)
             copydisc_button = discSector:AddButton("Copy to Clipboard", function() if setclipboard then setclipboard('https://discord.gg/DnyxZRwQh3') else print("DnyxZRwQh3") end end)
                 
         local changeSector = miscTab:CreateSector("Changelogs")
-            changeSector:AddLabel("• Vehicle Fly")
-            changeSector:AddLabel("• Vehicle Jump")         
-            changeSector:AddLabel("• Vehicle Speed")
-            changeSector:AddLabel("• Set Body Paint")
+            changeSector:AddLabel("• Crash Aura")
+            changeSector:AddLabel("• Tank Aura")         
+            changeSector:AddLabel("• Tank Kill All")
         
     
