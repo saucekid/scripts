@@ -136,7 +136,7 @@ local things = {}
 
 for _,anim in pairs(animals:GetChildren()) do
     local health = anim:WaitForChild("Health")
-    if health and health.Value > 200 then
+    if health and health.Value > 450 then
         if settings.Console then write("Legendary ".. anim.Name.. " Found!", "yellow") end
         ESP:Add(anim, {Name = "Legendary ".. anim.Name, Color = Color3.new(255,255,0)})
         table.insert(things, anim.PrimaryPart)
