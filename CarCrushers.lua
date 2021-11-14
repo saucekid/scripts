@@ -562,7 +562,7 @@ end)
 --=======\UI\
 local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum.KeyCode.RightShift)
     local afTab = window:CreateTab("Autofarm")
-        local infoSec = afTab:CreateSector("Info")
+        local infoSec = afTab:CreateSector("Info", 'left')
             local bestcarstring = "Best Car: "
             bestcar_label = infoSec:AddLabel(bestcarstring)
             task.spawn(function()
@@ -603,7 +603,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
             silent_toggle = afSec:AddToggle("Silent", flags.silent.value, flags.silent)
             paint_dropdown = afSec:AddDropdown("Body Paint", {"Neon", "Silver", "Gold", "Platinum"}, "You must own it", flags.bodypaint)
             
-        local amiscSec = afTab:CreateSector("Misc")
+        local amiscSec = afTab:CreateSector("Misc", 'left')
             local escapeCon
             ae_toggle = amiscSec:AddToggle("Auto Escape/Helicopter", false, function(bool) 
                 if bool then 
@@ -617,7 +617,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
     
     
     local vTab = window:CreateTab("Vehicle")
-        local flySec = vTab:CreateSector("Fly"); local flyCon
+        local flySec = vTab:CreateSector("Fly", 'left'); local flyCon
             vfly_toggle = flySec:AddToggle("ON/OFF", flags.invincible.value, function(b) 
                 if flyCon then flyCon:Disconnect() end
                 if b then
@@ -633,7 +633,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
         local speedSec = vTab:CreateSector("Speed", 'right')
             carspeed_slider = speedSec:AddSlider("Amount", 0, flags.carspeed.value, 50, 1, flags.carspeed)
             
-        local boostSec = vTab:CreateSector("Boost")
+        local boostSec = vTab:CreateSector("Boost", 'left')
             boost_keybind = boostSec:AddKeybind("Boost Key",Enum.KeyCode.C, nil, boost)
             boostspeed_slider = boostSec:AddSlider("Amount", 1, flags.boostspeed.value, 200, 1, flags.boostspeed)
             
@@ -642,7 +642,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
             jump_keybind = jumpSec:AddKeybind("Jump Key",Enum.KeyCode.G, nil, jump)
             jumppower_slider = jumpSec:AddSlider("Amount", 0, flags.jumppower.value, 50, 1, flags.jumppower)
             
-        local miscSec = vTab:CreateSector("Misc")
+        local miscSec = vTab:CreateSector("Misc", 'left')
             invincible_toggle = miscSec:AddToggle("No Damage", flags.invincible.value, flags.invincible)
             spawn_button = miscSec:AddButton("Spawn Car", spawnCar)
             bring_button = miscSec:AddButton("Bring Car", bringCar)
@@ -687,7 +687,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
                 end 
             end)
             
-        local serverSector = miscTab:CreateSector("Servers")
+        local serverSector = miscTab:CreateSector("Servers", 'left')
             rejoin_button = serverSector:AddButton("Rejoin", function()
                 if #Players:GetPlayers() <= 1 then
 	    	        Players.LocalPlayer:Kick("\nRejoining...")
@@ -719,11 +719,11 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
             end)    
 
 
-        local discSector = miscTab:CreateSector("Discord")
+        local discSector = miscTab:CreateSector("Discord", 'left')
             joindisc_button = discSector:AddButton("Direct Join", joindiscord)
             copydisc_button = discSector:AddButton("Copy to Clipboard", function() if setclipboard then setclipboard('https://discord.gg/DnyxZRwQh3') else print("DnyxZRwQh3") end end)
                 
-        local changeSector = miscTab:CreateSector("Changelogs")
+        local changeSector = miscTab:CreateSector("Changelogs", 'left')
             changeSector:AddLabel("• Crash Aura")
             changeSector:AddLabel("• Tank Aura")         
             changeSector:AddLabel("• Tank Kill All")
