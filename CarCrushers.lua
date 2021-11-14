@@ -158,7 +158,7 @@ end
 
 function spawnCar()
     local bestCar = getbestCar()
-    rF.SpawnVehicle:InvokeServer(bestCar)
+    task.spawn(function() rF.SpawnVehicle:InvokeServer(bestCar) end)
 end
 
 function bringCar()
@@ -489,7 +489,7 @@ task.spawn(function()
                 }, bestCar)
                 wait()
                 repeat 
-                    rF.SpawnVehicle:InvokeServer(bestCar)
+                    pcall(function() rF.SpawnVehicle:InvokeServer(bestCar) end)
                     car = getCar()
                     wait() 
                 until car ~= false or not flags.autofarm.value
