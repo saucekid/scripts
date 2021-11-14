@@ -601,7 +601,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
         local afSec = afTab:CreateSector("Vehicle Autofarm", "right")
             af_toggle = afSec:AddToggle("ON/OFF", flags.autofarm.value, flags.autofarm)
             silent_toggle = afSec:AddToggle("Silent", flags.silent.value, flags.silent)
-            paint_dropdown = afSec:AddDropdown("Body Paint", {"Neon", "Silver", "Gold", "Platinum"}, "You must own it", flags.bodypaint)
+            paint_dropdown = afSec:AddDropdown("Body Paint", {"Neon", "Silver", "Gold", "Platinum"}, "You must own it", false, flags.bodypaint)
             
         local amiscSec = afTab:CreateSector("Misc", 'left')
             local escapeCon
@@ -665,7 +665,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
                     teleports[v.Name] = v.Entrance:FindFirstChildOfClass("Part")
                     table.insert(tpNames, v.Name)
                 end
-                tp_dropdown = teleSec:AddDropdown("Crushers", tpNames, "Select", function(c) 
+                tp_dropdown = teleSec:AddDropdown("Crushers", tpNames, "Select", false, function(c) 
                     local entrance = getClosestEntrance(teleports[c])
                     if not entrance then return err("no entrance?") end
                     TP(entrance.Position)
