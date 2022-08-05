@@ -14,7 +14,7 @@ while index do
         if v.playing < maxplrs then
             maxplrs = v.playing
             lowestID = v.id
-        endz
+        end
     end
     index = js(res.Body).nextPageCursor
     wait()
