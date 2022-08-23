@@ -139,7 +139,7 @@ local WeaponTypes = {
             equippedWeapon.Type = attackType
             equippedWeapon.remote = attackRemotes[attackType]
             equippedWeapon.range = findFirstChild(weaponData, "Range") and weaponData.Range.Value or equippedWeapon.range;
-            equippedWeapon.hitDelay = findFirstChild(weaponData, "HitDelay") and weaponData.HitDelay.Value * weaponData.AttackSpeed.Value / 100 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
+            equippedWeapon.hitDelay = 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))--findFirstChild(weaponData, "HitDelay") and weaponData.HitDelay.Value * weaponData.AttackSpeed.Value / 100 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
 
             if not otherWeapon.remote then
                 for i,v in pairs(equippedWeapon) do
@@ -550,6 +550,14 @@ do
         return oldNamecall(self, unpack(Args))
     end))
     
+    
+    client.OnTeleport:Connect(function(State)
+        if State == Enum.TeleportState.Started and syn then
+            syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
+        end
+    end)
+
+
     connect(game.Players.PlayerRemoving, function(plr)
         if plr == client then
             save(flags, "dungeon.json")
