@@ -5,10 +5,11 @@
     by saucekid (https://discord.gg/eX5k7TKN4F)
     
     CREDITS:
-    - sukaretto#8874 (https://discord.gg/PFuQMWMhQQ) 
+    - sukaretto#8874 (https://discord.gg/PFuQMWMhQQ)
     - ObscureScapter (https://v3rmillion.net/member.php?action=profile&uid=387561)
 --]]
 
+_G.safemode = _G.safemode or true
 
 local game = game;
 local httpGet = game.HttpGet;
@@ -34,6 +35,8 @@ local fire, fireServer = create'BindableEvent'.Fire, create'RemoteEvent'.FireSer
 
 local string_find = string.find;
 local string_format = string.format;
+
+local jsonE, jsonD = function(o) return game.HttpService:JSONEncode(o) end, function(o) return game.HttpService:JSONDecode(o) end
 
 local c = game.Loaded;
 local connect, cwait = c.Connect, c.Wait;
@@ -61,7 +64,7 @@ for i,v in pairs(getconnections(client.Idled)) do
     v:Disable()
 end
 
-if game.PlaceVersion > 923 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
+if _G.safemode and game.PlaceVersion > 923 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
 
 -- things.
 local map = workspace.Map;
@@ -227,19 +230,55 @@ local function attack(group)
     end;
 end;
 
--- lib.
+
+-- file system.
+local folderpath = [[ventureAI/]]
+
+if makefolder then
+	makefolder("ventureAI")
+end
+
+local function existsFile(name)
+	if not readfile then return end
+	return pcall(function()
+		return readfile(folderpath .. name)
+	end)
+end
+
+function load(name, settings)
+	if not existsFile(name) then return end
+	local _, Result = pcall(readfile, folderpath .. name);
+	if _ then
+		local _, Loaded = pcall(game.HttpService.JSONDecode, game.HttpService, Result);
+		if _ then
+	        for i, v in pairs(Loaded) do
+                settings[i] = v;
+                pcall(settings[i], v);
+            end
+		end
+	end
+end
+
+function save(table, name)
+	if writefile then
+		writefile(folderpath .. name, jsonE(table));
+	end
+end
+
+-- flags.
 local autoDungeon, ignore = create'BindableEvent';
     
 local flags = {
-    killAura = false,
+    killAura = true,
     autoDungeon = false,
     autoPotion = true,
     autoDodge = true,
     dashWarp = true,
     jumping = true
-}
+}; load("dungeon.json", flags)
 
-local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ArrowsUIlib.lua'))(); do
+-- lib.
+local lib = loadstring(readfile("utility/ui/arrow.lua"))(); do
     _G["Theme"] = {
         ["UI_Position"] = Vector2.new(50, 200),
         ["Text_Size"] = 16,
@@ -256,7 +295,12 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
     
     
     if game.PlaceId == 4809447488 then 
-        local selectedDungeon, selectedDifficulty, hardCore = "Goblin Cave", "Easy", false
+        flags = {
+            selectedDungeon = "Goblin Cave", 
+            selectedDifficulty = "Easy", 
+            hardCore = false
+        }; load("lobby.json", flags)
+        
         local dungeons, realDungeons, difficulties = 
         {"Goblin Cave", "Enchanted Forest", "Bandit Castle"}, 
         {
@@ -266,43 +310,47 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         }, 
         {"Easy", "Normal", "Hard", "Raid", "Endless"}
         
-        print(realDungeons[selectedDungeon])
         local dungeonTab = lib:NewCategory("Lobby"); do
-
             dungeonTab:NewButton(
                 'Start Solo',
                 function()
-                    remotes.UI.Lobby.StartLobby:FireServer(realDungeons[selectedDungeon], selectedDifficulty, hardCore, "Solo")
+                    remotes.UI.Lobby.StartLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore, "Solo")
                 end
             );
             
             dungeonTab:NewButton(
                 'Create Lobby',
                 function()
-                    remotes.UI.Lobby.CreateLobby:FireServer(realDungeons[selectedDungeon], selectedDifficulty, hardCore)
+                    remotes.UI.Lobby.CreateLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore)
                 end
             );
             
-            dungeonTab:NewDropdown("Dungeon", dungeons, table.find(dungeons, selectedDungeon), function(option) 
-                selectedDungeon = option
+            dungeonTab:NewDropdown("Dungeon", dungeons, table.find(dungeons, flags.selectedDungeon), function(option) 
+                flags.selectedDungeon = option
             end)
             
-            dungeonTab:NewDropdown("Difficulty", difficulties, table.find(difficulties, selectedDifficulty), function(option) 
-                selectedDifficulty = option
+            dungeonTab:NewDropdown("Difficulty", difficulties, table.find(difficulties, flags.selectedDifficulty), function(option) 
+                flags.selectedDifficulty = option
             end)
             
             dungeonTab:NewToggle(
                 'Hardcore',
                 hardCore,
                 function(state)
-                    hardCore = state
+                    flags.hardCore = state
                 end
             );
         end
+        
+        connect(game.Players.PlayerRemoving, function(plr)
+            if plr == client then
+                save(flags, "lobby.json")
+            end
+        end)
         return
     end
-    
-    local adTab = lib:NewCategory("Dungeon AI"); do
+
+    local adTab = lib:NewCategory("ventureAI"); do
         adTab:NewToggle(
             'on/off',
             flags.autoDungeon,
@@ -453,7 +501,7 @@ do
                 mousePos = root.Position + root.CFrame.rightVector * -5
             elseif hostile then
                 local waiting = findFirstChild(hostile, 'Waiting' .. hostile.Name);
-                if not findFirstChild(character, 'ForceField') and (waiting or (distance >= 20 and not (distance <= Weapons[1].range))) then
+                if not findFirstChild(character, 'ForceField') and (waiting or (distance >= 50)) then --[[and not (distance <= Weapons[1].range))) then]]
                     dashWarp(hostile.HumanoidRootPart.CFrame);
                 end;
                 
@@ -491,17 +539,25 @@ do
         end
     end);
     
+    fire(autoDungeon, flags.autoDungeon);
+    
     oldNamecall = hookfunction(getrawmetatable(game).__namecall, newcclosure(function(self, ...)
-        local myArgs    = {...}
-        local callMethod    = getnamecallmethod()
+        local Args    = {...}
+        local callMethod = getnamecallmethod()
         if callMethod == "FireServer" and self.Name == "UpdateMouseDirection" and flags.autoDungeon then
-            myArgs[1]  = mousePos
+            Args[1]  = mousePos
         end
-        return oldNamecall(self, unpack(myArgs))
+        return oldNamecall(self, unpack(Args))
     end))
     
-    local DungeonGui = client.PlayerGui:WaitForChild("DungeonClear")
-    connect(DungeonGui:WaitForChild("DungeonClearLabel"):GetPropertyChangedSignal("Visible"), function()
+    connect(game.Players.PlayerRemoving, function(plr)
+        if plr == client then
+            save(flags, "dungeon.json")
+        end
+    end)
+
+    local DungeonGui = client.PlayerGui.DungeonClear
+    connect(DungeonGui.DungeonClearLabel:GetPropertyChangedSignal("Visible"), function()
         if DungeonGui.DungeonClearLabel.Visible then
             fireServer(dungeonVoting, 'ReplayDungeon');
         end
