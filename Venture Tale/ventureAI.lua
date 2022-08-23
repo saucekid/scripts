@@ -11,6 +11,8 @@
 
 _G.safemode = _G.safemode or true
 
+repeat wait() until game:IsLoaded()
+
 local game = game;
 local httpGet = game.HttpGet;
 
