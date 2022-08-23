@@ -288,7 +288,7 @@ client.OnTeleport:Connect(function(State)
 end)
 
 -- lib.
-local lib = loadstring(readfile("utility/ui/arrow.lua"))(); do
+local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ArrowsUIlib.lua'))(); do
     _G["Theme"] = {
         ["UI_Position"] = Vector2.new(50, 200),
         ["Text_Size"] = 16,
