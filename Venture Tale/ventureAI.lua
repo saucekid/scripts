@@ -165,7 +165,6 @@ local WeaponTypes = {
     end);
 end;
 
-
 -- classes.
 local hostile = ({params=(function()
     local _ = OverlapParams.new()
@@ -199,6 +198,7 @@ end)(), filtered = {
         return h, d;
     end;
 end;
+
 
 local ability = {} do
     function ability.cooldown(a)
@@ -276,6 +276,14 @@ local flags = {
     dashWarp = true,
     jumping = true
 }; load("dungeon.json", flags)
+
+
+-- auto execute.
+client.OnTeleport:Connect(function(State)
+    if State == Enum.TeleportState.Started and syn then
+        syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
+    end
+end)
 
 -- lib.
 local lib = loadstring(readfile("utility/ui/arrow.lua"))(); do
@@ -549,14 +557,6 @@ do
         end
         return oldNamecall(self, unpack(Args))
     end))
-    
-    
-    client.OnTeleport:Connect(function(State)
-        if State == Enum.TeleportState.Started and syn then
-            syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
-        end
-    end)
-
 
     connect(game.Players.PlayerRemoving, function(plr)
         if plr == client then
