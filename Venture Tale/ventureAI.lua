@@ -74,6 +74,7 @@ local map = workspace.Map;
 local projectiles = workspace.Projectiles;
 local rangeIndicators = workspace.RangeIndicators
 local IPDFunctions = require(replicatedStorage.Modules.IPDFunctions)
+local clientEquipped = client.stats.Equipped;
 
 -- remotes&attacking.
 local remotes = replicatedStorage.Remotes;
@@ -89,49 +90,54 @@ local dungeonVoting = remotes.UI.EndDungeon.EndOfDungeonVote;
 
 -- weapon calculation.
 local Weapons = {
-    [1] = { hitDelay = 1.2, range = 120 }, 
-    [2] = { hitDelay = 1.2, range = 120 }
-}
-local WeaponTypes = {
-    Melee = {
-        "Hammer",
-        "Dagger",
-        "Axe",
-        "Spear",
-        "Sword",
-        "Rapier",
-        "Polearm",
-        "Greatsword",
-        "Katana",
-    },
-    Bow = {
-        "Bow",
-        "Crossbow",
-    },
-    Magic   = {
-        "Staff",
-        "Wand",
-        "Book",
+    [1] = { hitDelay = 1.2, range = 110 }, 
+    [2] = { hitDelay = 1.2, range = 100 },
+
+    Types = {
+        Melee = {
+            "Hammer",
+            "Dagger",
+            "Axe",
+            "Spear",
+            "Sword",
+            "Rapier",
+            "Polearm",
+            "Greatsword",
+            "Katana",
+        },
+        Bow = {
+            "Bow",
+            "Crossbow",
+        },
+        Magic   = {
+            "Staff",
+            "Wand",
+            "Book",
+        }
     }
-} do
-    local function calculate(weapon)
+} do 
+    function Weapons.getWeaponCooldown(weapon, weaponData)
+        local Tags = findFirstChild(weaponData, "Tags");
+        local attackBoost = IPDFunctions:GetBoostValue(character, "AttackSpeedBoost");
+        
+        if Tags  then
+            for q, c in next, getChildren(Tags) do
+                attackBoost = attackBoost + IPDFunctions:GetBoostValue(character, c.Name .. "AttackSpeedBoost")
+            end
+        end
+        
+        return weaponData:FindFirstChild("NoAttack") and 1.2 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
+    end
+    
+    function Weapons.calculate(weapon)
         local weaponType = weapon.ItemType.Value;
         local weaponIndex = weapon.Name:gsub("Wep", "")
         
         local weaponTypeFolder = replicatedStorage.ItemData[weaponType];
         local weaponData = quick.find(getChildren(weaponTypeFolder), function(w) return w.Name == weapon.ItemID.Value end);
-        
-        local Tags = findFirstChild(weaponData, "Tags");
-        local attackBoost = IPDFunctions:GetBoostValue(character, "AttackSpeedBoost");
-        
-        if Tags  then
-            for q, c in pairs(Tags:GetChildren()) do
-                attackBoost = attackBoost + IPDFunctions:GetBoostValue(character, c.Name .. "AttackSpeedBoost")
-            end
-        end
                 
         local attackType 
-        for i,class in pairs(WeaponTypes) do
+        for i,class in pairs(Weapons.Types) do
             if table.find(class, weaponType) then
                 attackType = i
             end
@@ -141,10 +147,11 @@ local WeaponTypes = {
         local otherWeapon = tonumber(weaponIndex) == 1 and Weapons[2] or Weapons[1]
         if weaponData and attackType then
             equippedWeapon.Type = attackType
+            equippedWeapon.weapon = weapon
+            equippedWeapon.data = weaponData
             equippedWeapon.remote = attackRemotes[attackType]
             equippedWeapon.range = findFirstChild(weaponData, "Range") and weaponData.Range.Value or equippedWeapon.range;
-            equippedWeapon.hitDelay =  weaponData:FindFirstChild("NoAttack") and 1.2 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
-            equippedWeapon.Ranged = (attackType == "Magic" or attackType == "Bow") and true or false
+            equippedWeapon.Ranged = (attackType == "Magic" or attackType == "Bow") and true or false;
             
             if not otherWeapon.remote then
                 for i,v in pairs(equippedWeapon) do
@@ -157,11 +164,10 @@ local WeaponTypes = {
     end;
 
     local function weaponChanged(w)
-        calculate(w);
-        connect(w.ItemID.Changed, function() calculate(w) end);
+        Weapons.calculate(w);
+        connect(w.ItemID.Changed, function() Weapons.calculate(w) end);
     end;
     
-    local clientEquipped = client.stats.Equipped;
     quick.each(getChildren(clientEquipped), function(v) if string_find(v.Name, 'Wep') then weaponChanged(v) end end);
     connect(clientEquipped.ChildAdded, function(v)
         if string_find(v.Name, 'Wep') then
@@ -205,7 +211,7 @@ end)(), filtered = {
             if self.filtered[v.Name] or (not findFirstChild(v, 'HumanoidRootPart')) then continue end;
             
             local wall = self:behindWall(v)
-            local magnitude = findFirstChild(workspace.NPCS, "GoblinBashWatermelon") and (workspace.NPCS.GoblinBashWatermelon:GetPivot().p - v:GetPivot().p).magnitude or  distanceFromCharacter(client, v.HumanoidRootPart.Position);
+            local magnitude = distanceFromCharacter(client, v.HumanoidRootPart.Position);
             if wall then
                 if magnitude <= nearest.distance then
                     nearest.instance = v
@@ -226,6 +232,33 @@ end;
 
 
 local ability = {} do
+    ability.items = {
+    }
+    ability.wrapper = {
+        ["1"] = 3,
+        ["2"] = 4,
+        ["3"] = 5,
+        ["4"] = 6
+    }
+    function ability.register(item)
+        local itemType = item.ItemType.Value;
+        local itemIndex = item.Name:gsub("Item", "")
+        
+        local itemTypeFolder = replicatedStorage.ItemData[itemType];
+        local itemData = quick.find(getChildren(itemTypeFolder), function(i) return i.Name == item.ItemID.Value end);
+        
+        if itemType == "Spell" or item.ItemID.Value:find("Potion") then
+            local abilityType = item.ItemID.Value:find("Roll") and "Roll" or item.ItemID.Value:find("Potion") and "Potion" or "Spell"
+            ability.items[tonumber(itemIndex)] = {
+                Type = abilityType,
+                remote = ability.wrapper[itemIndex]
+            }
+            print(abilityType)
+        else
+            ability.items[tonumber(itemIndex)] = nil
+        end
+    end
+    
     function ability.cooldown(a)
         local attributes = findFirstChild(character, 'Attributes');
         return attributes and findFirstChild(attributes.Value, 'Cooldowns') and findFirstChild((attributes.Value).Cooldowns, string_format('Wep%dAbilityCD', a)) ~= nil;
@@ -238,6 +271,59 @@ local ability = {} do
         end;
         return false;
     end;
+    
+    function ability:getAbility(itemType)
+        for _, item in pairs(self.items) do
+            if item.Type == itemType then
+                return item
+            end
+        end
+        return
+    end
+    -- heal
+    function ability.potion()
+        local potion = ability:getAbility("Potion")
+        if potion then
+            return ability:use(potion.remote)
+        end
+    end
+            
+    -- roll
+    function ability.roll()
+        local roll = ability:getAbility("Roll")
+        if roll then
+            return ability:use(roll.remote)
+        end
+    end
+        
+    function ability.canRoll()
+        local roll = ability:getAbility("Roll")
+        if roll then
+            return not ability.cooldown(roll.remote) 
+        end
+        return false
+    end
+    
+    -- dash
+    function ability.dash()
+        return ability:use(999)
+    end
+    
+    function ability.canDash()
+        return not ability.cooldown(999)
+    end
+    
+    local function itemChanged(w)
+        ability.register(w);
+        connect(w.ItemID.Changed, function() ability.register(w) end);
+    end;
+    
+    quick.each(getChildren(clientEquipped), function(v) if string_find(v.Name, 'Item') then itemChanged(v) end end);
+    connect(clientEquipped.ChildAdded, function(v)
+        if string_find(v.Name, 'Item') then
+            itemChanged(v);
+        end;
+    end);   
 end;
 
 local function attack(group)
@@ -324,7 +410,7 @@ end)
 
 
 -- lib.
-local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ArrowsUIlib.lua'))(); do
+local lib = loadstring(readfile("utility/ui/arrow.lua"))(); do
     _G["Theme"] = {
         ["UI_Position"] = Vector2.new(50, 200),
         ["Text_Size"] = 16,
@@ -411,13 +497,14 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         settingsTab:NewToggle(
             'Kill Aura',
             flags.killAura,
-             function(state)
+            function(state)
                 flags.killAura = state;
                 coroutine.wrap(function()
                     while flags.killAura do
+                        local cooldown = Weapons.getWeaponCooldown(Weapons[1].weapon, Weapons[1].data)
                         local hostiles = hostile:group();
                         attack(hostiles);
-                        task.wait((#hostiles == 0 and 0) or Weapons[1].hitDelay);
+                        task.wait((#hostiles == 0 and 0) or cooldown);
                     end;
                 end)()
             end
@@ -505,7 +592,7 @@ do
     local behindWall
     
     local function inAttackRadius()
-        for _,indicator in pairs(rangeIndicators:GetChildren()) do
+        for _,indicator in next, getChildren(rangeIndicators) do
             if indicator.Name == "LingeringSpear" then continue end
             if indicator:IsA("Folder") then indicator = findFirstChild(indicator, 'Main') or indicator:FindFirstChildOfClass("BasePart") end
             
@@ -551,10 +638,10 @@ do
             if not root or (humanoid and humanoid.Health == 0) then return end;
             
             local hostile, distance, _ = hostile:nearest(); behindWall = _
-            local heal, dodge = (flags.autoPotion and (humanoid.Health <= humanoid.MaxHealth/2 and not ability.cooldown(6))) and true, flags.autoDodge and inAttackRadius()
+            local heal = (flags.autoPotion and (humanoid.Health <= humanoid.MaxHealth/2)) and ability.potion()
+            local dodge = flags.autoDodge and inAttackRadius()
             local gate, loot = (findFirstChild(projectiles, 'WaitingForPlayers') or findFirstChild(projectiles, 'BossWaitingForPlayers')), findFirstChild(map, 'LootPrompt', true);
-            local boss = replicatedStorage.ControlSettings.CurrentBoss.Value
-            local dungeonFailed = replicatedStorage.ControlSettings.Failed.Value;
+            local boss, dungeonFailed = replicatedStorage.ControlSettings.CurrentBoss.Value, replicatedStorage.ControlSettings.Failed.Value;
             
             faceCF = hostile and hostile.HumanoidRootPart.Position or client:GetMouse().Hit.Position
             
@@ -566,18 +653,16 @@ do
                     fireproximityprompt(loot); 
                 end
                 fireServer(dungeonVoting, 'ReplayDungeon');
-            elseif heal then
-                ability:use(6)
             elseif dodge then
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
-                if (not ability.cooldown(6) or not ability.cooldown(999)) then
+                characterPathing:Run(root.Position + root.CFrame.rightVector * -8);
+                if (ability.canRoll() or ability.canDash()) then
                     mousePos = root.Position + root.CFrame.rightVector * -5
-                    ability:use(3)
-                    ability:use(999)
+                    ability.roll()
+                    ability.dash()
                     return
                 end
                 mousePos = hostile and hostile.HumanoidRootPart.Position
-                characterPathing:Run(root.Position + root.CFrame.rightVector * -8);
             elseif hostile then
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
@@ -588,7 +673,6 @@ do
                         characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
                     else
                         characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -20);
-                        ability:use(999)
                     end
                     return
                 elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall then
@@ -599,7 +683,7 @@ do
                 local pathEnemy = characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 500 then
+                    if stuck > 900 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -607,7 +691,8 @@ do
                 end
                 
                 if behindWall then
-                    ability:use(999)
+                    ability.dash()
+                    ability.roll()
                 end
             end;
         end));
