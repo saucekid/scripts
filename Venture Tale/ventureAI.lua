@@ -574,11 +574,6 @@ do
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
                 
-                local waterMelon = findFirstChild(workspace.NPCS, "GoblinBashWatermelon") 
-                if Weapons[1].Ranged and waterMelon then
-                    return characterPathing:Run(waterMelon:GetPivot().Position);
-                end
-                
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
                         characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
@@ -652,5 +647,12 @@ do
         end
         return oldNamecall(self, unpack(Args))
     end))
+    
+    local DungeonGui = client.PlayerGui.DungeonClear
+    connect(DungeonGui.DungeonClearLabel:GetPropertyChangedSignal("Visible"), function()
+        if DungeonGui.DungeonClearLabel.Visible then
+            fireServer(dungeonVoting, 'ReplayDungeon');
+        end
+    end)
 end;
 
