@@ -155,7 +155,7 @@ local WeaponTypes = {
             equippedWeapon.remote = nil
         end;
     end;
-    ---
+
     local function weaponChanged(w)
         calculate(w);
         connect(w.ItemID.Changed, function() calculate(w) end);
@@ -192,7 +192,7 @@ end)(), filtered = {
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
-            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, workspace.Map.Segments.PropsSegment4.Invisible, damageIndicators };
+            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, damageIndicators };
             _.FilterType = Enum.RaycastFilterType.Blacklist;
         return workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
     end
