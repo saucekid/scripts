@@ -11,15 +11,18 @@
 
 _G.safemode = _G.safemode or true
 
-repeat wait() until game:IsLoaded() and not executed
-getgenv().executed = true
+repeat wait() until game:IsLoaded() 
+if executed then
+    MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Already executed!!", MessageBoxIcon = "Warning", MessageBoxButtons = "OK"})
+    return;
+end; getgenv().executed = true
 
 local game = game;
 local httpGet = game.HttpGet;
 
 local quick = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/quick/master/init.lua'))();
 local broom = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/broom/master/init.lua'))();
-local pathing = loadstring(httpGet(game, 'https://raw.githubusercontent.com/V3N0M-Z/RBLX-SimplePath/main/src/SimplePath.lua'))(); pathing.Visualize = true
+local pathing = loadstring(httpGet(game, 'https://raw.githubusercontent.com/V3N0M-Z/RBLX-SimplePath/main/src/SimplePath.lua'))(); pathing.Visualize = true;
 
 -- services.
 local s = quick.Service;
@@ -45,6 +48,8 @@ local c = game.Loaded;
 local connect, cwait = c.Connect, c.Wait;
 local render, step = runService.RenderStepped, runService.Stepped;
 
+local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+
 -- client.
 local client = quick.User;
 local character = client.Character or cwait(client.CharacterAdded);
@@ -53,7 +58,7 @@ local gyro = waitForChild(root, 'BodyGyro')
 local humanoid = waitForChild(character, 'Humanoid');
 
 local distanceFromCharacter = client.DistanceFromCharacter;
-local characterPathing = pathing.new(character, {
+local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 4.2}, {
     Costs = {
         Water = math.huge,
         Neon = math.huge
@@ -198,7 +203,7 @@ end)(), filtered = {
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
-            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, damageIndicators };
+            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace.Map:findFirstChild("Throne") };
             _.FilterType = Enum.RaycastFilterType.Blacklist;
         return workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
     end
@@ -213,12 +218,12 @@ end)(), filtered = {
             local wall = self:behindWall(v)
             local magnitude = distanceFromCharacter(client, v.HumanoidRootPart.Position);
             if wall then
-                if magnitude <= nearest.distance then
+                if magnitude < nearest.distance then
                     nearest.instance = v
                     nearest.distance = magnitude
                 end
             else
-                if magnitude <= nearestVis.distance then
+                if magnitude < nearestVis.distance then
                     nearestVis.instance = v
                     nearestVis.distance = magnitude
                 end
@@ -251,9 +256,9 @@ local ability = {} do
             local abilityType = item.ItemID.Value:find("Roll") and "Roll" or item.ItemID.Value:find("Potion") and "Potion" or "Spell"
             ability.items[tonumber(itemIndex)] = {
                 Type = abilityType,
-                remote = ability.wrapper[itemIndex]
+                remote = ability.wrapper[itemIndex],
+                potion = (abilityType == "Potion" and item.ItemID.Value:find("Heal")) and "Heal" or (abilityType == "Potion" and item.ItemID.Value:find("Mana")) and "Mana" or false
             }
-            print(abilityType)
         else
             ability.items[tonumber(itemIndex)] = nil
         end
@@ -264,6 +269,11 @@ local ability = {} do
         return attributes and findFirstChild(attributes.Value, 'Cooldowns') and findFirstChild((attributes.Value).Cooldowns, string_format('Wep%dAbilityCD', a)) ~= nil;
     end;
     
+    function ability.getMana()
+        local mana = findFirstChild(character, 'Mana')
+        return mana.Value, mana and mana.Max.Value
+    end
+    
     function ability:use(a)
         if (not self.cooldown(a)) then
             task.spawn(fireServer, useAbility, a);
@@ -273,36 +283,59 @@ local ability = {} do
     end;
     
     function ability:getAbility(itemType)
+        local abilities  = {}
         for _, item in pairs(self.items) do
             if item.Type == itemType then
-                return item
+                table.insert(abilities, item)
             end
         end
-        return
+        return abilities
     end
-    -- heal
+    
+    -- potion
     function ability.potion()
-        local potion = ability:getAbility("Potion")
-        if potion then
-            return ability:use(potion.remote)
+        local potions = ability:getAbility("Potion")
+        local mana, maxMana = ability.getMana()
+        if potions then
+            for _,potion in pairs(potions) do
+                if potion.potion == "Heal" and humanoid.Health <= humanoid.MaxHealth/2 then
+                    return ability:use(potion.remote)
+                elseif potion.potion == "Mana" and mana <= maxMana/2 then
+                    return ability:use(potion.remote)
+                end
+            end
         end
     end
-            
+    
+    -- spells
+    function ability:castSpells()
+        local spells = self:getAbility("Spell")
+        local mana, maxMana = ability.getMana()
+        if spells then
+            for _,spell in pairs(spells) do
+                if mana >= maxMana*0.75 then
+                    local success = ability:use(spell.remote)
+                end
+            end
+        end
+    end
+    
     -- roll
-    function ability.roll()
-        local roll = ability:getAbility("Roll")
-        if roll then
-            return ability:use(roll.remote)
-        end
-    end
-        
     function ability.canRoll()
         local roll = ability:getAbility("Roll")
         if roll then
-            return not ability.cooldown(roll.remote) 
+            return not ability.cooldown(roll[1].remote) 
         end
         return false
     end
+
+    function ability.roll()
+        local roll = ability:getAbility("Roll")
+        if roll then
+            return ability:use(roll[1].remote)
+        end
+    end
+        
     
     -- dash
     function ability.dash()
@@ -376,7 +409,7 @@ function save(table, name)
 	end
 end
 
-local MessageBox = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/NotificationGUI/main/source.lua"))()
+getgenv().MessageBox = loadstring(httpGet(game,"https://raw.githubusercontent.com/xHeptc/NotificationGUI/main/source.lua"))()
 if not existsFile("executed.once") then
     MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Use the arrows keys to navigate the GUI", MessageBoxIcon = "Question", MessageBoxButtons = "OK", Result = function(res)
         if (res == "OK") then
@@ -394,8 +427,11 @@ local flags = {
     autoDungeon = false,
     autoPotion = true,
     autoDodge = true,
+    autoSpell = true,
+    anims = false,
     dashWarp = true,
     jumping = true,
+    gateTeleport = true,
     keepDistance = false,
     distanceAway = 30
 }; load("dungeon.json", flags)
@@ -404,7 +440,7 @@ local flags = {
 -- auto execute.
 client.OnTeleport:Connect(function(State)
     if State == Enum.TeleportState.Started and syn then
-        syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
+        queueteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
     end
 end)
 
@@ -430,7 +466,8 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         flags = {
             selectedDungeon = "Goblin Cave", 
             selectedDifficulty = "Easy", 
-            hardCore = false
+            hardCore = false,
+            autoStart = false,
         }; load("lobby.json", flags)
         
         local dungeons, realDungeons, difficulties = 
@@ -438,7 +475,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         {
             ["Goblin Cave"] = "GoblinCave",
             ["Enchanted Forest"] = "EnchantedForest",
-            ["Bandit Castle"] = "BanditCastle"
+            ["Bandit Castle"] = "BanditCastle",
         }, 
         {"Easy", "Normal", "Hard", "Raid", "Endless"}
         
@@ -456,7 +493,34 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     remotes.UI.Lobby.CreateLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore)
                 end
             );
-            
+        
+            dungeonTab:NewToggle(
+                'Auto Start',
+                flags.autoStart,
+                function(state)
+                    flags.autoStart = state
+                    coroutine.wrap(function()
+                        local countDown 
+                        for i = 5,1,-1 do
+                            if countDown then countDown:Remove() end
+                            if not flags.autoStart then return end
+                            countDown = Drawing.new("Text")
+                            countDown.Text = tostring(i)
+                            countDown.Color = Color3.new(1,1,1)
+                            countDown.Outline = true
+                            countDown.OutlineColor = Color3.new(0,0,0)
+                            countDown.Size = 50
+                            countDown.Center = true
+                            countDown.Visible = true
+                            countDown.Position = Vector2.new(workspace.CurrentCamera.ViewportSize.X / 2, workspace.CurrentCamera.ViewportSize.Y / 2  - (game.GuiService:GetGuiInset().Y/2))
+                            wait(1)
+                        end
+                        countDown:Remove()
+                        remotes.UI.Lobby.StartLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore, "Solo")
+                    end)()
+                end
+            );
+        
             dungeonTab:NewDropdown("Dungeon", dungeons, table.find(dungeons, flags.selectedDungeon), function(option) 
                 flags.selectedDungeon = option
             end)
@@ -470,6 +534,39 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 flags.hardCore,
                 function(state)
                     flags.hardCore = state
+                end
+            );
+        end
+        
+        local miscTab = lib:NewCategory("Misc.") do
+            miscTab:NewButton(
+                'Rejoin',
+                function()
+                    game.TeleportService:Teleport(4809447488, client)
+                end
+            );
+        
+            miscTab:NewButton(
+                'Join Discord',
+                function()
+                    local json = {
+                        ["cmd"] = "INVITE_BROWSER",
+                        ["args"] = {
+                            ["code"] = "eX5k7TKN4F"
+                        },
+                        ["nonce"] = 'a'
+                    }
+                    spawn(function()
+                        print(syn.request({
+                            Url = 'http://127.0.0.1:6463/rpc?v=1',
+                            Method = 'POST',
+                            Headers = {
+                                ['Content-Type'] = 'application/json',
+                                ['Origin'] = 'https://discord.com'
+                            },
+                            Body = game:GetService('HttpService'):JSONEncode(json),
+                        }).Body)
+                    end)
                 end
             );
         end
@@ -527,7 +624,32 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         );
     
         settingsTab:NewToggle(
-            'Dash Warp',
+            'Auto Cast Spell',
+            flags.autoSpell,
+            function(state)
+                flags.autoSpell = state
+            end
+        );
+    
+        settingsTab:NewToggle(
+            'Animations',
+            flags.anims,
+            function(state)
+                flags.anims = state
+            end
+        );
+    
+    
+        settingsTab:NewToggle(
+            'Teleport to gates',
+            flags.gateTeleport,
+            function(state)
+                flags.gateTeleport = state
+            end
+        );
+    
+        settingsTab:NewToggle(
+            'Teleport if stuck',
             flags.dashWarp,
             function(state)
                 flags.dashWarp = state
@@ -569,8 +691,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             pathing.Visualize,
             function(state)
                 pathing.Visualize = state
-            end
-        );
+            end);
     end
 
 
@@ -579,6 +700,30 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             'Join Lobby',
             function()
                 game.TeleportService:Teleport(4809447488, client)
+            end
+        );
+    
+        miscTab:NewButton(
+            'Join Discord',
+            function()
+                local json = {
+                    ["cmd"] = "INVITE_BROWSER",
+                    ["args"] = {
+                        ["code"] = "eX5k7TKN4F"
+                    },
+                    ["nonce"] = 'a'
+                }
+                spawn(function()
+                    print(syn.request({
+                        Url = 'http://127.0.0.1:6463/rpc?v=1',
+                        Method = 'POST',
+                        Headers = {
+                            ['Content-Type'] = 'application/json',
+                            ['Origin'] = 'https://discord.com'
+                        },
+                        Body = game:GetService('HttpService'):JSONEncode(json),
+                    }).Body)
+                end)
             end
         );
     end
@@ -603,7 +748,7 @@ do
             local touching = indicator:GetTouchingParts()
             for i,v in pairs(touching) do
 		        if v.Parent == character then
-		        	return true
+		        	return indicator
 		        end
 	        end
         end
@@ -629,6 +774,7 @@ do
             end
         end
         
+        gyro.P = 3000
         autoDungeon_broom:GiveTask(connect(gyro:GetPropertyChangedSignal("CFrame"), function()
              pcall(function() gyro.CFrame = CFrame.new(root.Position, faceCF) end)
         end))
@@ -636,17 +782,21 @@ do
         local stuck = 0
         autoDungeon_broom:GiveTask(connect(render, function()
             if not root or (humanoid and humanoid.Health == 0) then return end;
-            
+
             local hostile, distance, _ = hostile:nearest(); behindWall = _
-            local heal = (flags.autoPotion and (humanoid.Health <= humanoid.MaxHealth/2)) and ability.potion()
-            local dodge = flags.autoDodge and inAttackRadius()
+            local potion = (flags.autoPotion) and ability.potion()
+            local dodge = flags.autoDodge and (inAttackRadius() or (findFirstChild(projectiles, "Pebble") or (not Weapons[1].Ranged and findFirstChild(projectiles, "Arrow"))))
             local gate, loot = (findFirstChild(projectiles, 'WaitingForPlayers') or findFirstChild(projectiles, 'BossWaitingForPlayers')), findFirstChild(map, 'LootPrompt', true);
             local boss, dungeonFailed = replicatedStorage.ControlSettings.CurrentBoss.Value, replicatedStorage.ControlSettings.Failed.Value;
             
-            faceCF = hostile and hostile.HumanoidRootPart.Position or client:GetMouse().Hit.Position
+            faceCF = ((hostile and not behindWall) or (hostile and dodge)) and hostile.HumanoidRootPart.Position or behindWall and humanoid.WalkToPoint or client:GetMouse().Hit.Position
             
             if gate then
-                root.CFrame = gate.CFrame + Vector3.yAxis;
+                if flags.gateTeleport then
+                    root.CFrame = gate.CFrame + Vector3.yAxis;
+                else
+                    local gatePath = gate.Name == "BossWaitingForPlayers"  and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
+                end
                 return;
             elseif loot or dungeonFailed then
                 if loot then 
@@ -656,23 +806,28 @@ do
             elseif dodge then
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
                 characterPathing:Run(root.Position + root.CFrame.rightVector * -8);
-                if (ability.canRoll() or ability.canDash()) then
-                    mousePos = root.Position + root.CFrame.rightVector * -5
+                if dodge.Parent == damageIndicators and (ability.canRoll() or ability.canDash()) then
+                    mousePos = root.Position + root.CFrame.rightVector * -8
                     ability.roll()
                     ability.dash()
                     return
                 end
                 mousePos = hostile and hostile.HumanoidRootPart.Position
             elseif hostile then
+                local hostilePos = findFirstChild(hostile, 'Waiting' .. hostile.Name) and Vector3.new(hostile.HumanoidRootPart.Position.X, root.Position.Y, hostile.HumanoidRootPart.Position.Z) or hostile.HumanoidRootPart.Position
+                                
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
+                characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
+                
+                local castSpells = flags.autoSpell and ability:castSpells()
                 
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
                         characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
                         characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
                     else
-                        characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -20);
+                        characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
                     end
                     return
                 elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall then
@@ -680,14 +835,16 @@ do
                 end
             
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
-                local pathEnemy = characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
+                local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 900 then
+                    if stuck > 100 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
                     return 
+                elseif pathEnemy then
+                    stuck = 0
                 end
                 
                 if behindWall then
@@ -701,9 +858,9 @@ do
     connect(client.CharacterAdded, function(newCharacter)
         character = newCharacter;
         root = waitForChild(newCharacter, 'HumanoidRootPart');
-        gyro = waitForChild(root, "BodyGyro");
+        gyro = waitForChild(root, "BodyGyro"); gyro.P = 3000
         humanoid = waitForChild(newCharacter, 'Humanoid');
-        characterPathing = pathing.new(newCharacter, {
+        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 4.2}, {
             Costs = {
                 Water = math.huge,
                 Neon = math.huge
@@ -727,25 +884,40 @@ do
         end
     end)
     
-    oldNamecall = hookfunction(getrawmetatable(game).__namecall, newcclosure(function(self, ...)
-        local Args   = {...}
-        local callMethod = getnamecallmethod()
-        if callMethod == "FireServer" then
-            if self.Name == "UpdateMouseDirection" and flags.autoDungeon then
-                Args[1]  = mousePos
-            end
-            if checkcaller() and (self.Name == "BowAttack" or self.Name == "MagicAttack") and (behindWall) then
-                return
-            end
-        end
-        return oldNamecall(self, unpack(Args))
-    end))
-    
     local DungeonGui = client.PlayerGui.DungeonClear
     connect(DungeonGui.DungeonClearLabel:GetPropertyChangedSignal("Visible"), function()
         if DungeonGui.DungeonClearLabel.Visible then
             fireServer(dungeonVoting, 'ReplayDungeon');
         end
     end)
+    
+    oldNamecall = hookfunction(getrawmetatable(game).__namecall, newcclosure(function(self, ...)
+        local Args   = {...}
+        local callMethod = getnamecallmethod()
+        if callMethod == "FireServer" then
+            if self.Name == "UpdateMouseDirection" and flags.autoDungeon then
+                Args[1]  = mousePos;
+            end
+            if attackRemotes[self.Name:gsub("Attack", "")] then
+                if checkcaller() then
+                    if behindWall then
+                        return;
+                    end
+                    if flags.anims then
+                        coroutine.wrap(function()
+                            mouse2press()
+                            task.wait(.2)
+                            mouse2release()
+                        end)()
+                    end
+                else
+                    if flags.autoDungeon then
+                        return;
+                    end
+                end
+            end
+        end
+        return oldNamecall(self, unpack(Args))
+    end))
 end;
 
