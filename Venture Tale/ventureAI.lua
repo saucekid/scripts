@@ -123,7 +123,8 @@ local WeaponTypes = {
         
         local Tags = findFirstChild(weaponData, "Tags");
         local attackBoost = IPDFunctions:GetBoostValue(character, "AttackSpeedBoost");
-        if Tags then
+        
+        if Tags  then
             for q, c in pairs(Tags:GetChildren()) do
                 attackBoost = attackBoost + IPDFunctions:GetBoostValue(character, c.Name .. "AttackSpeedBoost")
             end
@@ -142,9 +143,8 @@ local WeaponTypes = {
             equippedWeapon.Type = attackType
             equippedWeapon.remote = attackRemotes[attackType]
             equippedWeapon.range = findFirstChild(weaponData, "Range") and weaponData.Range.Value or equippedWeapon.range;
-            equippedWeapon.hitDelay = 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))--findFirstChild(weaponData, "HitDelay") and weaponData.HitDelay.Value * weaponData.AttackSpeed.Value / 100 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
+            equippedWeapon.hitDelay =  weaponData:FindFirstChild("NoAttack") and 1.2 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
             equippedWeapon.Ranged = (attackType == "Magic" or attackType == "Bow") and true or false
-            print(equippedWeapon.Ranged)
             
             if not otherWeapon.remote then
                 for i,v in pairs(equippedWeapon) do
@@ -570,9 +570,13 @@ do
                 ability:use(6)
             elseif dodge then
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
-                mousePos = root.Position + root.CFrame.rightVector * -5
-                ability:use(3)
-                ability:use(999)
+                if (not ability.cooldown(6) or not ability.cooldown(999)) then
+                    mousePos = root.Position + root.CFrame.rightVector * -5
+                    ability:use(3)
+                    ability:use(999)
+                    return
+                end
+                mousePos = hostile and hostile.HumanoidRootPart.Position
                 characterPathing:Run(root.Position + root.CFrame.rightVector * -8);
             elseif hostile then
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
