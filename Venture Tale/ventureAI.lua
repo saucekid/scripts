@@ -11,7 +11,8 @@
 
 _G.safemode = _G.safemode or true
 
-repeat wait() until game:IsLoaded()
+repeat wait() until game:IsLoaded() and not executed
+getgenv().executed = true
 
 local game = game;
 local httpGet = game.HttpGet;
@@ -88,8 +89,8 @@ local dungeonVoting = remotes.UI.EndDungeon.EndOfDungeonVote;
 
 -- weapon calculation.
 local Weapons = {
-    [1] = { hitDelay = 1.2, range = 100 }, 
-    [2] = { hitDelay = 1.2, range = 100 }
+    [1] = { hitDelay = 1.2, range = 90 }, 
+    [2] = { hitDelay = 1.2, range = 90 }
 }
 local WeaponTypes = {
     Melee = {
@@ -142,7 +143,8 @@ local WeaponTypes = {
             equippedWeapon.remote = attackRemotes[attackType]
             equippedWeapon.range = findFirstChild(weaponData, "Range") and weaponData.Range.Value or equippedWeapon.range;
             equippedWeapon.hitDelay = 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))--findFirstChild(weaponData, "HitDelay") and weaponData.HitDelay.Value * weaponData.AttackSpeed.Value / 100 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
-            equippedWeapon.Ranged = attackType == "Melee" and false or true
+            equippedWeapon.Ranged = (attackType == "Magic" or attackType == "Bow") and true or false
+            print(equippedWeapon.Ranged)
             
             if not otherWeapon.remote then
                 for i,v in pairs(equippedWeapon) do
@@ -187,10 +189,10 @@ end)(), filtered = {
     end;
     
     function hostile:behindWall(hostile)
-        local CF = CFrame.new(hostile.HumanoidRootPart.Position, root.Position);
+        local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
-            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles };
+            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, workspace.Map.Segments.PropsSegment4.Invisible, damageIndicators };
             _.FilterType = Enum.RaycastFilterType.Blacklist;
         return workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
     end
@@ -288,10 +290,16 @@ function save(table, name)
 	end
 end
 
+if not existsFile("executed.once") then
+    local prompt = messagebox("Use arrow keys to navigate the GUI", "ventureAI", 0)
+    writefile(folderpath .. "executed.once", "")
+end
+
 -- flags.
 local autoDungeon, ignore = create'BindableEvent';
     
 local flags = {
+    pathFind = true,
     killAura = true,
     autoDungeon = false,
     autoPotion = true,
@@ -443,23 +451,27 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 characterPathing._settings.JUMP_WHEN_STUCK = state
             end
         );
+        
+        if Weapons[1].Ranged then
+            settingsTab:NewToggle(
+                'Keep Distance with Ranged',
+                flags.keepDistance,
+                function(state)
+                    flags.keepDistance = state
+                end
+            );
     
-        settingsTab:NewToggle(
-            'Keep Distance with Ranged',
-            flags.keepDistance,
-            function(state)
-                flags.keepDistance = state
-            end
-        );
-    
-        settingsTab:NewSlider(
-            'Distance',
-            flags.distanceAway,
-            1, 0, 100, 2, " studs",
-            function(num)
-                flags.distanceAway = num
-            end
-        );
+            settingsTab:NewSlider(
+                'Distance',
+                flags.distanceAway,
+                1, 0, 100, 2, " studs",
+                function(num)
+                    flags.distanceAway = num
+                end
+            );
+        else
+            flags.keepDistance = false
+        end
     
         adTab:NewToggle(
             'Visualize Path',
@@ -526,7 +538,6 @@ do
             end
         end
         
-        
         autoDungeon_broom:GiveTask(connect(gyro:GetPropertyChangedSignal("CFrame"), function()
              pcall(function() gyro.CFrame = CFrame.new(root.Position, faceCF) end)
         end))
@@ -564,20 +575,28 @@ do
                 humanoid.MaxSlopeAngle = math.huge;
                 
                 local waterMelon = findFirstChild(workspace.NPCS, "GoblinBashWatermelon") 
-                if ranged and waterMelon then
+                if Weapons[1].Ranged and waterMelon then
                     return characterPathing:Run(waterMelon:GetPivot().Position);
                 end
                 
-                if not behindWall and distance <= flags.distanceAway and flags.keepDistance and Weapons[1].Ranged then
-                    characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
-                    return characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
+                if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
+                    if distance >= 15 then
+                        characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
+                        characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
+                    else
+                        characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -20);
+                        ability:use(999)
+                    end
+                    return
+                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall then
+                    return
                 end
             
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
                 local pathEnemy = characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 10000 then
+                    if stuck > 300 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -627,7 +646,7 @@ do
             if self.Name == "UpdateMouseDirection" and flags.autoDungeon then
                 Args[1]  = mousePos
             end
-            if checkcaller() and self.Name == "BowAttack" and (behindWall) then
+            if checkcaller() and (self.Name == "BowAttack" or self.Name == "MagicAttack") and (behindWall) then
                 return
             end
         end
