@@ -89,8 +89,8 @@ local dungeonVoting = remotes.UI.EndDungeon.EndOfDungeonVote;
 
 -- weapon calculation.
 local Weapons = {
-    [1] = { hitDelay = 1.2, range = 90 }, 
-    [2] = { hitDelay = 1.2, range = 90 }
+    [1] = { hitDelay = 1.2, range = 120 }, 
+    [2] = { hitDelay = 1.2, range = 120 }
 }
 local WeaponTypes = {
     Melee = {
@@ -205,7 +205,7 @@ end)(), filtered = {
             if self.filtered[v.Name] or (not findFirstChild(v, 'HumanoidRootPart')) then continue end;
             
             local wall = self:behindWall(v)
-            local magnitude = distanceFromCharacter(client, v.HumanoidRootPart.Position);
+            local magnitude = findFirstChild(workspace.NPCS, "GoblinBashWatermelon") and (workspace.NPCS.GoblinBashWatermelon:GetPivot().p - v:GetPivot().p).magnitude or  distanceFromCharacter(client, v.HumanoidRootPart.Position);
             if wall then
                 if magnitude <= nearest.distance then
                     nearest.instance = v
@@ -290,9 +290,13 @@ function save(table, name)
 	end
 end
 
+local MessageBox = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/NotificationGUI/main/source.lua"))()
 if not existsFile("executed.once") then
-    local prompt = messagebox("Use arrow keys to navigate the GUI", "ventureAI", 0)
-    writefile(folderpath .. "executed.once", "")
+    MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Use the arrows keys to navigate the GUI", MessageBoxIcon = "Question", MessageBoxButtons = "OK", Result = function(res)
+        if (res == "OK") then
+           writefile(folderpath .. "executed.once", "")
+       end
+    end})
 end
 
 -- flags.
@@ -314,7 +318,7 @@ local flags = {
 -- auto execute.
 client.OnTeleport:Connect(function(State)
     if State == Enum.TeleportState.Started and syn then
-        syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
+        --syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
     end
 end)
 
@@ -591,7 +595,7 @@ do
                 local pathEnemy = characterPathing:Run(hostile.HumanoidRootPart.Position + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 300 then
+                    if stuck > 500 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
