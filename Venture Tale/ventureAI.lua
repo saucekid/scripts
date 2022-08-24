@@ -155,7 +155,7 @@ local WeaponTypes = {
             equippedWeapon.remote = nil
         end;
     end;
-    
+    --
     local function weaponChanged(w)
         calculate(w);
         connect(w.ItemID.Changed, function() calculate(w) end);
