@@ -820,7 +820,7 @@ do
                 humanoid.MaxSlopeAngle = math.huge;
                 characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
                 
-                local castSpells = flags.autoSpell and ability:castSpells()
+                local castSpells = (flags.autoSpell and not behindWall) and ability:castSpells()
                 
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
