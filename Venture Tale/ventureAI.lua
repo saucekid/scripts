@@ -58,12 +58,12 @@ local gyro = waitForChild(root, 'BodyGyro')
 local humanoid = waitForChild(character, 'Humanoid');
 
 local distanceFromCharacter = client.DistanceFromCharacter;
-local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 4.2}, {
+local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
     Costs = {
         Water = math.huge,
         Neon = math.huge
     }}, {
-    TIME_VARIANCE = 0.07,
+    TIME_VARIANCE = 0.1,
     COMPARISON_CHECKS = 2,
     JUMP_WHEN_STUCK = true
 });
@@ -860,12 +860,12 @@ do
         root = waitForChild(newCharacter, 'HumanoidRootPart');
         gyro = waitForChild(root, "BodyGyro"); gyro.P = 3000
         humanoid = waitForChild(newCharacter, 'Humanoid');
-        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 4.2}, {
+        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
             Costs = {
                 Water = math.huge,
                 Neon = math.huge
             }}, {
-            TIME_VARIANCE = 0.07,
+            TIME_VARIANCE = 0.1,
             COMPARISON_CHECKS = 2,
             JUMP_WHEN_STUCK = true
         });
