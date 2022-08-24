@@ -318,7 +318,7 @@ local flags = {
 -- auto execute.
 client.OnTeleport:Connect(function(State)
     if State == Enum.TeleportState.Started and syn then
-        --syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
+        syn.queue_on_teleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
     end
 end)
 
