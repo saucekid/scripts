@@ -284,6 +284,7 @@ local ability = {} do
     
     function ability.getMana()
         local mana = findFirstChild(character, 'Mana')
+        if not mana then return end
         return mana.Value, mana and mana.Max.Value
     end
     
@@ -847,7 +848,7 @@ do
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
                 characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
-                characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 1 or 0.1
+                characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 0.5 or 0.1
                 
                 local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
                 
@@ -865,9 +866,9 @@ do
             
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
-                if not pathEnemy and not humanoid.Jump and not humanoid.WalkToPoint then
+                if not pathEnemy and not humanoid.Jump and humanoid.MoveDirection.magnitude == 0 then
                     stuck = stuck + 1
-                    if stuck > 100 then
+                    if stuck > 200 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -929,7 +930,7 @@ do
             end
             if attackRemotes[self.Name:gsub("Attack", "")] then
                 if checkcaller() then
-                    if behindWall then
+                    if behindWall and not replicatedStorage.ControlSettings.CurrentBoss.Value then
                         return;
                     end
                     if flags.anims then
