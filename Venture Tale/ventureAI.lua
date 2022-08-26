@@ -238,7 +238,7 @@ end)(), filtered = {
         end;
         
         local selected = nearestVis.instance and nearestVis or nearest
-        if lastHostile and lastHostile.instance and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and not lastHostile.behindWall then
+        if lastHostile and lastHostile.instance and lastHostile.isntance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and not lastHostile.behindWall then
             return lastHostile.instance, lastHostile.distance, lastHostile.behindWall;  -- fuck you
         end
         lastHostile = {instance = selected.instance, distance = selected.distance, behindWall = selected.behindWall}
