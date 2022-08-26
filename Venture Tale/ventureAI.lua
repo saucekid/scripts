@@ -191,30 +191,37 @@ local hostile = ({params=(function()
 end)(), filtered = {
     ['GoblinBashWatermelon'] = true
 }}); do
-    function hostile:group()
-        local parts = quick.map(getPartsByRadius(workspace, root.Position, Weapons[1].range, self.params), function(p)
+    function hostile:group(wep)
+        local parts = quick.map(getPartsByRadius(workspace, root.Position, Weapons[wep].range, self.params), function(p)
             return p.Parent;
         end);
         
         return quick.uniq(quick.filter(parts, function(p) return not self.filtered[p.Name] and p.Parent == workspace.NPCS end));
     end;
     
+    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators}
     function hostile:behindWall(hostile)
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
-            _.FilterDescendantsInstances = { workspace.NPCS, character, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace.Map:findFirstChild("Throne") };
+            _.FilterDescendantsInstances = { table.unpack(self.partBlacklist), workspace.Map:findFirstChild("Throne"), character};
             _.FilterType = Enum.RaycastFilterType.Blacklist;
-        return workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
+            
+        local hit = workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
+        if hit and ((hit.Instance.Transparency >= .3 or not hit.Instance.CanCollide) and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
+            table.insert(self.partBlacklist, hit.Instance)
+        end
+        
+        return hit
     end
     
+    local lastHostile
     function hostile:nearest()
         local nearestVis = {behindWall = false, distance = math.huge}
         local nearest = {behindWall = true, distance = math.huge}
 
         for _, v in next, getChildren(workspace.NPCS) do
             if self.filtered[v.Name] or (not findFirstChild(v, 'HumanoidRootPart')) then continue end;
-            
             local wall = self:behindWall(v)
             local magnitude = distanceFromCharacter(client, v.HumanoidRootPart.Position);
             if wall then
@@ -231,6 +238,12 @@ end)(), filtered = {
         end;
         
         local selected = nearestVis.instance and nearestVis or nearest
+        if lastHostile and lastHostile.instance and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and not lastHostile.behindWall then
+            return lastHostile.instance, lastHostile.distance, lastHostile.behindWall;  -- fuck you
+        end
+        lastHostile = {instance = selected.instance, distance = selected.distance, behindWall = selected.behindWall}
+        print(lastHostile.instance)
+        
         return selected.instance, selected.distance, selected.behindWall;
     end;
 end;
@@ -359,19 +372,18 @@ local ability = {} do
     end);   
 end;
 
-local function attack(group)
+local function attack(group, wep)
     local targetMap = #group > 0 and quick.map(group, function(v)
         return { TargetCharacter = v, KnockbackDirection = cf(v3(root.Position.X, v.HumanoidRootPart.Position.Y, root.Position.Z), v.HumanoidRootPart.Position).LookVector }
     end);
     
     if not targetMap then return end;
-    for i = 1, 2 do
-        local w = Weapons[i]
-        if w.remote then
-            w.remote:FireServer(i, { Targets = targetMap })
-            ability:use(i);
-        end
-    end;
+    
+    local w = Weapons[wep]
+    if w and w.remote then
+        w.remote:FireServer(wep, { Targets = targetMap })
+        ability:use(wep);
+    end
 end;
 
 
@@ -596,14 +608,27 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             flags.killAura,
             function(state)
                 flags.killAura = state;
+                
+                function killAura(wep)
+                    if not Weapons[wep] then return end
+                    local cooldown = Weapons.getWeaponCooldown(Weapons[wep].weapon, Weapons[wep].data)
+                    local hostiles = hostile:group(wep);
+                    attack(hostiles, wep);
+                    task.wait((#hostiles == 0 and 0) or cooldown);
+                end
+                
                 coroutine.wrap(function()
                     while flags.killAura do
-                        local cooldown = Weapons.getWeaponCooldown(Weapons[1].weapon, Weapons[1].data)
-                        local hostiles = hostile:group();
-                        attack(hostiles);
-                        task.wait((#hostiles == 0 and 0) or cooldown);
+                        killAura(1)
                     end;
                 end)()
+                
+                coroutine.wrap(function()
+                    while flags.killAura do
+                        killAura(2)
+                    end;
+                end)()
+                
             end
         );
     
@@ -772,6 +797,9 @@ do
             if v:IsA("BasePart") and v.Transparency < 1 and (v.Parent.Name == "Balustrade1_Angled_Variant1" or v.Parent.Name == "Balustrade1_Straight_Variant2" or not v.Name:find("Wall") and not v.Name:find("Bricks") and not v.Name:find("Floor") and not v.Parent.Name:find("Floor") and not v.Name:lower():find("coin")) then
                 v.CanCollide = false
             end
+            if v.Name == "HurtBox" then
+                v.CanCollide = true
+            end
         end
         
         gyro.P = 3000
@@ -819,8 +847,9 @@ do
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
                 characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
+                characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 1 or 0.1
                 
-                local castSpells = (flags.autoSpell and not behindWall) and ability:castSpells()
+                local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
                 
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
@@ -836,7 +865,7 @@ do
             
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
-                if not pathEnemy and not humanoid.Jump then
+                if not pathEnemy and not humanoid.Jump and not humanoid.WalkToPoint then
                     stuck = stuck + 1
                     if stuck > 100 then
                         stuck = 0
