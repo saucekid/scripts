@@ -12,10 +12,10 @@
 _G.safemode = _G.safemode or true
 
 repeat wait() until game:IsLoaded() 
-if executed then
+if executed_ then
     MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Already executed!!", MessageBoxIcon = "Warning", MessageBoxButtons = "OK"})
     return;
-end; getgenv().executed = true
+end; getgenv().executed_ = true
 
 local game = game;
 local httpGet = game.HttpGet;
