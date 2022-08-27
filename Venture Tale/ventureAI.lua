@@ -344,9 +344,11 @@ local ability = {} do
     end
 
     function ability.roll()
-        local roll = ability:getAbility("Roll")
-        if roll then
-            return ability:use(roll[1].remote)
+        local rolls = ability:getAbility("Roll")
+        if rolls then
+            for _,roll in pairs(rolls) do
+                local success = ability:use(roll.remote)
+            end
         end
     end
         
@@ -387,6 +389,54 @@ local function attack(group, wep)
     end
 end;
 
+-- ESP
+local ESP = {} do
+    function ESP:Create(base, name, trackername, studs)
+        local bb = Instance.new('BillboardGui', game.CoreGui)
+        bb.Adornee = base
+        bb.ExtentsOffset = Vector3.new(0,1,0)
+        bb.AlwaysOnTop = true
+        bb.Size = UDim2.new(0,6,0,6)
+        bb.StudsOffset = Vector3.new(0,1,0)
+        bb.Name = trackername
+
+        local frame = Instance.new('Frame', bb)
+        frame.ZIndex = 10
+        frame.BackgroundTransparency = 0.3
+        frame.Size = UDim2.new(1,0,1,0)
+        frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    
+        local txtlbl = Instance.new('TextLabel', bb)
+        txtlbl.ZIndex = 10
+        txtlbl.BackgroundTransparency = 1
+        txtlbl.Position = UDim2.new(0,0,0,-48)
+        txtlbl.Size = UDim2.new(1,0,10,0)
+        txtlbl.Font = 'ArialBold'
+        txtlbl.FontSize = 'Size12'
+        txtlbl.Text = name
+        txtlbl.TextStrokeTransparency = 0.5
+        txtlbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+    
+        local txtlblstud = Instance.new('TextLabel', bb)
+        txtlblstud.ZIndex = 10
+        txtlblstud.BackgroundTransparency = 1
+        txtlblstud.Position = UDim2.new(0,0,0,-35)
+        txtlblstud.Size = UDim2.new(1,0,10,0)
+        txtlblstud.Font = 'ArialBold'
+        txtlblstud.FontSize = 'Size12'
+        txtlblstud.Text = tostring(studs) .. " Studs"
+        txtlblstud.TextStrokeTransparency = 0.5
+        txtlblstud.TextColor3 = Color3.new(255,255,255)
+    end
+
+    function ESP:Clear(espname)
+        for _,v in pairs(game.CoreGui:GetChildren()) do
+            if v.Name == espname and v:isA('BillboardGui') then
+                v:Destroy()
+            end
+        end
+    end
+end
 
 -- file system.
 local folderpath = [[ventureAI/]]
@@ -446,7 +496,8 @@ local flags = {
     jumping = true,
     gateTeleport = true,
     keepDistance = false,
-    distanceAway = 30
+    distanceAway = 30,
+    visualize
 }; load("dungeon.json", flags)
 
 
@@ -716,6 +767,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             'Visualize Path',
             pathing.Visualize,
             function(state)
+                flags.visualize = state
                 pathing.Visualize = state
             end);
     end
@@ -725,7 +777,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         miscTab:NewButton(
             'Join Lobby',
             function()
-                game.TeleportService:Teleport(4809447488, client)
+                game:GetService("TeleportService"):Teleport(4809447488, client)
             end
         );
     
@@ -800,6 +852,7 @@ do
             end
             if v.Name == "HurtBox" then
                 v.CanCollide = true
+                v.Transparency = 0
             end
         end
         
@@ -843,15 +896,24 @@ do
                 end
                 mousePos = hostile and hostile.HumanoidRootPart.Position
             elseif hostile then
+                -- Spider Patcb
                 local hostilePos = findFirstChild(hostile, 'Waiting' .. hostile.Name) and Vector3.new(hostile.HumanoidRootPart.Position.X, root.Position.Y, hostile.HumanoidRootPart.Position.Z) or hostile.HumanoidRootPart.Position
                                 
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
                 characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
-                characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 0.5 or 0.1
+                --characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 0.5 or 0.1
                 
+                -- Cast Spells
                 local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
                 
+                -- ESP
+                ESP:Clear("Hostile")
+                if flags.visualize then
+                    ESP:Create(hostile.HumanoidRootPart, hostile.Name, "Hostile", math.floor(distance + 0.5))
+                end
+                
+                -- Keep Distance
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
                         characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
@@ -864,11 +926,12 @@ do
                     return
                 end
             
+                --Pathfinding
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump and humanoid.MoveDirection.magnitude == 0 then
                     stuck = stuck + 1
-                    if stuck > 200 then
+                    if stuck > 100 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -877,6 +940,7 @@ do
                     stuck = 0
                 end
                 
+                -- Dash if behind wall
                 if behindWall then
                     ability.dash()
                     ability.roll()
