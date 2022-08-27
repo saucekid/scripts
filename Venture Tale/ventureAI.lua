@@ -199,7 +199,7 @@ end)(), filtered = {
         return quick.uniq(quick.filter(parts, function(p) return not self.filtered[p.Name] and p.Parent == workspace.NPCS end));
     end;
     
-    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators}
+    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace:findFirstChildChild("Local")}
     function hostile:behindWall(hostile)
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
