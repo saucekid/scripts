@@ -201,14 +201,15 @@ end)(), filtered = {
     
     hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local"), workspace.Map:FindFirstChild("Throne"), client.Character}
     function hostile:behindWall(hostile)
-        local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
+        local fromPart = character:FindFirstChild("Wep1") or root
+        local CF = CFrame.new(hostile.HumanoidRootPart.Position, fromPart:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
             _.FilterDescendantsInstances = self.partBlacklist;
             _.FilterType = Enum.RaycastFilterType.Blacklist;
             
         local hit = workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
-        if hit and ((hit.Instance.Transparency >= .3 or hit.Instance.Parent == client.Character or hit.Instance.Parent == workspace.Map:FindFirstChild("Throne")) and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
+        if hit and ((hit.Instance.Transparency >= .3 or hit.Instance.Parent == client.Character) and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
             table.insert(self.partBlacklist, hit.Instance)
         end
         return hit
@@ -237,11 +238,10 @@ end)(), filtered = {
         end;
         
         local selected = nearestVis.instance and nearestVis or nearest
-        if lastHostile and lastHostile.instance and lastHostile.instance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and not lastHostile.behindWall then
+        if lastHostile and lastHostile.instance and lastHostile.instance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range then
             return lastHostile.instance, lastHostile.distance, lastHostile.behindWall;  -- fuck you
         end
         lastHostile = {instance = selected.instance, distance = selected.distance, behindWall = selected.behindWall}
-        print(lastHostile.instance)
         
         return selected.instance, selected.distance, selected.behindWall;
     end;
@@ -390,7 +390,7 @@ end;
 
 -- ESP
 local ESP = {} do
-    function ESP:Create(base, name, trackername, studs)
+    function ESP:Create(base, name, trackername, studs, color)
         local bb = Instance.new('BillboardGui', game.CoreGui)
         bb.Adornee = base
         bb.ExtentsOffset = Vector3.new(0,1,0)
@@ -403,7 +403,7 @@ local ESP = {} do
         frame.ZIndex = 10
         frame.BackgroundTransparency = 0.3
         frame.Size = UDim2.new(1,0,1,0)
-        frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        frame.BackgroundColor3 = color or Color3.fromRGB(255, 0, 0)
     
         local txtlbl = Instance.new('TextLabel', bb)
         txtlbl.ZIndex = 10
@@ -414,7 +414,7 @@ local ESP = {} do
         txtlbl.FontSize = 'Size12'
         txtlbl.Text = name
         txtlbl.TextStrokeTransparency = 0.5
-        txtlbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+        txtlbl.TextColor3 = color or Color3.fromRGB(255, 0, 0)
     
         local txtlblstud = Instance.new('TextLabel', bb)
         txtlblstud.ZIndex = 10
@@ -768,7 +768,8 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             function(state)
                 flags.visualize = state
                 pathing.Visualize = state
-            end);
+            end)
+        ;
     end
 
 
@@ -876,7 +877,10 @@ do
                 if flags.gateTeleport then
                     root.CFrame = gate.CFrame + Vector3.yAxis;
                 else
-                    local gatePath = gate.Name == "BossWaitingForPlayers"  and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
+                    local gatePath = gate.Name == "BossWaitingForPlayers" and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
+                    if not gatePath then
+                        root.CFrame = gate.CFrame 
+                    end
                 end
                 return;
             elseif loot or dungeonFailed then
@@ -909,7 +913,7 @@ do
                 -- ESP
                 ESP:Clear("Hostile")
                 if flags.visualize then
-                    ESP:Create(hostile.HumanoidRootPart, hostile.Name, "Hostile", math.floor(distance + 0.5))
+                    ESP:Create(hostile.HumanoidRootPart, hostile.Name, "Hostile", math.floor(distance + 0.5), behindWall and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(0, 255, 0))
                 end
                 
                 -- Keep Distance
@@ -930,7 +934,7 @@ do
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 100 then
+                    if stuck > 50 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -953,7 +957,7 @@ do
         root = waitForChild(newCharacter, 'HumanoidRootPart');
         gyro = waitForChild(root, "BodyGyro"); gyro.P = 3000
         humanoid = waitForChild(newCharacter, 'Humanoid');
-        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
+        characterPathing = pathing.new(newCharacter, {AgentRadius = 6, AgentHeight = 3, AgentCanJump = true, WaypointSpacing = 8.2}, {
             Costs = {
                 Water = math.huge,
                 Neon = math.huge
@@ -973,6 +977,7 @@ do
 
     connect(game.Players.PlayerRemoving, function(plr)
         if plr == client then
+            mouse2release()
             save(flags, "dungeon.json")
         end
     end)
