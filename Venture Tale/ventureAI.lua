@@ -208,7 +208,7 @@ end)(), filtered = {
             _.FilterType = Enum.RaycastFilterType.Blacklist;
             
         local hit = workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
-        if hit and ((hit.Instance.Transparency >= .3 or not hit.Instance.CanCollide or hit.Parent == character or hit.Name == "Throne") and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
+        if hit and ((hit.Instance.Transparency >= .3 or not hit.Instance.CanCollide or hit.Instance == character or hit.Instance == "Throne") and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
             table.insert(self.partBlacklist, hit.Instance)
         end
         
