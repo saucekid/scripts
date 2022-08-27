@@ -199,16 +199,16 @@ end)(), filtered = {
         return quick.uniq(quick.filter(parts, function(p) return not self.filtered[p.Name] and p.Parent == workspace.NPCS end));
     end;
     
-    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local")}
+    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local"), workspace.Map:findFirstChild("Throne"), character}
     function hostile:behindWall(hostile)
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, character["Wep1"]:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
-            _.FilterDescendantsInstances = { table.unpack(self.partBlacklist), workspace.Map:findFirstChild("Throne"), character};
+            _.FilterDescendantsInstances = self.partBlacklist;
             _.FilterType = Enum.RaycastFilterType.Blacklist;
             
         local hit = workspace:Raycast(CF.p, CF.LookVector * (hostile.HumanoidRootPart.Position - root.Position).magnitude, _)
-        if hit and ((hit.Instance.Transparency >= .3 or not hit.Instance.CanCollide) and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
+        if hit and ((hit.Instance.Transparency >= .3 or not hit.Instance.CanCollide or hit.Parent == character or hit.Name == "Throne") and hit.Instance.ClassName ~= "Terrain") and not table.find(self.partBlacklist, hit.Instance) then
             table.insert(self.partBlacklist, hit.Instance)
         end
         
