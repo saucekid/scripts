@@ -929,7 +929,7 @@ do
                 --Pathfinding
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
-                if not pathEnemy and not humanoid.Jump and humanoid.MoveDirection.magnitude == 0 then
+                if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
                     if stuck > 100 then
                         stuck = 0
