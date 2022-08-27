@@ -238,7 +238,7 @@ end)(), filtered = {
         end;
         
         local selected = nearestVis.instance and nearestVis or nearest
-        if lastHostile and lastHostile.instance and lastHostile.instance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range then
+        if lastHostile and lastHostile.instance and lastHostile.instance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and selected.distance > lastHostile.distance then
             return lastHostile.instance, lastHostile.distance, lastHostile.behindWall;  -- fuck you
         end
         lastHostile = {instance = selected.instance, distance = selected.distance, behindWall = selected.behindWall}
@@ -335,9 +335,11 @@ local ability = {} do
     
     -- roll
     function ability.canRoll()
-        local roll = ability:getAbility("Roll")
-        if roll then
-            return not ability.cooldown(roll[1].remote) 
+        local rolls = ability:getAbility("Roll")
+        if rolls then
+            for _,roll in pairs(rolls) do
+                return not ability.cooldown(roll.remote) 
+            end
         end
         return false
     end
@@ -876,10 +878,18 @@ do
             if gate then
                 if flags.gateTeleport then
                     root.CFrame = gate.CFrame + Vector3.yAxis;
-                else
+                else 
+                    if not gate then return end
                     local gatePath = gate.Name == "BossWaitingForPlayers" and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
-                    if not gatePath then
-                        root.CFrame = gate.CFrame 
+                    if not gatePath and not humanoid.Jump then
+                        stuck = stuck + 1
+                        if stuck > 200 then
+                            stuck = 0
+                            root.CFrame = gate.CFrame + Vector3.yAxis;
+                        end
+                        return 
+                    elseif gatePath then
+                        stuck = 0
                     end
                 end
                 return;
@@ -934,7 +944,7 @@ do
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 50 then
+                    if stuck > 100 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
