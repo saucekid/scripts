@@ -178,6 +178,7 @@ local function comparePosition(self)
 			setJumpState(self)
 		end
 		declareError(self, self.ErrorType.AgentStuck)
+        return self.ErrorType.AgentStuck
 	end
 end
 
@@ -303,7 +304,7 @@ function Path:Run(target)
 		self._visualWaypoints = destroyVisualWaypoints(self._visualWaypoints)
 		task.wait()
 		declareError(self, self.ErrorType.ComputationError)
-		return false
+		return self.ErrorType.ComputationError
 	end
 
 	--Set status to active; pathfinding starts
@@ -320,8 +321,9 @@ function Path:Run(target)
 	self._currentWaypoint = 2
 
 	--Refer to Settings.COMPARISON_CHECKS
+    local stuck
 	if self._humanoid then
-		comparePosition(self)
+		stuck = comparePosition(self)
 	end
 
 	--Visualize waypoints

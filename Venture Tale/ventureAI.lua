@@ -10,7 +10,6 @@
 --]]
 
 _G.safemode = _G.safemode or true
-
 repeat wait() until game:IsLoaded() 
 if executed_ then
     MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Already executed!!", MessageBoxIcon = "Warning", MessageBoxButtons = "OK"})
@@ -22,7 +21,7 @@ local httpGet = game.HttpGet;
 
 local quick = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/quick/master/init.lua'))();
 local broom = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/broom/master/init.lua'))();
-local pathing = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/scripts/main/Miscellaneous/SimplePath.lua'))(); pathing.Visualize = true;
+local pathing = loadstring(httpGet(game, 'https://pastebin.com/raw/9H6fukVH'))(); pathing.Visualize = true;
 
 -- services.
 local s = quick.Service;
@@ -326,7 +325,7 @@ local ability = {} do
         local mana, maxMana = ability.getMana()
         if spells then
             for _,spell in pairs(spells) do
-                if mana >= maxMana*0.75 then
+                if mana >= maxMana*0.5 then
                     local success = ability:use(spell.remote)
                 end
             end
@@ -895,14 +894,14 @@ do
                     if not gate then return end
                     characterPathing._settings.TIME_VARIANCE = 2
                     local gatePath = gate.Name == "BossWaitingForPlayers" and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
-                    if not gatePath and not humanoid.Jump then
+                    if pathEnemy == "ComputationError" and not humanoid.Jump then
                         stuck = stuck + 1
-                        if stuck > 2 then
+                        if stuck > 5 then
                             stuck = 0
                             root.CFrame = gate.CFrame + Vector3.yAxis;
                         end
                         return 
-                    elseif gatePath then
+                    elseif pathEnemy ~= "ComputationError" and pathEnemy ~= "LimitReached" then
                         stuck = 0
                     end
                 end
@@ -953,21 +952,23 @@ do
                 end
             
                 --Pathfinding
-                characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and true
-                local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
-                if not pathEnemy and not humanoid.Jump then
+                local enemyOffset = hostile:FindFirstChild("HideHealthBar") and math.clamp(Weapons[1].range, 0, 10) or -math.clamp(Weapons[1].range, 0, 10)
+                local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * enemyOffset);
+               
+               -- Stuck
+                if pathEnemy == "ComputationError" and not humanoid.Jump and behindWall then
                     stuck = stuck + 1
-                    if stuck > 2 then
+                    if stuck > 5  then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
                     return 
-                elseif pathEnemy then
+                elseif pathEnemy ~= "ComputationError" and pathEnemy ~= "LimitReached" then
                     stuck = 0
                 end
                 
                 -- Dash if behind wall
-                if behindWall then
+                if behindWall and stuck < 5 then
                     ability.dash()
                     ability.roll()
                 end
