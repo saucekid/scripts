@@ -847,7 +847,7 @@ do
             if v.Name:find("Gate") then
                 for _,part in pairs(v:GetDescendants()) do
                     if part:IsA("BasePart") then
-                        v.CanCollide = false
+                        part.CanCollide = false
                     end
                 end
             end
