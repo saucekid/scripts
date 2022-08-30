@@ -843,9 +843,13 @@ do
     connect(autoDungeon.Event, function(state)
         if not state then return autoDungeon_broom:clean() end;
         
-        for _,v in pairs(map:GetDescendants()) do
-            if v:IsA("BasePart") and v.Parent.Name:find("Gate") then
-                v.CanCollide = false
+        for _,v in pairs(map:GetChildren()) do
+            if v.Name:find("Gate") then
+                for _,part in pairs(v:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        v.CanCollide = false
+                    end
+                end
             end
         end
     
@@ -858,6 +862,14 @@ do
                 v.Transparency = 0
             end
         end
+        
+        
+        autoDungeon_broom:GiveTask(connect(map.Segments.DescendantAdded, function(v)
+            if v.Name == "HurtBox" then
+                v.CanCollide = true
+                v.Transparency = 0
+            end
+        end))
         
         gyro.P = 3000
         autoDungeon_broom:GiveTask(connect(gyro:GetPropertyChangedSignal("CFrame"), function()
@@ -903,7 +915,7 @@ do
             elseif dodge then
                 characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
                 characterPathing:Run(root.Position + root.CFrame.rightVector * -8);
-                if dodge.Parent == damageIndicators and (ability.canRoll() or ability.canDash()) then
+                if (ability.canRoll() or ability.canDash()) then
                     mousePos = root.Position + root.CFrame.rightVector * -8
                     ability.roll()
                     ability.dash()
