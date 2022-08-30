@@ -22,7 +22,7 @@ local httpGet = game.HttpGet;
 
 local quick = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/quick/master/init.lua'))();
 local broom = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/broom/master/init.lua'))();
-local pathing = loadstring(httpGet(game, 'https://raw.githubusercontent.com/V3N0M-Z/RBLX-SimplePath/main/src/SimplePath.lua'))(); pathing.Visualize = true;
+local pathing = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/scripts/main/Miscellaneous/SimplePath.lua'))(); pathing.Visualize = true;
 
 -- services.
 local s = quick.Service;
@@ -46,7 +46,7 @@ local jsonE, jsonD = function(o) return game.HttpService:JSONEncode(o) end, func
 
 local c = game.Loaded;
 local connect, cwait = c.Connect, c.Wait;
-local render, step = runService.RenderStepped, runService.Stepped;
+local render, step, heartBeat = runService.RenderStepped, runService.Stepped, runService.Heartbeat;
 
 local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
 
@@ -58,12 +58,12 @@ local gyro = waitForChild(root, 'BodyGyro')
 local humanoid = waitForChild(character, 'Humanoid');
 
 local distanceFromCharacter = client.DistanceFromCharacter;
-local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
+local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 5, AgentCanJump = true, WaypointSpacing = 8.2}, {
     Costs = {
         Water = math.huge,
         Neon = math.huge
     }}, {
-    TIME_VARIANCE = 0.1,
+    TIME_VARIANCE = 0.001,
     COMPARISON_CHECKS = 2,
     JUMP_WHEN_STUCK = true
 });
@@ -199,7 +199,7 @@ end)(), filtered = {
         return quick.uniq(quick.filter(parts, function(p) return not self.filtered[p.Name] and p.Parent == workspace.NPCS end));
     end;
     
-    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local"), workspace.Map:FindFirstChild("Throne"), client.Character}
+    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.NextNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local"), workspace.Map:FindFirstChild("Throne"), client.Character}
     function hostile:behindWall(hostile)
         local fromPart = character:FindFirstChild("Wep1") or root
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, fromPart:GetPivot().p);
@@ -667,21 +667,16 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     local cooldown = Weapons.getWeaponCooldown(Weapons[wep].weapon, Weapons[wep].data)
                     local hostiles = hostile:group(wep);
                     attack(hostiles, wep);
-                    task.wait((#hostiles == 0 and 0) or cooldown);
+                    return (#hostiles == 0 and 0) or cooldown
                 end
                 
                 coroutine.wrap(function()
                     while flags.killAura do
-                        killAura(1)
-                    end;
-                end)()
-                
-                coroutine.wrap(function()
-                    while flags.killAura do
+                        local cooldown = killAura(1)
                         killAura(2)
+                        wait(cooldown)
                     end;
                 end)()
-                
             end
         );
     
@@ -847,7 +842,13 @@ do
 
     connect(autoDungeon.Event, function(state)
         if not state then return autoDungeon_broom:clean() end;
-
+        
+        for _,v in pairs(map:GetDescendants()) do
+            if v:IsA("BasePart") and v.Parent.Name:find("Gate") then
+                v.CanCollide = false
+            end
+        end
+    
         for _,v in pairs(map.Segments:GetDescendants()) do
             if v:IsA("BasePart") and v.Transparency < 1 and (v.Parent.Name == "Balustrade1_Angled_Variant1" or v.Parent.Name == "Balustrade1_Straight_Variant2" or not v.Name:find("Wall") and not v.Name:find("Bricks") and not v.Name:find("Floor") and not v.Parent.Name:find("Floor") and not v.Name:lower():find("coin")) then
                 v.CanCollide = false
@@ -869,7 +870,7 @@ do
 
             local hostile, distance, _ = hostile:nearest(); behindWall = _
             local potion = (flags.autoPotion) and ability.potion()
-            local dodge = flags.autoDodge and (inAttackRadius() or (findFirstChild(projectiles, "Pebble") or (not Weapons[1].Ranged and findFirstChild(projectiles, "Arrow"))))
+            local dodge = flags.autoDodge and (inAttackRadius())
             local gate, loot = (findFirstChild(projectiles, 'WaitingForPlayers') or findFirstChild(projectiles, 'BossWaitingForPlayers')), findFirstChild(map, 'LootPrompt', true);
             local boss, dungeonFailed = replicatedStorage.ControlSettings.CurrentBoss.Value, replicatedStorage.ControlSettings.Failed.Value;
             
@@ -880,10 +881,11 @@ do
                     root.CFrame = gate.CFrame + Vector3.yAxis;
                 else 
                     if not gate then return end
+                    characterPathing._settings.TIME_VARIANCE = 2
                     local gatePath = gate.Name == "BossWaitingForPlayers" and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
                     if not gatePath and not humanoid.Jump then
                         stuck = stuck + 1
-                        if stuck > 200 then
+                        if stuck > 2 then
                             stuck = 0
                             root.CFrame = gate.CFrame + Vector3.yAxis;
                         end
@@ -914,8 +916,8 @@ do
                                 
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
                 humanoid.MaxSlopeAngle = math.huge;
-                characterPathing._settings.COMPARISON_CHECKS = (distance < 10 and flags.jumping) and 1 or 2
-                --characterPathing._settings.TIME_VARIANCE = (behindWall and distance > 60)    and 0.5 or 0.1
+                characterPathing._settings.COMPARISON_CHECKS = (distance < 15 and flags.jumping) and 1 or 2
+                characterPathing._settings.TIME_VARIANCE = (distance < 50 or boss or findFirstChild(hostile, 'Waiting' .. hostile.Name))  and 0.07 or 1
                 
                 -- Cast Spells
                 local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
@@ -929,7 +931,6 @@ do
                 -- Keep Distance
                 if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                     if distance >= 15 then
-                        characterPathing._settings.JUMP_WHEN_STUCK = flags.jumping and false
                         characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
                     else
                         characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
@@ -944,7 +945,7 @@ do
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -math.clamp(Weapons[1].range, 0, 10));
                 if not pathEnemy and not humanoid.Jump then
                     stuck = stuck + 1
-                    if stuck > 100 then
+                    if stuck > 2 then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -967,15 +968,16 @@ do
         root = waitForChild(newCharacter, 'HumanoidRootPart');
         gyro = waitForChild(root, "BodyGyro"); gyro.P = 3000
         humanoid = waitForChild(newCharacter, 'Humanoid');
-        characterPathing = pathing.new(newCharacter, {AgentRadius = 6, AgentHeight = 3, AgentCanJump = true, WaypointSpacing = 8.2}, {
+        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 5, AgentCanJump = true, WaypointSpacing = 8.2}, {
             Costs = {
                 Water = math.huge,
                 Neon = math.huge
             }}, {
-            TIME_VARIANCE = 0.1,
+            TIME_VARIANCE = 0.001,
             COMPARISON_CHECKS = 2,
             JUMP_WHEN_STUCK = true
         });
+        table.insert(hostile.partBlacklist, character)
         if flags.autoDungeon then
             autoDungeon_broom:GiveTask(connect(gyro:GetPropertyChangedSignal("CFrame"), function()
                 pcall(function() gyro.CFrame = CFrame.new(root.Position, faceCF)  end)
