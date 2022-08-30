@@ -990,6 +990,28 @@ do
             COMPARISON_CHECKS = 2,
             JUMP_WHEN_STUCK = true
         });
+    
+    
+        for _,v in pairs(map:GetChildren()) do
+            if v.Name:find("Gate") then
+                for _,part in pairs(v:GetDescendants()) do
+                    if part:IsA("BasePart") and part.Name ~= "Tiles" then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    
+        for _,v in pairs(map.Segments:GetDescendants()) do
+            if v:IsA("BasePart") and v.Transparency < 1 and (v.Parent.Name == "Balustrade1_Angled_Variant1" or v.Parent.Name == "Balustrade1_Straight_Variant2" or not v.Name:find("Wall") and not v.Name:find("Bricks") and not v.Name:find("Floor") and not v.Parent.Name:find("Floor") and not v.Name:lower():find("coin")) then
+                v.CanCollide = false
+            end
+            if v.Name == "HurtBox" then
+                v.CanCollide = true
+                v.Transparency = 0
+            end
+        end
+        
         table.insert(hostile.partBlacklist, character)
         if flags.autoDungeon then
             autoDungeon_broom:GiveTask(connect(gyro:GetPropertyChangedSignal("CFrame"), function()
