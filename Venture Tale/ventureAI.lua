@@ -846,7 +846,7 @@ do
         for _,v in pairs(map:GetChildren()) do
             if v.Name:find("Gate") then
                 for _,part in pairs(v:GetDescendants()) do
-                    if part:IsA("BasePart") then
+                    if part:IsA("BasePart") and part.Name ~= "Tiles" then
                         part.CanCollide = false
                     end
                 end
