@@ -71,7 +71,7 @@ for i,v in pairs(getconnections(client.Idled)) do
     v:Disable()
 end
 
-if _G.safemode and game.PlaceVersion > 923 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
+if _G.safemode and game.PlaceVersion > 928 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
 
 -- things.
 local map = workspace.Map;
@@ -108,6 +108,7 @@ local Weapons = {
             "Polearm",
             "Greatsword",
             "Katana",
+            "TowerShield"
         },
         Bow = {
             "Bow",
