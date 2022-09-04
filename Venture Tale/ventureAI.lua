@@ -914,16 +914,18 @@ do
                     if not gate then return end
                     characterPathing._settings.TIME_VARIANCE = 2
                     local gatePath = gate.Name == "BossWaitingForPlayers" and characterPathing:Run(gate.Position + gate.CFrame.lookVector * -40) or characterPathing:Run(gate.Position + gate.CFrame.rightVector * 5);
-                    if pathEnemy == "ComputationError" and not humanoid.Jump then
+                    local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
+                    if distanceFromLast < 0.2 then
                         stuck = stuck + 1
-                        if stuck > 5 then
+                        if stuck > 5  then
                             stuck = 0
                             root.CFrame = gate.CFrame + Vector3.yAxis;
                         end
                         return 
-                    elseif pathEnemy ~= "ComputationError" and pathEnemy ~= "LimitReached" then
+                    elseif distanceFromLast > 0.2 then
                         stuck = 0
                     end
+                    lastCF = character:GetPivot()
                 end
                 return;
             elseif loot or dungeonFailed then
@@ -977,7 +979,7 @@ do
                
                -- Stuck
                 local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
-                if distanceFromLast < 0.2 and not humanoid.Jump then
+                if distanceFromLast < 0.2 and not humanoid.Jump and not boss then
                     stuck = stuck + 1
                     if stuck > 5  then
                         stuck = 0
