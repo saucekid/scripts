@@ -498,13 +498,14 @@ local flags = {
     gateTeleport = true,
     keepDistance = false,
     distanceAway = 30,
-    visualize
+    visualize = false,
+    autoExec = true
 }; load("dungeon.json", flags)
 
 
 -- auto execute.
 client.OnTeleport:Connect(function(State)
-    if State == Enum.TeleportState.Started and syn then
+    if State == Enum.TeleportState.Started and syn and flags.autoExec then
         queueteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
     end
 end)
@@ -533,6 +534,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             selectedDifficulty = "Easy", 
             hardCore = false,
             autoStart = false,
+            autoExec = true
         }; load("lobby.json", flags)
         
         local dungeons, realDungeons, difficulties = 
@@ -635,6 +637,14 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 end
             );
         end
+        
+        miscTab:NewToggle(
+            'Auto-Execute',
+            flags.autoExec,
+            function(state)
+                flags.autoExec = state
+            end
+        );
         
         connect(game.Players.PlayerRemoving, function(plr)
             if plr == client then
@@ -801,6 +811,14 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 end)
             end
         );
+    
+        miscTab:NewToggle(
+            'Auto-Execute',
+            flags.autoExec,
+            function(state)
+                flags.autoExec = state
+            end
+        );
     end
 end
 
@@ -877,6 +895,7 @@ do
         end))
         
         local stuck = 0
+        local lastCF = character:GetPivot()
         autoDungeon_broom:GiveTask(connect(render, function()
             if not root or (humanoid and humanoid.Health == 0) then return end;
 
@@ -957,16 +976,18 @@ do
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * enemyOffset);
                
                -- Stuck
-                if pathEnemy == "ComputationError" and not humanoid.Jump and behindWall then
+                local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
+                if distanceFromLast < 0.2 and not humanoid.Jump then
                     stuck = stuck + 1
                     if stuck > 5  then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
                     return 
-                elseif pathEnemy ~= "ComputationError" and pathEnemy ~= "LimitReached" then
+                elseif distanceFromLast > 0.2 then
                     stuck = 0
                 end
+                lastCF = character:GetPivot()
                 
                 -- Dash if behind wall
                 if behindWall and stuck < 5 then
@@ -1046,10 +1067,10 @@ do
             end
             if attackRemotes[self.Name:gsub("Attack", "")] then
                 if checkcaller() then
-                    if behindWall and not replicatedStorage.ControlSettings.CurrentBoss.Value then
+                    if behindWall and not replicatedStorage.ControlSettings.CurrentBoss.Value and not self == attackRemotes.Melee then
                         return;
                     end
-                    if flags.anims then
+                    if not behindWall and flags.anims then
                         coroutine.wrap(function()
                             mouse2press()
                             task.wait(.2)
