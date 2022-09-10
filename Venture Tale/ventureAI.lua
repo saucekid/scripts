@@ -484,30 +484,7 @@ function claimQuests()
     end
 end
 
-function SpoofProperty(A,B,C)
-    hookfunction(client.Kick, function() end)
-    
-    for i,v in next, getconnections(A:GetPropertyChangedSignal(B)) do
-        v.Function = error
-        v:Disable()  
-    end
-    
-    for i,v in next, getconnections(A.Changed) do
-        v.Function = error
-        v:Disable()  
-    end
-
-    local Old
-
-    Old = hookmetamethod(game, "__index", function(Self, Key)
-
-        if not checkcaller() and Self == A and Key == B then
-            return C
-        end
-
-        return Old(Self, Key)
-    end)
-end
+loadstring(game:HttpGet("https://pastebin.com/raw/tUUGAeaH", true))()
 
 -- file system.
 local folderpath = [[ventureAI/]]
@@ -982,18 +959,22 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             checked = flags.speed,
             callback = function(state)
                 flags.speed = state
-                SpoofProperty(humanoid, "WalkSpeed", 16)
-                coroutine.wrap(function() 
-                    while flags.speed do
-                        if humanoid then
-                            humanoid.WalkSpeed = flags.speedInt
-                        else
-                            repeat task.wait() until humanoid
-                            SpoofProperty(humanoid, "WalkSpeed", 16)
+                if state then
+                    spoof(humanoid, "WalkSpeed", 16)
+                    coroutine.wrap(function() 
+                        while flags.speed do
+                            if humanoid then
+                                humanoid.WalkSpeed = flags.speedInt
+                            else
+                                repeat task.wait() until humanoid
+                                SpoofProperty(humanoid, "WalkSpeed", 16)
+                          end
+                            task.wait()
                         end
-                        task.wait()
-                    end
-                end)()
+                    end)()
+                else
+                    unspoof(humanoid, "WalkSpeed")
+                end
             end
         });
         
@@ -1169,7 +1150,7 @@ do
                 local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
                 if distanceFromLast < 0.2 and not humanoid.Jump and not boss then
                     stuck = stuck + 1
-                    if stuck > 100  then
+                    if stuck > 100 and hostile:FindFirstChild("HumanoidRootPart")  then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
