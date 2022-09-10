@@ -471,15 +471,17 @@ end
 
 function claimQuests()
     for i,quest in pairs(quests:GetDescendants()) do
-        if quest.Name == "C" then
-            quest = findFirstChild(client.stats.Quests, quest.Parent.Name)
-            remotes.UI.Quests.ClaimRewards:FireServer(quest.Name);
-            local rewards = "" do 
-                for i,v in pairs(quest.Rewards:GetChildren()) do
-                    rewards = rewards.. v.Name.. ": ".. tostring(v.Value).. "                   \n"
+        if findFirstChild(quest, "Frame") then
+            quest = findFirstChild(client.stats.Quests, quest.Name)
+            if findFirstChild(quest, "C") then 
+                remotes.UI.Quests.ClaimRewards:FireServer(quest.Name);
+                local rewards = "" do 
+                    for i,v in pairs(quest.Rewards:GetChildren()) do
+                        rewards = rewards.. v.Name.. ": ".. tostring(v.Value).. "                   \n"
+                    end
                 end
+                notify({Title = quest.Title.Value, Text = rewards, Duration = 10})
             end
-            notify({Title = quest.Title.Value, Text = rewards, Duration = 10})
         end
     end
 end
@@ -967,8 +969,8 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                                 humanoid.WalkSpeed = flags.speedInt
                             else
                                 repeat task.wait() until humanoid
-                                SpoofProperty(humanoid, "WalkSpeed", 16)
-                          end
+                                spoof(humanoid, "WalkSpeed", 16)
+                            end
                             task.wait()
                         end
                     end)()
@@ -1113,17 +1115,17 @@ do
                 end
                 mousePos = hostile and hostile.HumanoidRootPart.Position
             elseif hostile then
-                -- Spider Patcb
+                -- Spider Patch
                 local hostilePos = findFirstChild(hostile, 'Waiting' .. hostile.Name) and Vector3.new(hostile.HumanoidRootPart.Position.X, root.Position.Y, hostile.HumanoidRootPart.Position.Z) or hostile.HumanoidRootPart.Position
                                 
                 mousePos = behindWall and humanoid.WalkToPoint or hostile.HumanoidRootPart.Position
-                humanoid.MaxSlopeAngle = math.huge;
                 characterPathing._settings.COMPARISON_CHECKS = (distance < 15 and flags.jumping) and 1 or 2
                 characterPathing._settings.TIME_VARIANCE = (distance < 50 or boss or findFirstChild(hostile, 'Waiting' .. hostile.Name))  and 0.07 or 1
                 
                 -- Cast Spells
                 local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
                 --game:GetService("Players").LocalPlayer.PlayerGui.DungeonPlaceUI.EndlessGui.EndlessController
+                
                 -- ESP
                 ESP:Clear("Hostile")
                 if flags.visualize then
@@ -1131,15 +1133,17 @@ do
                 end
                 
                 -- Keep Distance
-                if distance <= flags.distanceAway and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth  then
-                    if distance >= 15 then
-                        characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
-                    else
-                        characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
+                if not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then
+                    if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
+                        if distance >= 15 then
+                            characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
+                        else
+                            characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
+                        end
+                        return
+                    elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall then
+                        return
                     end
-                    return
-                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then
-                    return
                 end
             
                 --Pathfinding
@@ -1150,7 +1154,7 @@ do
                 local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
                 if distanceFromLast < 0.2 and not humanoid.Jump and not boss then
                     stuck = stuck + 1
-                    if stuck > 100 and hostile:FindFirstChild("HumanoidRootPart")  then
+                    if stuck > 100 and findFirstChild(hostile, "HumanoidRootPart")  then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
