@@ -12,16 +12,45 @@
 _G.safemode = _G.safemode or true
 repeat wait() until game:IsLoaded() 
 if executed_ then
-    MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Already executed!!", MessageBoxIcon = "Warning", MessageBoxButtons = "OK"})
+    noti.full("Warning", "You have already executed the script once", {"Ok"})
     return;
-end; getgenv().executed_ = true
+end;
 
+-- compatability.
+if not getgenv then
+    _G.getgenv = function()
+        return _G
+    end
+end
+if not syn then
+    getgenv().syn = {
+        request = function(t)
+            return http_request(t)
+        end,
+        protect_gui = function(object) end
+    }
+    getgenv().isfile = function(t)
+        return pcall(function()
+            readfile(t)
+        end)
+    end
+    getgenv().delfile = function() end
+end
+
+getgenv().executed_ = true
+
+-- { variables.
 local game = game;
 local httpGet = game.HttpGet;
 
 local quick = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/quick/master/init.lua'))();
 local broom = loadstring(httpGet(game, 'https://raw.githubusercontent.com/Belkworks/broom/master/init.lua'))();
 local pathing = loadstring(httpGet(game, 'https://pastebin.com/raw/9H6fukVH'))(); pathing.Visualize = true;
+
+getgenv().noti ={
+    full = loadstring(httpGet(game,"https://raw.githubusercontent.com/boop71/cappuccino-new/main/utilities/fullscreen-notify.lua"))(),
+    normal = loadstring(httpGet(game, "https://raw.githubusercontent.com/boop71/cappuccino-new/main/utilities/notification.lua"))()
+}
 
 -- services.
 local s = quick.Service;
@@ -32,7 +61,7 @@ local runService = s.RunService;
 -- indexing.
 local cf, v3 = CFrame.new, Vector3.new;
 
-local findFirstChild, waitForChild = game.FindFirstChild, game.WaitForChild;
+local findFirstChild, findFirstChildOfClass, waitForChild = game.FindFirstChild, game.FindFirstChildOfClass, game.WaitForChild;
 local getChildren, getPartsByRadius = game.GetChildren, workspace.GetPartBoundsInRadius;
 
 local create, destroy = Instance.new, game.Destroy;
@@ -75,6 +104,7 @@ if _G.safemode and game.PlaceVersion > 928 then client:Kick("\nGame Updated.\nWa
 
 -- things.
 local map = workspace.Map;
+local quests = client.PlayerGui.Quests.QuestFrame.Quests
 local projectiles = workspace.Projectiles;
 local rangeIndicators = workspace.RangeIndicators
 local IPDFunctions = require(replicatedStorage.Modules.IPDFunctions)
@@ -131,7 +161,7 @@ local Weapons = {
             end
         end
         
-        return weaponData:FindFirstChild("NoAttack") and 1.2 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
+        return findFirstChild(weaponData, "NoAttack") and 1.2 or 1 / (weaponData.AttackSpeed.Value * 1.03 ^ (weapon.Rarity.Value - weaponData.BaseRarity.Value) * (1 + attackBoost / 100))
     end
     
     function Weapons.calculate(weapon)
@@ -199,9 +229,9 @@ end)(), filtered = {
         return quick.uniq(quick.filter(parts, function(p) return not self.filtered[p.Name] and p.Parent == workspace.NPCS end));
     end;
     
-    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.NextNPCS, workspace.Projectiles, damageIndicators, workspace:FindFirstChild("Local"), workspace.Map:FindFirstChild("Throne"), client.Character}
+    hostile.partBlacklist =  {workspace.NPCS, workspace.DeadNPCS, workspace.NextNPCS, workspace.Projectiles, damageIndicators, findFirstChild(workspace, "Local"), workspace.Map:FindFirstChild("Throne"), client.Character}
     function hostile:behindWall(hostile)
-        local fromPart = character:FindFirstChild("Wep1") or root
+        local fromPart = findFirstChild(character, "Wep1") or root
         local CF = CFrame.new(hostile.HumanoidRootPart.Position, fromPart:GetPivot().p);
         local _ = RaycastParams.new();
             _.IgnoreWater = true
@@ -238,7 +268,7 @@ end)(), filtered = {
         end;
         
         local selected = nearestVis.instance and nearestVis or nearest
-        if lastHostile and lastHostile.instance and lastHostile.instance:FindFirstChild("Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and selected.distance > lastHostile.distance then
+        if lastHostile and lastHostile.instance and findFirstChild(lastHostile.instance, "Humanoid") and lastHostile.instance.Humanoid.Health > 0 and selected.instance ~= lastHostile.instance and selected.instance ~= replicatedStorage.ControlSettings.CurrentBoss.Value and selected.distance > Weapons[1].range and selected.distance > lastHostile.distance then
             return lastHostile.instance, lastHostile.distance, lastHostile.behindWall;  -- fuck you
         end
         lastHostile = {instance = selected.instance, distance = selected.distance, behindWall = selected.behindWall}
@@ -439,6 +469,46 @@ local ESP = {} do
     end
 end
 
+function claimQuests()
+    for i,quest in pairs(quests:GetDescendants()) do
+        if quest.Name == "C" then
+            quest = findFirstChild(client.stats.Quests, quest.Parent.Name)
+            remotes.UI.Quests.ClaimRewards:FireServer(quest.Name);
+            local rewards = "" do 
+                for i,v in pairs(quest.Rewards:GetChildren()) do
+                    rewards = rewards.. v.Name.. ": ".. tostring(v.Value).. "                   \n"
+                end
+            end
+            notify({Title = quest.Title.Value, Text = rewards, Duration = 10})
+        end
+    end
+end
+
+function SpoofProperty(A,B,C)
+    hookfunction(client.Kick, function() end)
+    
+    for i,v in next, getconnections(A:GetPropertyChangedSignal(B)) do
+        v.Function = error
+        v:Disable()  
+    end
+    
+    for i,v in next, getconnections(A.Changed) do
+        v.Function = error
+        v:Disable()  
+    end
+
+    local Old
+
+    Old = hookmetamethod(game, "__index", function(Self, Key)
+
+        if not checkcaller() and Self == A and Key == B then
+            return C
+        end
+
+        return Old(Self, Key)
+    end)
+end
+
 -- file system.
 local folderpath = [[ventureAI/]]
 
@@ -466,27 +536,21 @@ function load(name, settings)
 		end
 	end
 end
-
+    
 function save(table, name)
 	if writefile then
 		writefile(folderpath .. name, jsonE(table));
 	end
 end
 
-getgenv().MessageBox = loadstring(httpGet(game,"https://raw.githubusercontent.com/xHeptc/NotificationGUI/main/source.lua"))()
-if not existsFile("executed.once") then
-    MessageBox.Show({Position = UDim2.new(0.5,0,0.5,0), Text = "ventureUI", Description = "Use the arrows keys to navigate the GUI", MessageBoxIcon = "Question", MessageBoxButtons = "OK", Result = function(res)
-        if (res == "OK") then
-           writefile(folderpath .. "executed.once", "")
-       end
-    end})
-end
 
 -- flags.
 local autoDungeon, ignore = create'BindableEvent';
     
 local flags = {
     pathFind = true,
+    speed = false,
+    speedInt = 20,
     killAura = true,
     autoDungeon = false,
     autoPotion = true,
@@ -504,7 +568,7 @@ local flags = {
 
 
 -- auto execute.
-client.OnTeleport:Connect(function(State)
+connect(client.OnTeleport, function(State)
     if State == Enum.TeleportState.Started and syn and flags.autoExec then
         queueteleport([[loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/Venture%20Tale/ventureAI.lua"))()]])
     end
@@ -512,22 +576,7 @@ end)
 
 
 -- lib.
-local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/ArrowsUIlib.lua'))(); do
-    _G["Theme"] = {
-        ["UI_Position"] = Vector2.new(50, 200),
-        ["Text_Size"] = 16,
-    
-        ["Category_Text"] = Color3.fromRGB(255, 255, 255),
-        ["Category_Back"] = Color3.fromRGB(0, 0, 0),
-        ["Category_Back_Transparency"] = 0.5,
-    
-        ["Option_Text"] = Color3.fromRGB(255, 255, 255),
-        ["Option_Back"] = Color3.fromRGB(0, 0, 0),
-        ["Option_Back_Transparency"] = 0,
-        ["Selected_Color"] = Color3.fromRGB(128,128,128)
-    }
-    
-    
+local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/compact.lua'))().init("ventureAI", "saucekid v2.0.1", 1, UDim2.new(0.2, 0, 0.2, 0), UDim2.new(0, 600, 0, 300)); do
     if game.PlaceId == 4809447488 then 
         flags = {
             selectedDungeon = "Goblin Cave", 
@@ -546,25 +595,36 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         }, 
         {"Easy", "Normal", "Hard", "Raid", "Endless"}
         
-        local dungeonTab = lib:NewCategory("Lobby"); do
-            dungeonTab:NewButton(
-                'Start Solo',
-                function()
+        local dungeonTab, miscTab = lib:AddTab("Lobby", "Join/create dungeons"); do
+            dungeonTab:AddSeperator("Dungeons")
+            dungeonTab:AddButton({
+                title = 'Start Solo',
+                desc = "Starts the selected solo dungeon",
+                callback = function()
+                    notify({Title = "Solo Dungeon", Text = string_format("Starting %s %s lobby", flags.selectedDifficulty, flags.selectedDungeon), Duration = 5})
                     remotes.UI.Lobby.StartLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore, "Solo")
                 end
-            );
+            });
             
-            dungeonTab:NewButton(
-                'Create Lobby',
-                function()
-                    remotes.UI.Lobby.CreateLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore)
+            dungeonTab:AddButton({
+                title = 'Create Lobby',
+                desc = "Creates a lobby for the selected dungeon",
+                callback = function()
+                    noti.full("Confirmation", string_format("Create a %s %s lobby?", flags.selectedDifficulty, flags.selectedDungeon), {"Yes", "No"},
+                    function(p)
+                        if p == "Yes" then
+                            remotes.UI.Lobby.CreateLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore)
+                        end
+                    end)
                 end
-            );
+            });
+
         
-            dungeonTab:NewToggle(
-                'Auto Start',
-                flags.autoStart,
-                function(state)
+            dungeonTab:AddToggle({
+                title = 'Auto Start',
+                desc = 'Automatically starts selected dungeon with a countdown',
+                checked = flags.autoStart,
+                callback = function(state)
                     flags.autoStart = state
                     coroutine.wrap(function()
                         local countDown 
@@ -586,36 +646,92 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                         remotes.UI.Lobby.StartLobby:FireServer(realDungeons[flags.selectedDungeon], flags.selectedDifficulty, flags.hardCore, "Solo")
                     end)()
                 end
-            );
-        
-            dungeonTab:NewDropdown("Dungeon", dungeons, table.find(dungeons, flags.selectedDungeon), function(option) 
-                flags.selectedDungeon = option
-            end)
+            });
             
-            dungeonTab:NewDropdown("Difficulty", difficulties, table.find(difficulties, flags.selectedDifficulty), function(option) 
-                flags.selectedDifficulty = option
-            end)
+            dungeonTab:AddDropdown({
+                title = "Dungeon", 
+                desc = "Select a dungeon",
+                options = dungeons, 
+                default = table.find(dungeons, flags.selectedDungeon), 
+                callback = function(option) 
+                    flags.selectedDungeon = dungeons[option]
+                end
+            })
             
-            dungeonTab:NewToggle(
-                'Hardcore',
-                flags.hardCore,
-                function(state)
+            dungeonTab:AddDropdown({
+                title = "Difficulty", 
+                desc = "Select a difficulty",
+                options = difficulties, 
+                default = table.find(difficulties, flags.selectedDifficulty), 
+                callback = function(option) 
+                    flags.selectedDifficulty = difficulties[option]
+                end
+            })
+
+            
+            dungeonTab:AddToggle({
+                title = 'Hardcore',
+                desc = 'Toggles hardcore mode for selected dungeon',
+                checked = flags.hardCore,
+                callback = function(state)
                     flags.hardCore = state
                 end
-            );
-        end
-        
-        local miscTab = lib:NewCategory("Misc.") do
-            miscTab:NewButton(
-                'Rejoin',
-                function()
-                    game.TeleportService:Teleport(4809447488, client)
+            });
+
+            miscTab:AddSeperator("Game")
+            miscTab:AddButton({
+                title = 'Claim Quests',
+                desc = "Claims any quests that have been completed",
+                callback = claimQuests
+            });
+
+            miscTab:AddSeperator("Servers")
+            miscTab:AddButton({
+                title = 'Rejoin',
+                desc = "Rejoins the game",
+                callback = function()
+                    notify({Title = "Server", Text = "Rejoining the server", Duration = 5})
+                    game:GetService("TeleportService"):Teleport(4809447488, client)
                 end
-            );
-        
-            miscTab:NewButton(
-                'Join Discord',
-                function()
+            });
+
+            miscTab:AddButton({
+                title = 'Serverhop',
+                desc = "Joins a different server",
+                callback = function()
+                    local servers = {}
+                    local req = syn.request({Url = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100", game.PlaceId)})
+                    local body = jsonD(req.Body)
+                    if body and body.data then
+                        for i, v in next, body.data do
+                            if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+                                table.insert(servers, 1, v.id)
+                            end 
+                        end
+                    end
+                    if #servers > 0 then
+                        notify({Title = "Server", Text = "Hopping to a new server", Duration = 5})
+                        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], client)
+                    else
+                        return notify({Title = "Server", Text = "Couldn't find a server", Duration = 5})
+                    end
+                end
+            });
+
+            miscTab:AddToggle({
+                title = 'Auto-Execute',
+                desc = "Automatically executes script on new server",
+                checked = flags.autoExec,
+                callback = function(state)
+                    flags.autoExec = state
+                end
+            });
+
+            miscTab:AddSeperator("Discord")
+            miscTab:AddButton({
+                title = 'Join Discord',
+                desc = 'Joins the discord server instantly (SYNAPSE ONLY)',
+                callback = function()
                     local json = {
                         ["cmd"] = "INVITE_BROWSER",
                         ["args"] = {
@@ -635,41 +751,34 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                         }).Body)
                     end)
                 end
-            );
+            });
+            connect(game.Players.PlayerRemoving, function(plr)
+                if plr == client then
+                    save(flags, "lobby.json")
+                end
+            end)
         end
-        
-        miscTab:NewToggle(
-            'Auto-Execute',
-            flags.autoExec,
-            function(state)
-                flags.autoExec = state
-            end
-        );
-        
-        connect(game.Players.PlayerRemoving, function(plr)
-            if plr == client then
-                save(flags, "lobby.json")
-            end
-        end)
         return
     end
 
-    local adTab = lib:NewCategory("ventureAI"); do
-        adTab:NewToggle(
-            'on/off',
-            flags.autoDungeon,
-            function(state)
+    local adTab, settingsTab = lib:AddTab("Main", "Toggle and settings"); do 
+        adTab:AddSeperator("AI")
+        adTab:AddToggle({
+            title = 'ON/OFF',
+            desc = 'Toggles ventureAI',
+            checked = flags.autoDungeon,
+            callback = function(state)
                 flags.autoDungeon = state
                 fire(autoDungeon, state);
             end
-        );
-    end
-    
-    local settingsTab = lib:NewCategory("Settings"); do
-        settingsTab:NewToggle(
-            'Kill Aura',
-            flags.killAura,
-            function(state)
+        });
+
+        settingsTab:AddSeperator("Settings")
+        settingsTab:AddToggle({
+            title = 'Kill Aura',
+            desc = 'Kills monsters around you',
+            checked = flags.killAura,
+            callback = function(state)
                 flags.killAura = state;
                 
                 function killAura(wep)
@@ -683,114 +792,137 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 coroutine.wrap(function()
                     while flags.killAura do
                         local cooldown = killAura(1)
-                        killAura(2)
+                        wait(cooldown)
+                    end;
+                end)()
+
+                coroutine.wrap(function()
+                    while flags.killAura do
+                        local cooldown = killAura(2)
                         wait(cooldown)
                     end;
                 end)()
             end
-        );
+        });
     
-        settingsTab:NewToggle(
-            'Auto Potion',
-            flags.autoPotion,
-            function(state)
+        settingsTab:AddToggle({
+            title = 'Auto Potion',
+            desc = 'Automatically uses mana & health potions',
+            checked = flags.autoPotion,
+            callback = function(state)
                 flags.autoPotion = state
             end
-        );
-    
-        settingsTab:NewToggle(
-            'Auto Dodge',
-            flags.autoDodge,
-            function(state)
+        });
+        
+        settingsTab:AddToggle({
+            title = 'Auto Dodge',
+            desc = 'Automatically dodges boss & enemy attacks',
+            checked = flags.autoDodge,
+            callback = function(state)
+                if state and not ability.canRoll() then
+                    notify({Title = "Warning", Text = "Equip roll for optimum auto dodge", Duration = 5})
+                end
                 flags.autoDodge = state
             end
-        );
+        });
     
-        settingsTab:NewToggle(
-            'Auto Cast Spell',
-            flags.autoSpell,
-            function(state)
+        settingsTab:AddToggle({
+            title = 'Auto Cast Spell',
+            desc = 'Automatically cast spells at enemies',
+            checked = flags.autoSpell,
+            callback = function(state)
                 flags.autoSpell = state
             end
-        );
-    
-        settingsTab:NewToggle(
-            'Animations',
-            flags.anims,
-            function(state)
+        });
+
+        settingsTab:AddToggle({
+            title = 'Animations',
+            desc = 'Shows weapon animations using mouse input (glitchy)',
+            checked = flags.anims,
+            callback = function(state)
                 flags.anims = state
             end
-        );
+        });
     
-    
-        settingsTab:NewToggle(
-            'Teleport to gates',
-            flags.gateTeleport,
-            function(state)
+        settingsTab:AddToggle({
+            title = 'Teleport to gates',
+            desc = 'Teleports to gate instead of pathfinding',
+            checked = flags.gateTeleport,
+            callback = function(state)
                 flags.gateTeleport = state
             end
-        );
-    
-        settingsTab:NewToggle(
-            'Teleport if stuck',
-            flags.dashWarp,
-            function(state)
+        });
+
+        settingsTab:AddToggle({
+            title = 'Teleport if stuck',
+            desc = 'Teleports to enemy if stuck (enable if you get stuck)',
+            checked = flags.dashWarp,
+            callback = function(state)
                 flags.dashWarp = state
             end
-        );
-    
-        settingsTab:NewToggle(
-            'Smart Jump',
-            flags.jumping,
-            function(state)
-                flags.jumping = state
-                characterPathing._settings.JUMP_WHEN_STUCK = state
+        });
+
+
+        settingsTab:AddToggle({
+            title = 'Smart Jump',
+            desc = 'Jumps when near enemies to attempt to dodge',
+            checked = flags.jumping,
+            callback = function(state)
+                flags.anims = state
             end
-        );
+        });
+
         
-        if Weapons[1].Ranged then
-            settingsTab:NewToggle(
-                'Keep Distance with Ranged',
-                flags.keepDistance,
-                function(state)
+        if Weapons[1].Ranged or (Weapons[2] and Weapons[2].Ranged) then
+            settingsTab:AddToggle({
+                title = 'Keep Distance with Ranged',
+                desc = 'Stays away from enemies to prevent damage',
+                checked = flags.keepDistance,
+                callback = function(state)
                     flags.keepDistance = state
                 end
-            );
+            });
     
-            settingsTab:NewSlider(
-                'Distance',
-                flags.distanceAway,
-                1, 0, 100, 2, " studs",
-                function(num)
-                    flags.distanceAway = num
+            settingsTab:AddSlider({
+                title = 'Distance',
+                desc = 'Distance to stay away',
+                values = {min = 0, max = 100, default = flags.distanceAway, round = 1},
+                callback = function(state)
+                    flags.distanceAway = state
                 end
-            );
+            });
         else
             flags.keepDistance = false
         end
-    
-        adTab:NewToggle(
-            'Visualize Path',
-            pathing.Visualize,
-            function(state)
+        
+        adTab:AddToggle({
+            title = 'Visualization',
+            desc = 'Visualizes AI',
+            checked = flags.visualize,
+            callback = function(state)
                 flags.visualize = state
                 pathing.Visualize = state
-            end)
-        ;
+            end
+        });
     end
 
 
-    local miscTab = lib:NewCategory("Misc.") do
-        miscTab:NewButton(
-            'Join Lobby',
-            function()
+    local miscTab, serverTab = lib:AddTab("Misc.", "Miscellaneous functions"); do
+        serverTab:AddSeperator("Servers")
+        serverTab:AddButton({
+            title = 'Join Lobby',
+            desc = 'Joins the lobby of the game',
+            callback = function()
+                notify({Title = "Server", Text = "Joining the lobby", Duration = 5})
                 game:GetService("TeleportService"):Teleport(4809447488, client)
             end
-        );
-    
-        miscTab:NewButton(
-            'Join Discord',
-            function()
+        });
+        
+        miscTab:AddSeperator("Misc")
+        miscTab:AddButton({
+            title = 'Join Discord',
+            desc = 'Joins the discord server instantly (SYNAPSE ONLY)',
+            callback = function()
                 local json = {
                     ["cmd"] = "INVITE_BROWSER",
                     ["args"] = {
@@ -810,15 +942,71 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     }).Body)
                 end)
             end
-        );
+        });
     
-        miscTab:NewToggle(
-            'Auto-Execute',
-            flags.autoExec,
-            function(state)
+        miscTab:AddToggle({
+            title = 'Auto-Execute',
+            desc = 'Automatically executes script on new server',
+            checked = flags.autoExec,
+            callback = function(state)
                 flags.autoExec = state
             end
-        );
+        });
+
+        adTab:AddSeperator("Auto Claim Quests")
+
+        local questCon
+        adTab:AddToggle({
+            title = 'ON/OFF',
+            desc = 'Toggles auto claim quest',
+            checked = flags.autoQuest,
+            callback = function(state)
+                flags.autoQuest = state
+                if questCon then
+                    questCon:Disconnect()
+                end
+                if state then
+                    questCon = connect(quests.DescendantAdded, function(i)
+                        if i.Name == "C" then
+                            claimQuests()
+                        end
+                    end)
+                end
+            end
+        });
+
+        adTab:AddSeperator("Walk Speed")
+        adTab:AddToggle({
+            title = 'ON/OFF',
+            desc = 'Toggle speed hacks',
+            checked = flags.speed,
+            callback = function(state)
+                flags.speed = state
+                SpoofProperty(humanoid, "WalkSpeed", 16)
+                coroutine.wrap(function() 
+                    while flags.speed do
+                        if humanoid then
+                            humanoid.WalkSpeed = flags.speedInt
+                        else
+                            repeat task.wait() until humanoid
+                            SpoofProperty(humanoid, "WalkSpeed", 16)
+                        end
+                        task.wait()
+                    end
+                end)()
+            end
+        });
+        
+        getgenv().oldSpeed = flags.speedInt
+        adTab:AddSlider({
+            title = 'Speed',
+            desc = 'Speed of your humanoid with speed enabled',
+            values = {min = 16, max = 22, default = flags.speedInt, round = 1},
+            callback = function(state)
+                oldSpeed = state
+                flags.speedInt = state
+            end
+        });
     end
 end
 
@@ -832,11 +1020,11 @@ do
     local function inAttackRadius()
         for _,indicator in next, getChildren(rangeIndicators) do
             if indicator.Name == "LingeringSpear" then continue end
-            if indicator:IsA("Folder") then indicator = findFirstChild(indicator, 'Main') or indicator:FindFirstChildOfClass("BasePart") end
+            if indicator:IsA("Folder") then indicator = findFirstChild(indicator, 'Main') or findFirstChildOfClass(indicator, "BasePart") end
             
             indicator.Position = Vector3.new(indicator.Position.X, root.Position.Y, indicator.Position.Z)
             if not findFirstChild(indicator, "TouchInterest") then
-                indicator.Touched:Connect(function() end) 
+                connect(indicator.Touched, function() end) 
             end
             local touching = indicator:GetTouchingParts()
             for i,v in pairs(touching) do
@@ -917,7 +1105,7 @@ do
                     local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
                     if distanceFromLast < 0.2 then
                         stuck = stuck + 1
-                        if stuck > 5  then
+                        if stuck > 500  then
                             stuck = 0
                             root.CFrame = gate.CFrame + Vector3.yAxis;
                         end
@@ -954,7 +1142,7 @@ do
                 
                 -- Cast Spells
                 local castSpells = (flags.autoSpell and not behindWall and distance < 20) and ability:castSpells()
-                
+                --game:GetService("Players").LocalPlayer.PlayerGui.DungeonPlaceUI.EndlessGui.EndlessController
                 -- ESP
                 ESP:Clear("Hostile")
                 if flags.visualize then
@@ -962,26 +1150,26 @@ do
                 end
                 
                 -- Keep Distance
-                if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
+                if distance <= flags.distanceAway and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) then
                     if distance >= 15 then
                         characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
                     else
                         characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
                     end
                     return
-                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall then
+                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) then
                     return
                 end
             
                 --Pathfinding
-                local enemyOffset = hostile:FindFirstChild("HideHealthBar") and math.clamp(Weapons[1].range, 0, 10) or -math.clamp(Weapons[1].range, 0, 10)
+                local enemyOffset = findFirstChild(hostile, "HideHealthBar") and math.clamp(Weapons[1].range, 0, 10) or -math.clamp(Weapons[1].range, 0, 10)
                 local pathEnemy = characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * enemyOffset);
                
                -- Stuck
                 local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
                 if distanceFromLast < 0.2 and not humanoid.Jump and not boss then
                     stuck = stuck + 1
-                    if stuck > 5  then
+                    if stuck > 100  then
                         stuck = 0
                         dashWarp(hostile.HumanoidRootPart.CFrame)
                     end
@@ -1067,15 +1255,22 @@ do
             if self.Name == "UpdateMouseDirection" and flags.autoDungeon then
                 Args[1]  = mousePos;
             end
-            if attackRemotes[self.Name:gsub("Attack", "")] then
+            if attackRemotes[self.Name:gsub("Attack", "")] and flags.killAura then
                 if checkcaller() then
-                    if behindWall and not replicatedStorage.ControlSettings.CurrentBoss.Value and not self == attackRemotes.Melee then
+                    if (behindWall and self ~= attackRemotes.Melee and not replicatedStorage.ControlSettings.CurrentBoss.Value) then
                         return;
+                    end
+                    if self ~= attackRemotes.Melee then
+                        coroutine.wrap(function()
+                            flags.speedInt = 10
+                            task.wait(.5)
+                            flags.speedInt = oldSpeed
+                        end)()
                     end
                     if not behindWall and flags.anims then
                         coroutine.wrap(function()
                             mouse2press()
-                            task.wait(.2)
+                            task.wait(.5)
                             mouse2release()
                         end)()
                     end
