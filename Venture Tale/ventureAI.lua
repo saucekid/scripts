@@ -763,7 +763,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     local cooldown = Weapons.getWeaponCooldown(Weapons[wep].weapon, Weapons[wep].data)
                     local hostiles = hostile:group(wep);
                     attack(hostiles, wep);
-                    return (#hostiles == 0 and 0) or cooldown
+                    return (#hostiles == 0 and 0) or cooldown or 0
                 end
                 
                 coroutine.wrap(function()
@@ -1131,14 +1131,14 @@ do
                 end
                 
                 -- Keep Distance
-                if distance <= flags.distanceAway and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) then
+                if distance <= flags.distanceAway and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth  then
                     if distance >= 15 then
                         characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
                     else
                         characterPathing:Run(hostilePos + hostile.HumanoidRootPart.CFrame.lookVector * -10);
                     end
                     return
-                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) then
+                elseif distance > flags.distanceAway and distance < Weapons[1].range and flags.keepDistance and not behindWall and not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then
                     return
                 end
             
