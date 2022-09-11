@@ -945,7 +945,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     questCon:Disconnect()
                 end
                 if state then
-                    questCon = connect(quests.DescendantAdded, function(i)
+                    questCon = connect(client.stats.Quests.DescendantAdded, function(i)
                         if i.Name == "C" then
                             claimQuests()
                         end
@@ -984,7 +984,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
         adTab:AddSlider({
             title = 'Speed',
             desc = 'Speed of your humanoid with speed enabled',
-            values = {min = 16, max = 22, default = flags.speedInt, round = 1},
+            values = {min = 0, max = 22, default = flags.speedInt, round = 1},
             callback = function(state)
                 oldSpeed = state
                 flags.speedInt = state
@@ -1067,6 +1067,7 @@ do
         
         local stuck = 0
         local lastCF = character:GetPivot()
+        local sameHealth = 0
         autoDungeon_broom:GiveTask(connect(render, function()
             if not root or (humanoid and humanoid.Health == 0) then return end;
 
@@ -1133,7 +1134,13 @@ do
                 end
                 
                 -- Keep Distance
-                if not findFirstChild(hostile, 'Waiting' .. hostile.Name) and not hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then
+                if findFirstChild(hostile, "Humanoid") and  hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then -- ranged not hitting fix
+                    sameHealth = sameHealth + 1
+                else
+                    sameHealth = 0
+                end
+                
+                if not findFirstChild(hostile, 'Waiting' .. hostile.Name) and sameHealth < 100 then
                     if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                         if distance >= 15 then
                             characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
