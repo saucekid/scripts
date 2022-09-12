@@ -86,7 +86,7 @@ local gyro = waitForChild(root, 'BodyGyro')
 local humanoid = waitForChild(character, 'Humanoid');
 
 local distanceFromCharacter = client.DistanceFromCharacter;
-local characterPathing = pathing.new(character, {AgentRadius = 2, AgentHeight = 5, AgentCanJump = true, WaypointSpacing = 8.2}, {
+local characterPathing = pathing.new(character, {AgentRadius = 3, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
     Costs = {
         Water = math.huge,
         Neon = math.huge
@@ -100,7 +100,7 @@ for i,v in pairs(getconnections(client.Idled)) do
     v:Disable()
 end
 
-if _G.safemode and game.PlaceVersion > 928 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
+if _G.safemode and game.PlaceVersion > 934 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
 
 -- things.
 local map = workspace.Map;
@@ -279,8 +279,7 @@ end;
 
 
 local ability = {} do
-    ability.items = {
-    }
+    ability.items = {}
     ability.wrapper = {
         ["1"] = 3,
         ["2"] = 4,
@@ -296,10 +295,13 @@ local ability = {} do
         
         if itemType == "Spell" or item.ItemID.Value:find("Potion") then
             local abilityType = item.ItemID.Value:find("Roll") and "Roll" or item.ItemID.Value:find("Potion") and "Potion" or "Spell"
+            local abilityData = replicatedStorage.AbilityData:FindFirstChild(itemData.DisplayName.Value)
+            
             ability.items[tonumber(itemIndex)] = {
                 Type = abilityType,
                 remote = ability.wrapper[itemIndex],
-                potion = (abilityType == "Potion" and item.ItemID.Value:find("Heal")) and "Heal" or (abilityType == "Potion" and item.ItemID.Value:find("Mana")) and "Mana" or false
+                potion = (abilityType == "Potion" and item.ItemID.Value:find("Heal")) and "Heal" or (abilityType == "Potion" and item.ItemID.Value:find("Mana")) and "Mana" or false,
+                mana = abilityData and abilityData.ManaCost.Value
             }
         else
             ability.items[tonumber(itemIndex)] = nil
@@ -356,7 +358,7 @@ local ability = {} do
         local mana, maxMana = ability.getMana()
         if spells then
             for _,spell in pairs(spells) do
-                if mana >= maxMana*0.5 then
+                if mana >= spell.mana then
                     local success = ability:use(spell.remote)
                 end
             end
@@ -706,7 +708,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 end
             });
 
-            miscTab:AddSeperator("Discord")
+            miscTab:AddSeperator("Support")
             miscTab:AddButton({
                 title = 'Join Discord',
                 desc = 'Joins the discord server instantly (SYNAPSE ONLY)',
@@ -771,14 +773,14 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                 coroutine.wrap(function()
                     while flags.killAura do
                         local cooldown = killAura(1)
-                        wait(cooldown)
+                        task.wait(cooldown)
                     end;
                 end)()
 
                 coroutine.wrap(function()
                     while flags.killAura do
                         local cooldown = killAura(2)
-                        wait(cooldown)
+                        task.wait(cooldown)
                     end;
                 end)()
             end
@@ -820,6 +822,9 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
             checked = flags.anims,
             callback = function(state)
                 flags.anims = state
+                if state then
+                    notify({Title = "Warning", Text = "Disable animations if your having input problems", Duration = 5})
+                end
             end
         });
     
@@ -945,6 +950,7 @@ local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid
                     questCon:Disconnect()
                 end
                 if state then
+                    claimQuests()
                     questCon = connect(client.stats.Quests.DescendantAdded, function(i)
                         if i.Name == "C" then
                             claimQuests()
@@ -1089,7 +1095,7 @@ do
                     local distanceFromLast = (lastCF.p - character:GetPivot().p).Magnitude
                     if distanceFromLast < 0.2 then
                         stuck = stuck + 1
-                        if stuck > 500  then
+                        if stuck > 100  then
                             stuck = 0
                             root.CFrame = gate.CFrame + Vector3.yAxis;
                         end
@@ -1114,8 +1120,8 @@ do
                     ability.dash()
                     return
                 end
-                mousePos = hostile and hostile.HumanoidRootPart.Position
-            elseif hostile then
+                mousePos = hostile and findFirstChild(hostile, "HumanoidRootPart") and hostile.HumanoidRootPart.Position
+            elseif hostile and findFirstChild(hostile, "HumanoidRootPart") then
                 -- Spider Patch
                 local hostilePos = findFirstChild(hostile, 'Waiting' .. hostile.Name) and Vector3.new(hostile.HumanoidRootPart.Position.X, root.Position.Y, hostile.HumanoidRootPart.Position.Z) or hostile.HumanoidRootPart.Position
                                 
@@ -1133,6 +1139,10 @@ do
                     ESP:Create(hostile.HumanoidRootPart, hostile.Name, "Hostile", math.floor(distance + 0.5), behindWall and Color3.fromRGB(255, 0, 0) or Color3.fromRGB(0, 255, 0))
                 end
                 
+                if boss and boss:FindFirstChild("DamageReduction", true) then
+                    return characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
+                end
+            
                 -- Keep Distance
                 if findFirstChild(hostile, "Humanoid") and  hostile.Humanoid.Health == hostile.Humanoid.MaxHealth then -- ranged not hitting fix
                     sameHealth = sameHealth + 1
@@ -1140,7 +1150,7 @@ do
                     sameHealth = 0
                 end
                 
-                if not findFirstChild(hostile, 'Waiting' .. hostile.Name) and sameHealth < 100 then
+                if sameHealth < 100 then
                     if distance <= flags.distanceAway and flags.keepDistance and not behindWall then
                         if distance >= 15 then
                             characterPathing:Run(root.Position + root.CFrame.lookVector * -7);
@@ -1185,7 +1195,7 @@ do
         root = waitForChild(newCharacter, 'HumanoidRootPart');
         gyro = waitForChild(root, "BodyGyro"); gyro.P = 3000
         humanoid = waitForChild(newCharacter, 'Humanoid');
-        characterPathing = pathing.new(newCharacter, {AgentRadius = 2, AgentHeight = 5, AgentCanJump = true, WaypointSpacing = 8.2}, {
+        characterPathing = pathing.new(newCharacter, {AgentRadius = 3, AgentHeight = 4, AgentCanJump = true, WaypointSpacing = 8.2}, {
             Costs = {
                 Water = math.huge,
                 Neon = math.huge
@@ -1240,6 +1250,20 @@ do
         end
     end)
     
+
+
+    local function deepCopy(original)
+    	local copy = {}
+    	for k, v in pairs(original) do
+    		if type(v) == "table" then
+    			v = deepCopy(v)
+    		end
+    		copy[k] = v
+    	end
+    	return copy
+    end
+
+
     oldNamecall = hookfunction(getrawmetatable(game).__namecall, newcclosure(function(self, ...)
         local Args   = {...}
         local callMethod = getnamecallmethod()
