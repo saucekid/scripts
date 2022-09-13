@@ -557,7 +557,7 @@ end)
 
 
 -- lib.
-local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/compact.lua'))().init("ventureAI", "saucekid v2.0.1", 1, UDim2.new(0.2, 0, 0.2, 0), UDim2.new(0, 600, 0, 300)); do
+local lib = loadstring(httpGet(game, 'https://raw.githubusercontent.com/saucekid/UI-Libraries/main/compact.lua'))().init("ventureAI", "saucekid v2.0.2", 1, UDim2.new(0.2, 0, 0.2, 0), UDim2.new(0, 600, 0, 300)); do
     if game.PlaceId == 4809447488 then 
         flags = {
             selectedDungeon = "Goblin Cave", 
