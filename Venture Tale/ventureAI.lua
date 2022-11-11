@@ -149,6 +149,7 @@ local Weapons = {
         Bow   = {
             "Bow",
             "Crossbow",
+            "Rifle"
         },
         Magic = {
             "Staff",
@@ -2553,6 +2554,8 @@ do
         });
     end
 end
+
+noti.normal("Warning", "Damage multiplier is unsafe, you may get banned", "warn", 5)
 
 do
     local autoDungeon_broom = broom();
