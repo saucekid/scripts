@@ -37,7 +37,6 @@ if not syn then
     getgenv().delfile = function() end
 end
 
-getgenv().executed_ = true
 
 -- { variables.
 local game = game;
@@ -106,7 +105,17 @@ for i, v in pairs(getconnections(client.Idled)) do
     v:Disable()
 end
 
-if _G.safemode and game.PlaceVersion > 973 then client:Kick("\nGame Updated.\nWait For Script Update!") return end
+if game.PlaceVersion > 1 then 
+    noti.full({ Position = UDim2.new(0.5, 0, 0.5, 0), Text = "Warning",
+    Description = "Game version has changed since latest update \n Continue?", MessageBoxIcon = "Warning", MessageBoxButtons = "YesNo",
+        Result = function(res)
+        if (res == "Yes") then
+            confirm = true
+        end
+    end})
+    repeat task.wait() until confirm 
+end
+getgenv().executed_ = true
 
 -- things.
 local map = workspace.Map;
