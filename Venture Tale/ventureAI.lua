@@ -105,7 +105,7 @@ for i, v in pairs(getconnections(client.Idled)) do
     v:Disable()
 end
 
-if game.PlaceVersion > 1 then 
+if game.PlaceVersion > 991 then 
     noti.full({ Position = UDim2.new(0.5, 0, 0.5, 0), Text = "Warning",
     Description = "Game version has changed since latest update \n Continue?", MessageBoxIcon = "Warning", MessageBoxButtons = "YesNo",
         Result = function(res)
@@ -1096,25 +1096,6 @@ do
         });
 
 
-
-        adTab:AddSeperator("Damage Multiplier")
-        adTab:AddToggle({
-            title = 'ON/OFF',
-            desc = 'Toggle damage multiplier',
-            checked = flags.damage,
-            callback = function(state)
-                flags.damage = state
-            end
-        });
-
-        adTab:AddSlider({
-            title = 'Multiplier',
-            desc = 'How many times damage is multiplier',
-            values = { min = 0, max = 5, default = flags.damageInt, round = 1 },
-            callback = function(state)
-                flags.damageInt = state
-            end
-        });
     end
 end
 
@@ -1396,17 +1377,6 @@ do
         end
     end)
 
-    local function deepCopy(original)
-        local copy = {}
-        for k, v in pairs(original) do
-            if type(v) == "table" then
-                v = deepCopy(v)
-            end
-            copy[k] = v
-        end
-        return copy
-    end
-
     oldNamecall = hookfunction(getrawmetatable(game).__namecall, newcclosure(function(self, ...)
         local Args       = { ... }
         local callMethod = getnamecallmethod()
@@ -1439,15 +1409,6 @@ do
                     if flags.autoDungeon then
                         return;
                     end
-                end
-                if flags.damage then
-                    for i = 1, flags.damageInt do
-                        local clone = deepCopy(Args[2].Targets)
-                        for i, v in pairs(clone) do
-                            table.insert(Args[2].Targets, v)
-                        end
-                    end
-                    return oldNamecall(self, unpack(Args))
                 end
             end
         end
