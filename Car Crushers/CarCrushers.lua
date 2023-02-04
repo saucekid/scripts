@@ -1,7 +1,13 @@
 _G.Executed = true
-repeat wait() until game:IsLoaded()
 
---=======\Variables\
+local game = game
+local GetService = game.GetService
+if (not game.IsLoaded(game)) then
+    local Loaded = game.Loaded
+    Loaded.Wait(Loaded);
+end
+
+-- vars
 local Players = game:GetService("Players");     
 local Lighting = game:GetService("Lighting");
 local ReplicatedStorage = game:GetService("ReplicatedStorage");
@@ -30,7 +36,7 @@ local CarCollection = workspace:FindFirstChild("CarCollection");
 local rF = ReplicatedStorage:FindFirstChild("rF");
 local rE = ReplicatedStorage:FindFirstChild("rE");
 
---\Libraries\
+-- libraries
 local Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/UI-Libraries/main/NotificationLib.lua"))()
 function err(txt)
     Notification.Notify("Error", txt, "rbxassetid://1491260682", {
@@ -106,7 +112,7 @@ if ReplicatedStorage:FindFirstChild("ClientError") then
 end
 
 --\Toggles\
-flags = {
+local flags = {
     invincible = {},
     autofarm = {},
     silent = {},
@@ -148,7 +154,7 @@ function getbestCar(realname)
         if not inGroup and car.GroupOnly.Value == true then continue end
         local name = realname and car:FindFirstChild("Name").Value or car.Name
         local price = car.Price.Value
-        if price >= bestPrice and price <= LocalPlayer.Money.Value and car.TokenRequirement.Value <= LocalPlayer.leaderstats.Tokens.Value then
+        if price >= bestPrice and price <= LocalPlayer.Money.Value  then
             bestName = name
             bestPrice = price
         end
@@ -183,6 +189,9 @@ function destroyCar()
     bodyPosition.MaxForce = Vector3.new(999999999,999999999,999999999)
     bodyPosition.Position = car.PrimaryPart.Position + Vector3.new(0,10,0)
     ]]
+
+
+    
     for i = 1,5 do
         local parts = {}
         local collision
@@ -192,9 +201,24 @@ function destroyCar()
                 table.insert(parts, v)
             end
         end
-        car.PrimaryPart.Velocity = Vector3.new(0,1000,0)--car.PrimaryPart.CFrame.lookVector*1000*Vector3.new(1,0,1)
-        rF.BreakParts:InvokeServer(parts, collision, car.PrimaryPart.Velocity.Magnitude, "Default", car.PrimaryPart.Velocity, false)
-        wait()
+
+local ohInstance1 = collision
+local ohVector32 = Vector3.new(16.288908004760742, -2.9744818210601807, 89.69550323486328)
+local ohTable3 = {
+	["VectorPoints"] = {
+		[1] = -96.40599822998047, 5.4149932861328125, -1015.3600463867188,
+		[2] = -94.96304321289062, 5.398645877838135, -1016.0562744140625
+	},
+	["ContactPoint"] = -95.68452453613281, 5.406819820404053, -1015.7081298828125,
+	["ContactType"] = "Edge",
+	["HitParts"] = {
+		[1] = workspace.Island.Trees.NonToggle.Tree.Trunk
+	}
+}
+local ohCFrame4 = CFrame.new(3.20446777, -3.8204813, 0.409912109, -0.96374619, 0.0188923255, 0.266151279, 0.00917989202, 0.999247432, -0.0376891643, -0.266663015, -0.0338795446, -0.963194191)
+
+game:GetService("ReplicatedStorage").rE.TakeVehicleDamage:FireServer(ohInstance1, ohVector32, ohTable3, ohCFrame4)
+        task.wait()
     end
 end
 
@@ -697,13 +721,7 @@ local window = library:CreateWindow("Car Crushers 2", Vector2.new(450,330), Enum
         		    game:GetService('TeleportService'):TeleportToPlaceInstance(game.PlaceId, game.JobId, Players.LocalPlayer)
         	    end
             end)
-            smallest_button = serverSector:AddButton("Join Smallest Server", function()
-                if syn then 
-                    coroutine.resume(coroutine.create(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/saucekid/scripts/main/JoinLowestPlayer.lua"))()  end))
-                else
-                    err("Sorry, this function is Synapse only")
-                end
-            end)
+
             serverhop_button = serverSector:AddButton("Server Hop", function()
                 local x = {}
 	                for _, v in ipairs(game:GetService("HttpService"):JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100")).data) do
