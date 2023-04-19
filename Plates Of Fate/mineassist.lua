@@ -1,7 +1,7 @@
 --[[
 	mineassist 
     saucekid
-    2/4/23
+    12/20/22
 ]]
 
 local game = game
@@ -78,9 +78,10 @@ local random, floor, round, abs, atan, cos, sin, rad, clamp =
 local Camera = Services.Workspace.CurrentCamera
 local Players = Services.Players
 
-local Lobby = FindFirstChild(Services.Workspace, "Lobby")
-local Casino = FindFirstChild(Lobby, "Casino")
-local Machines = FindFirstChild(Casino, "Machines")
+local Map = FindFirstChild(Services.Workspace, "Map")
+local Lobby = FindFirstChild(Map, "Lobby")
+local Arcade = FindFirstChild(Lobby, "Arcade")
+local Machines = FindFirstChild(Arcade, "Machines")
 local Sweeper = FindFirstChild(Machines, "Sweeper")
 local Button = Sweeper.Button.Buy
 local Slots = Sweeper.Machine.Slots.Boxes
@@ -89,7 +90,7 @@ local Slots = Sweeper.Machine.Slots.Boxes
 local maxBombs = 9
 
 local partData = {{},{},{},{},{}} do -- get the slot parts
-    local xPos, yPos = {-252,-249,-245,-242,-238}, {9,13,16,20,23}
+    local xPos, yPos = {-253,-250,-246,-243,-239}, {9,13,16,20,23}
     for _,slot in pairs(GetChildren(Slots)) do
         local slotX, slotY = table.find(xPos, round(slot.Position.Z)), table.find(yPos, round(slot.Position.Y)) 
         slot:SetAttribute("X", slotX); slot:SetAttribute("Y", slotY)
@@ -308,6 +309,7 @@ function updateSlot(slot, bombs, refresh)
 
                     text.Text = tostring(round((bombs/(#adjacentSlots))*100)).. "%"
                     text.Visible = true
+                    text.Enabled = true
                 end
             end
         end
@@ -405,7 +407,7 @@ for i,part in pairs(GetChildren(Slots)) do
         task.wait()
 
         if color == BrickColor.new("New Yeller") and not fail then            
-            fail = part.SurfaceGui.Bomb.Visible
+            fail = part.SurfaceGui.Icon.Image == "rbxassetid://6459666422"
 
             if not fail then
                 local slot, bombs = getSlotFromPart(part), getBombsFromPart(part)
