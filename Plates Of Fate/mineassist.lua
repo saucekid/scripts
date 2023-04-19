@@ -309,7 +309,7 @@ function updateSlot(slot, bombs, refresh)
 
                     text.Text = tostring(round((bombs/(#adjacentSlots))*100)).. "%"
                     text.Visible = true
-                    text.Enabled = true
+                    text.Parent.Enabled = true
                 end
             end
         end
